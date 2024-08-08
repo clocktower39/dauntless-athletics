@@ -75,7 +75,6 @@ export default function Services() {
                   textAlign="center"
                   sx={{
                     fontFamily: "montserrat",
-                    color: "rgb(60, 57, 80)",
                     fontSize: "24px",
                     padding: "15px",
                   }}
@@ -146,7 +145,6 @@ export default function Services() {
                     textAlign="center"
                     sx={{
                       fontFamily: "montserrat",
-                      color: "rgb(60, 57, 80)",
                       fontSize: "24px",
                       padding: "15px",
                     }}
@@ -197,12 +195,11 @@ export default function Services() {
                     textAlign="center"
                     sx={{
                       fontFamily: "montserrat",
-                      color: "rgb(60, 57, 80)",
                       fontSize: "24px",
                       padding: "15px",
                     }}
                   >
-                    <GavelIcon sx={{ color: "inherit", fontSize: "inherit" }} /> TUMBLING
+                    <GavelIcon sx={{ fontSize: "inherit" }} /> TUMBLING
                     CONTRACTING SERVICES
                   </Typography>
                   <Typography
@@ -251,24 +248,6 @@ export default function Services() {
             >
               Our{" "}
               <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
-                Documents
-              </Typography>
-            </Typography>
-          </Grid>
-
-          <Grid container justifyContent="center">
-            <Typography
-              variant="h3"
-              textAlign="center"
-              sx={{
-                color: "#fff",
-                fontFamily: "Montserrat",
-                textTransform: "uppercase",
-                padding: "50px 0",
-              }}
-            >
-              Our{" "}
-              <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
                 Services
               </Typography>
             </Typography>
@@ -293,7 +272,7 @@ export default function Services() {
               </Typography>
               <Typography
                 textAlign="center"
-                sx={{ fontFamily: "source sans pro", color: "rgb(188, 198, 205)" }}
+                sx={{ fontFamily: "source sans pro", color: "#FFF" }}
               >
                 We visit gyms that are working to build a strong tumbling program and need help
                 coaching their recreational tumbling. Note we do NOT coach cheer teams. If your
@@ -323,7 +302,7 @@ export default function Services() {
               </Typography>
               <Typography
                 textAlign="center"
-                sx={{ fontFamily: "source sans pro", color: "rgb(188, 198, 205)" }}
+                sx={{ fontFamily: "source sans pro", color: "#FFF" }}
               >
                 We visit both High Schools and Jr. Highs to work with the athletes on their tumbling
                 skills. We make sure that they are able to perform and execute the skills that their
@@ -349,7 +328,7 @@ export default function Services() {
               </Typography>
               <Typography
                 textAlign="center"
-                sx={{ fontFamily: "source sans pro", color: "rgb(188, 198, 205)" }}
+                sx={{ fontFamily: "source sans pro", color: "#FFF" }}
               >
                 We visit Dance Studios and work with the dancers on their tumbling skills and
                 position. The goal is to help them perform the skills that they put into their

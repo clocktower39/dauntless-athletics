@@ -60,13 +60,13 @@ export default function Contact() {
             <Grid container item xs={12} md={3}>
               <Grid container item xs={12} justifyContent="center">
                 <PhoneIcon
-                  sx={{ color: "rgb(84, 114, 210)", fontSize: "64px", padding: "25px 0" }}
+                  sx={{ fontSize: "64px", padding: "25px 0" }}
                 />
               </Grid>
               <Grid container item xs={12} justifyContent="center">
                 <Typography
                   textAlign="center"
-                  sx={{ color: "rgb(60, 57, 80)", fontFamily: "montserrat", fontSize: "36px" }}
+                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
                 >
                   CONTACT
                 </Typography>
@@ -85,7 +85,6 @@ export default function Contact() {
               >
                 <Typography
                   sx={{
-                    color: "rgb(95, 114, 127)",
                     fontFamily: "source sans pro",
                     fontSize: "16px",
                   }}
@@ -94,7 +93,6 @@ export default function Contact() {
                 </Typography>
                 <Typography
                   sx={{
-                    color: "rgb(95, 114, 127)",
                     fontFamily: "source sans pro",
                     fontSize: "16px",
                   }}
@@ -114,7 +112,7 @@ export default function Contact() {
               <Grid container item xs={12} justifyContent="center">
                 <Typography
                   textAlign="center"
-                  sx={{ color: "rgb(60, 57, 80)", fontFamily: "montserrat", fontSize: "36px" }}
+                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
                 >
                   CLASS SCHEDULE
                 </Typography>
@@ -128,7 +126,6 @@ export default function Contact() {
               >
                 <Typography
                   sx={{
-                    color: "rgb(95, 114, 127)",
                     fontFamily: "source sans pro",
                     fontSize: "16px",
                   }}
@@ -147,7 +144,7 @@ export default function Contact() {
               <Grid container item xs={12} justifyContent="center">
                 <Typography
                   textAlign="center"
-                  sx={{ color: "rgb(60, 57, 80)", fontFamily: "montserrat", fontSize: "36px" }}
+                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
                 >
                   HOLIDAY SCHEDULE
                 </Typography>
@@ -161,7 +158,6 @@ export default function Contact() {
               >
                 <ul
                   style={{
-                    color: "rgb(95, 114, 127)",
                     fontFamily: "source sans pro",
                     fontSize: "16px",
                   }}
@@ -186,7 +182,7 @@ export default function Contact() {
               <Grid container item xs={12} justifyContent="center">
                 <Typography
                   textAlign="center"
-                  sx={{ color: "rgb(60, 57, 80)", fontFamily: "montserrat", fontSize: "36px" }}
+                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
                 >
                   ADDRESS
                 </Typography>
@@ -201,7 +197,6 @@ export default function Contact() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    color: "rgb(95, 114, 127)",
                     fontFamily: "source sans pro",
                     fontSize: "16px",
                   }}

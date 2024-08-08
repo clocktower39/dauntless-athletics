@@ -32,7 +32,7 @@ const schedule = [
         time: "4:00-5:00 PM",
       },
       {
-        activity: "Cheer Prep Class (age 3-6)",
+        activity: "Cheer Prep Class (age 6+)",
         time: "4:00-5:00 PM",
       },
       {
@@ -270,7 +270,7 @@ export default function ClassSchedule() {
             <Divider sx={{ bgcolor: "#eee", marginBottom: "1.1em" }} />
           </Grid>
           <Typography
-            sx={{ color: "rgb(95, 114, 127)", fontFamily: "Source Sans Pro", padding: "25px" }}
+            sx={{ color: "#FFF", fontFamily: "Source Sans Pro", padding: "25px" }}
           >
             We require a written 30 day notice in order to drop enrollments. Students will need to
             bring water bottles to class. If your child has been sick. We ask that they please not

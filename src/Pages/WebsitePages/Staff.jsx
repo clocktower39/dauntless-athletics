@@ -15,8 +15,8 @@ import dantePic from "../../assets/Dante-Labarre-Dauntless-Athletics-2020.jpg";
 import jonPic from "../../assets/Matt-Kearns-Dauntless-Athletics-2022.jpg";
 import mattPic from "../../assets/Matt-Kearns-Dauntless-Athletics-2022.jpg";
 
-export default function Team() {
-  const teamMembers = [
+export default function Staff() {
+  const staff = [
     {
       displayName: "Anthony “DOM” Damiani",
       positionTitle: "Owner | Head Coach",
@@ -43,14 +43,14 @@ export default function Team() {
       picture: oathaPic,
     },
     {
+      displayName: "Dante Labarre",
+      positionTitle: "Lead Tumbling Coach",
+      picture: dantePic,
+    },
+    {
       displayName: "Adrienne Traynor",
       positionTitle: "Stunting and Tumbling Coach",
       picture: adriennePic,
-    },
-    {
-      displayName: "Calla Reed",
-      positionTitle: "Stunting and Tumbling Coach",
-      picture: callaPic,
     },
     {
       displayName: "Elias Espinosa",
@@ -61,11 +61,6 @@ export default function Team() {
       displayName: "Carlos Solis",
       positionTitle: "Tumbling and Stunting Coach",
       picture: carlosPic,
-    },
-    {
-      displayName: "Dante Labarre",
-      positionTitle: "Lead Tumbling Coach",
-      picture: dantePic,
     },
     {
       displayName: "Jon Kearns",
@@ -79,7 +74,7 @@ export default function Team() {
     },
   ];
 
-  const TeamMemberCard = ({ employee }) => {
+  const StaffMemberCard = ({ employee }) => {
     return (
       <Grid container item xs={12} md={6} lg={4} justifyContent="center">
         <Box
@@ -156,14 +151,14 @@ export default function Team() {
             },
           }}
         >
-          Meet Our Team
+          Meet Our Staff
         </Typography>
         <Container maxWidth="lg">
           <Divider sx={{ backgroundColor: "#53c7d6", width: "25%", margin: "auto" }} />
           <Typography
             variant="body1"
             sx={{
-              color: "rgb(95, 114, 127)",
+              color: "#FFF",
               fontFamily: "source sans pro",
               fontSize: "16px",
               padding: "25px",
@@ -185,11 +180,11 @@ export default function Team() {
               padding: "25px",
             }}
           >
-            Dauntless Team
+            Dauntless Staff
           </Typography>
           <Grid container spacing={3}>
-            {teamMembers.map((employee) => (
-              <TeamMemberCard key={employee.displayName} employee={employee} />
+            {staff.map((employee) => (
+              <StaffMemberCard key={employee.displayName} employee={employee} />
             ))}
           </Grid>
         </Container>

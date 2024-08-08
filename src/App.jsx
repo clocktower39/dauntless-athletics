@@ -4,7 +4,7 @@ import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
 import Camps from "./Pages/WebsitePages/Camps";
 import ClassSchedule from "./Pages/WebsitePages/ClassSchedule";
 import Services from "./Pages/WebsitePages/Services";
-import Team from "./Pages/WebsitePages/Team";
+import Staff from "./Pages/WebsitePages/Staff";
 import Facility from "./Pages/WebsitePages/Facility";
 import Contact from "./Pages/WebsitePages/Contact";
 import NotFoundPage from "./Pages/NotFoundPage";
@@ -44,7 +44,7 @@ function App() {
               <Route exact path="/camps" element={<Camps />} />
               <Route exact path="/class-schedule" element={<ClassSchedule />} />
               <Route exact path="/services" element={<Services />} />
-              <Route exact path="/team" element={<Team />} />
+              <Route exact path="/staff" element={<Staff />} />
               <Route exact path="/facility" element={<Facility />} />
               <Route exact path="/contact-us" element={<Contact />} />
             </>

@@ -90,27 +90,26 @@ export default function Home() {
                     textAlign="center"
                     sx={{
                       fontFamily: "montserrat",
-                      color: "#3c3950",
                       textTransform: "uppercase",
                       paddingBottom: "1.4em",
                     }}
                   >
-                    7 Years{" "}
+                    8 Years{" "}
                     <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
                       Going Strong
                     </Typography>
                   </Typography>
                 </Grid>
                 <Grid>
-                  <Typography sx={{ color: "rgb(95, 114, 127)", fontFamily: "Source Sans Pro" }}>
-                    As we approach 7 years of being open we would like to take the time to thank
-                    each and everyone of you for being a part of our journey the last 7 years! We
+                  <Typography sx={{ fontFamily: "Source Sans Pro" }}>
+                    As we approach 8 years of being open we would like to take the time to thank
+                    each and everyone of you for being a part of our journey the last 8 years! We
                     appreciate all the love and support you have shown us these past years.
                   </Typography>
                   <br />
 
-                  <Typography sx={{ color: "rgb(95, 114, 127)", fontFamily: "Source Sans Pro" }}>
-                    While we have had time to reflect on the last 7 years, we have decided to make
+                  <Typography sx={{ fontFamily: "Source Sans Pro" }}>
+                    While we have had time to reflect on the last 8 years, we have decided to make
                     some changes at Dauntless. We are very excited to welcome back Coach Dante as of
                     Monday, March 6th! Coach Dante has been a part of Dauntless from the start and
                     we are excited to see him back in the gym! In the next few weeks you will notice
@@ -120,8 +119,8 @@ export default function Home() {
                   </Typography>
                   <br />
 
-                  <Typography sx={{ color: "rgb(95, 114, 127)", fontFamily: "source sans pro" }}>
-                    We are excited for the journey of year 7 and can’t wait to see the improvements
+                  <Typography sx={{ fontFamily: "source sans pro" }}>
+                    We are excited for the journey of year 8 and can’t wait to see the improvements
                     and goals being achieved by every athlete here!
                   </Typography>
                 </Grid>
@@ -135,7 +134,7 @@ export default function Home() {
                   <Typography
                     variant="h3"
                     textAlign="center"
-                    sx={{ fontFamily: "Montserrat", color: "#3c3950", textTransform: "uppercase" }}
+                    sx={{ fontFamily: "Montserrat", textTransform: "uppercase" }}
                   >
                     Upcoming{" "}
                     <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
@@ -146,7 +145,6 @@ export default function Home() {
                 <Grid container justifyContent="center" sx={{ paddingBottom: "3em" }}>
                   <Typography
                     sx={{
-                      color: "rgb(95, 114, 127)",
                       fontFamily: "source sans pro",
                       padding: "3em 0 1.5em 0",
                     }}
@@ -207,11 +205,11 @@ export default function Home() {
                       <Grid container item xs={9} sm={8}>
                         <Typography
                           variant="h5"
-                          sx={{ color: "#3c3950", textTransform: "uppercase", padding: "15px 0" }}
+                          sx={{ textTransform: "uppercase", padding: "15px 0" }}
                         >
                           {c.title}
                         </Typography>
-                        <Typography variant="body1" sx={{ color: "#5f727f", padding: "15px 0px" }}>
+                        <Typography variant="body1" sx={{ color: "#A0A0A0", padding: "15px 0px" }}>
                           {c.description}
                         </Typography>
                       </Grid>
@@ -220,81 +218,6 @@ export default function Home() {
                       </Grid>
                     </Grid>
                   ))}
-                  <Grid container item xs={12} sm={6} sx={{ padding: "75px 0px" }}>
-                    <Grid item xs={9} sm={8}>
-                      <Typography
-                        variant="h5"
-                        sx={{ color: "#3c3950", textTransform: "uppercase", padding: "15px 0" }}
-                      >
-                        Cheer Prep Class
-                      </Typography>
-                      <Typography variant="body1" sx={{ color: "#5f727f", padding: "15px 0px" }}>
-                        Motions, jumps, stunts, and tumbling for ages 4 and up. See the class
-                        schedule for more details.
-                      </Typography>
-                      <Box>
-                        <Typography variant="subtitle2" sx={{ color: "#5f727f" }}>
-                          *Classes start in March.
-                        </Typography>
-                        <Typography variant="subtitle2" sx={{ color: "#5f727f" }}>
-                          **Must wear tennis shoes.
-                        </Typography>
-                      </Box>
-                      <Box sx={{ margin: "20% 0" }}>
-                        <Button variant="contained" component={Link} to="https://app.iclasspro.com/portal/dauntlessathletics/classes" sx={{ backgroundColor: 'rgb(60, 57, 80)', '&:hover': { backgroundColor: 'rgb(244, 67, 54)', }}}>Sign Up</Button>
-                      </Box>
-                    </Grid>
-                    <Grid container item xs={3} sm={4} alignItems="flex-start">
-                      <CheckCircleIcon
-                        sx={{
-                          fontSize: { xs: "4em", md: "6em" },
-                          padding: "15px",
-                          color: "rgb(255, 199, 118)",
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container item xs={12} sm={6} sx={{ padding: "75px 0px" }}>
-                    <Grid item xs={9} sm={8}>
-                      <Typography
-                        variant="h5"
-                        sx={{ color: "#3c3950", textTransform: "none", padding: "15px 0" }}
-                      >
-                        Junior high and high school try out prep class
-                      </Typography>
-                      <Typography variant="body1" sx={{ color: "#5f727f", padding: "15px 0px" }}>
-                        This class is for any athletes ages 11-19 looking to prepare for junior high
-                        and high school cheer tryouts! See the class schedule for more details.
-                      </Typography>
-                      <Box>
-                        <Typography variant="subtitle2" sx={{ color: "#5f727f" }}>
-                          *Starting Tuesday March 5th 6-8pm
-                        </Typography>
-                        <Typography variant="subtitle2" sx={{ color: "#5f727f" }}>
-                          *The class begins March 5th and ends May 28th, 2024.
-                        </Typography>
-                        <Typography variant="subtitle2" sx={{ color: "#5f727f" }}>
-                          {" "}
-                          *$130 a month.
-                        </Typography>
-                        <Typography variant="subtitle2" sx={{ color: "#5f727f" }}>
-                          **Must wear tennis shoes.
-                        </Typography>
-                      </Box>
-                      <Box sx={{ margin: "20% 0" }}>
-                        <Button variant="contained" component={Link} to="https://app.iclasspro.com/portal/dauntlessathletics/classes" sx={{ backgroundColor: 'rgb(60, 57, 80)', '&:hover': { backgroundColor: 'rgb(244, 67, 54)', }}}>Sign Up</Button>
-                      </Box>
-                    </Grid>
-                    <Grid container item xs={3} sm={4} alignItems="flex-start">
-                      <CheckCircleIcon
-                        sx={{
-                          fontSize: { xs: "4em", md: "6em" },
-                          padding: "15px",
-                          color: "rgb(255, 199, 118)",
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
                 </Grid>
                 <Grid container justifyContent="center">
                   <ReactPlayer url="https://youtu.be/Oiz0gypDSRI" controls />
@@ -309,7 +232,7 @@ export default function Home() {
                   <Typography
                     variant="h3"
                     textAlign="center"
-                    sx={{ fontFamily: "Montserrat", color: "#3c3950", textTransform: "uppercase" }}
+                    sx={{ fontFamily: "Montserrat", textTransform: "uppercase" }}
                   >
                     Why{" "}
                     <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>

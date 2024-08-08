@@ -64,12 +64,12 @@ export default function WebsiteNavbar() {
   const navItems = [
     { name: "Home", link: "/#" },
     { name: "Classes", link: "/#dauntless-classes-section" },
-    { name: "Camps", link: "/camps/#" },
-    { name: "Shop", link: "https://stores.inksoft.com/dauntless_apparel/shop/home" },
     { name: "Tuition", link: "/#tuition-section" },
+    { name: "Camps", link: "/camps/#" },
+    { name: "Merch", link: "https://stores.inksoft.com/dauntless_apparel/shop/home" },
     { name: "Schedule", link: "/class-schedule/#" },
     { name: "Services", link: "/services/#" },
-    { name: "Team", link: "/team/#" },
+    { name: "Staff", link: "/staff/#" },
     { name: "Facility", link: "/facility/#" },
     { name: "Contact Us", link: "/contact-us/#" },
     {
@@ -103,7 +103,7 @@ export default function WebsiteNavbar() {
               },
             }}
           >
-            Schedule Now
+            Create Account
           </Button>
         </Box>
       </Toolbar>

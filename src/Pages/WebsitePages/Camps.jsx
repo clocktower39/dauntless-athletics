@@ -78,7 +78,7 @@ export default function Camps() {
           <br /> That Peak Your Skills
         </Typography>
       </Box>
-      <Box sx={{ backgroundColor: "#FFFFFF" }}>
+      <Box sx={{ backgroundColor: "#000", color: '#FFF', }}>
         <Container maxWidth="md">
           <Typography
             sx={{
