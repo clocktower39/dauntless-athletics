@@ -59,15 +59,10 @@ export default function Contact() {
           <Grid container sx={{ padding: "50px 0" }}>
             <Grid container item xs={12} md={3}>
               <Grid container item xs={12} justifyContent="center">
-                <PhoneIcon
-                  sx={{ fontSize: "64px", padding: "25px 0" }}
-                />
+                <PhoneIcon sx={{ fontSize: "64px", padding: "25px 0" }} />
               </Grid>
               <Grid container item xs={12} justifyContent="center">
-                <Typography
-                  textAlign="center"
-                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
-                >
+                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   CONTACT
                 </Typography>
               </Grid>
@@ -110,10 +105,7 @@ export default function Contact() {
                 />
               </Grid>
               <Grid container item xs={12} justifyContent="center">
-                <Typography
-                  textAlign="center"
-                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
-                >
+                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   CLASS SCHEDULE
                 </Typography>
               </Grid>
@@ -142,10 +134,7 @@ export default function Contact() {
                 />
               </Grid>
               <Grid container item xs={12} justifyContent="center">
-                <Typography
-                  textAlign="center"
-                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
-                >
+                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   HOLIDAY SCHEDULE
                 </Typography>
               </Grid>
@@ -154,21 +143,85 @@ export default function Contact() {
                 item
                 xs={12}
                 justifyContent="center"
-                sx={{ padding: "15px 0", flexGrow: 1, minHeight: "150px" }}
+                sx={{ padding: "15px 0", flexGrow: 1, flexShrink: 0, minHeight: "150px" }}
               >
                 <ul
                   style={{
                     fontFamily: "source sans pro",
                     fontSize: "16px",
+                    paddingLeft: "0", // Remove default padding of the ul
                   }}
                 >
-                  <li>Mar 29th – Mar 31st: Closed</li>
-                  <li>May 27th: Closed</li>
-                  <li>Jul 1st – Jul 7th: Closed</li>
-                  <li>Sept 2nd: Closed</li>
-                  <li>Oct 31st: Closed</li>
-                  <li>Nov 27th – Dec 1st: Closed</li>
-                  <li>Dec 22nd – Jan 1st: Closed</li>
+                  <li
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span>Mar 29th – Mar 31st:</span>
+                    <span style={{ paddingLeft: "25px" }}>Closed</span>
+                  </li>
+                  <li
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span>May 27th:</span>
+                    <span>Closed</span>
+                  </li>
+                  <li
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span>Jul 1st – Jul 7th:</span>
+                    <span>Closed</span>
+                  </li>
+                  <li
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span>Sept 2nd:</span>
+                    <span>Closed</span>
+                  </li>
+                  <li
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span>Oct 31st:</span>
+                    <span>Closed</span>
+                  </li>
+                  <li
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span>Nov 27th – Dec 1st:</span>
+                    <span>Closed</span>
+                  </li>
+                  <li
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    <span>Dec 22nd – Jan 1st:</span>
+                    <span>Closed</span>
+                  </li>
                 </ul>
               </Grid>
             </Grid>
@@ -180,10 +233,7 @@ export default function Contact() {
                 />
               </Grid>
               <Grid container item xs={12} justifyContent="center">
-                <Typography
-                  textAlign="center"
-                  sx={{ fontFamily: "montserrat", fontSize: "36px" }}
-                >
+                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   ADDRESS
                 </Typography>
               </Grid>
@@ -192,7 +242,7 @@ export default function Contact() {
                 item
                 xs={12}
                 justifyContent="center"
-                sx={{ padding: "15px 0", flexGrow: 1, minHeight: "150px" }}
+                sx={{ padding: "15px", flexGrow: 1, minHeight: "150px" }}
               >
                 <Typography
                   textAlign="center"
