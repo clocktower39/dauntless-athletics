@@ -34,18 +34,22 @@ const schedule = [
       {
         activity: "Cheer Prep Class (age 6+)",
         time: "4:00-5:00 PM",
+        color: '#ffc776',
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Open Gym (*High School & College)",
         time: "8:30-10:30 PM",
+        color: '#a3ff25',
       },
     ],
   },
@@ -55,6 +59,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Stunting/Flier Class",
@@ -63,6 +68,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Stunting/Flier Class",
@@ -75,6 +81,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Twisting",
@@ -88,14 +95,17 @@ const schedule = [
       {
         activity: "Cheer Prep Class (age 7-9)",
         time: "4:00-5:00 PM",
+        color: '#ffc776',
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Jump Class",
@@ -117,6 +127,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Strength",
@@ -125,6 +136,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Stunting/Flier Class",
@@ -146,10 +158,12 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Cheer Prep Class (age 10 & up)",
         time: "5:00-6:30 PM",
+        color: '#ffc776',
       },
       {
         activity: "Twisting",
@@ -163,6 +177,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "9:30-10:00 AM",
+        color: '#d72933',
       },
       {
         activity: "Jump Class",
@@ -171,6 +186,7 @@ const schedule = [
       {
         activity: "Intermediate Tumbling",
         time: "10:30-12:00 PM",
+        color: '#d72933',
       },
       {
         activity: "Stunting/Flier Class",
@@ -190,9 +206,9 @@ const schedule = [
 
 export default function ClassSchedule() {
   const DaySchedule = ({ day, activities }) => {
-    const ActivityDetails = ({ activity, time }) => {
+    const ActivityDetails = ({ activity, time, color="#FFF" }) => {
       return (
-        <Grid container item xs={12} sx={{ padding: "5px 25px" }}>
+        <Grid container item xs={12} sx={{ padding: "5px 25px", color: color, }}>
           <Grid container item xs={8}>
             {activity}:
           </Grid>
@@ -219,7 +235,7 @@ export default function ClassSchedule() {
           </Typography>
         </Grid>
         {activities.map((a) => (
-          <ActivityDetails activity={a.activity} time={a.time} />
+          <ActivityDetails activity={a.activity} time={a.time} color={a.color} />
         ))}
       </Grid>
     );
