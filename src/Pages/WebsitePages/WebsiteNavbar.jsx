@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { HashLink as Link } from "react-router-hash-link";
+import { useLocation } from "react-router-dom";
 import {
   AppBar,
   Avatar,
@@ -52,8 +53,9 @@ export default function WebsiteNavbar() {
   const wide = useWindowWidth(1045);
   const [menuOpen, setMenuOpen] = useState(false);
   const toolbarRef = useRef(null); // Reference for the second Toolbar
+  const location = useLocation(); // Get the current location
 
-  const handleMenuClick = (event) => {
+  const handleMenuClick = () => {
     setMenuOpen(true); // Open the menu
   };
 
@@ -61,6 +63,27 @@ export default function WebsiteNavbar() {
     setMenuOpen(false); // Close the menu
   };
 
+  const isActive = (path) => {
+    // Exact match for the home path without a hash
+    if (path === "/#" && location.pathname === "/" && !location.hash) {
+      return true;
+    }
+  
+    // Exact match for hash-based paths (like Classes or Tuition sections)
+    if (path.startsWith('/#')) {
+      const [pathname, hash] = path.split('#');
+      return location.pathname === pathname && location.hash === `#${hash}`;
+    }
+  
+    // Handle non-hash paths that might end with "/#"
+    if (!path.includes('#') || path.endsWith('/#')) {
+      const normalizedPath = path.endsWith('/#') ? path.slice(0, -1) : path; // Remove "/#" from the end
+      return location.pathname === normalizedPath;
+    }
+  
+    return false; // Default return false if none of the conditions match
+  };
+  
   const navItems = [
     { name: "Home", link: "/#" },
     { name: "Classes", link: "/#dauntless-classes-section" },
@@ -117,7 +140,7 @@ export default function WebsiteNavbar() {
           >
             <Avatar
               src={DauntlessAthleticsLogoDesktopCircleImg}
-              alt="Logo"
+              alt="Dauntless Athletics Logo"
               sx={wide ? { width: 99, height: 99 } : { width: 56, height: 56 }}
             />
           </IconButton>
@@ -128,12 +151,13 @@ export default function WebsiteNavbar() {
                   key={item.name}
                   sx={{
                     textTransform: "none",
-                    color: item.textColor || '#fff',
-                    backgroundColor: "#000",
+                    color: isActive(item.link) ? "#00f" : item.textColor || '#fff',
+                    backgroundColor: isActive(item.link) ? "rgba(0, 0, 255, 0.1)" : "#000",
                     fontSize: {
                       xs: "9px",
                       md: "13px",
-                    }
+                    },
+                    borderBottom: isActive(item.link) ? "2px solid #00f" : "none",
                   }}
                   component={Link}
                   to={item.link}
@@ -194,7 +218,11 @@ export default function WebsiteNavbar() {
             onClick={handleMenuClose}
             component={Link}
             to={item.link}
-            sx={{ ...classes.MenuItem, color: item.textColor || "rgb(153, 169, 181)" }}
+            sx={{
+              ...classes.MenuItem,
+              color: isActive(item.link) ? "#00f" : item.textColor || "rgb(153, 169, 181)",
+              backgroundColor: isActive(item.link) ? "rgba(0, 0, 255, 0.1)" : "inherit",
+            }}
           >
             {item.name}
           </MenuItem>

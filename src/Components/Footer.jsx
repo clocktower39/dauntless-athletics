@@ -23,6 +23,7 @@ const TopFooter = () => {
         sx={{ padding: "50px 0" }}
       >
         <Avatar
+          alt="Dauntless Athletics Logo"
           src={DauntlessAthleticsLogoDesktopCircleImg}
           sx={{ width: "75%", height: "auto", maxWidth: "210px" }}
         />

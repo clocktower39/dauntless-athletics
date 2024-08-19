@@ -155,6 +155,7 @@ export default function Home() {
                 <Grid container justifyContent="center" sx={{ paddingBottom: "3em" }}>
                   <Link to="/camps/#">
                     <img
+                      alt="Dauntless Athletics Tumbling Camp Banner"
                       src={DauntlessAthleticsTumblingCampsImg}
                       height="auto"
                       style={{ maxWidth: "100%" }}
