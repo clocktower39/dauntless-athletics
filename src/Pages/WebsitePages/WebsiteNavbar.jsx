@@ -151,13 +151,13 @@ export default function WebsiteNavbar() {
                   key={item.name}
                   sx={{
                     textTransform: "none",
-                    color: isActive(item.link) ? "#00f" : item.textColor || '#fff',
-                    backgroundColor: isActive(item.link) ? "rgba(0, 0, 255, 0.1)" : "#000",
+                    color: item.textColor || '#fff',
+                    backgroundColor: "#000",
                     fontSize: {
                       xs: "9px",
                       md: "13px",
                     },
-                    borderBottom: isActive(item.link) ? "2px solid #00f" : "none",
+                    border: isActive(item.link) ? "2px solid #FFF" : "none",
                   }}
                   component={Link}
                   to={item.link}
