@@ -30,11 +30,12 @@ const schedule = [
       {
         activity: "Flexibility",
         time: "4:00-5:00 PM",
+        color: '#00bcd4',
       },
       {
-        activity: "Cheer Prep Class (age 6+)",
+        activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: '#ffc776',
+        color: '#d72933',
       },
       {
         activity: "Beginning/Intermediate Tumbling",
@@ -62,8 +63,9 @@ const schedule = [
         color: '#d72933',
       },
       {
-        activity: "Stunting/Flier Class",
+        activity: "Flexibility",
         time: "4:00-5:00 PM",
+        color: '#00bcd4',
       },
       {
         activity: "Beginning/Intermediate Tumbling",
@@ -75,17 +77,18 @@ const schedule = [
         time: "5:00-6:00 PM",
       },
       {
-        activity: "Stunting/Flier Class",
-        time: "6:00-7:00 PM",
-      },
-      {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
         color: '#d72933',
       },
       {
-        activity: "Twisting",
+        activity: "Stunting/Flier Class",
+        time: "6:00-7:00 PM",
+      },
+      {
+        activity: "Twisters Class",
         time: "7:00-8:30 PM",
+        color: '#ffc776',
       },
     ],
   },
@@ -93,31 +96,19 @@ const schedule = [
     day: "Wednesday",
     activities: [
       {
-        activity: "Cheer Prep Class (age 7-9)",
+        activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
+        color: '#d72933',
+      },
+      {
+        activity: "Beginning/Intermediate Tumbling",
+        time: "5:00-6:00 PM",
+        color: '#d72933',
+      },
+      {
+        activity: "Twisters Class",
+        time: "6:00-7:30 PM",
         color: '#ffc776',
-      },
-      {
-        activity: "Beginning/Intermediate Tumbling",
-        time: "4:00-5:00 PM",
-        color: '#d72933',
-      },
-      {
-        activity: "Beginning/Intermediate Tumbling",
-        time: "5:00-6:00 PM",
-        color: '#d72933',
-      },
-      {
-        activity: "Jump Class",
-        time: "5:00-6:00 PM",
-      },
-      {
-        activity: "Strength",
-        time: "5:00-6:00 PM",
-      },
-      {
-        activity: "Twisters",
-        time: "7:00-8:30 PM",
       },
     ],
   },
@@ -132,6 +123,7 @@ const schedule = [
       {
         activity: "Strength",
         time: "4:00-5:00 PM",
+        color: '#00bcd4',
       },
       {
         activity: "Beginning/Intermediate Tumbling",
@@ -143,12 +135,18 @@ const schedule = [
         time: "5:30-6:30 PM",
       },
       {
+        activity: "Beginning/Intermediate Tumbling",
+        time: "6:00-7:00 PM",
+        color: '#d72933',
+      },
+      {
         activity: "Stunting/Flier Class",
         time: "6:30-7:30 PM",
       },
       {
-        activity: "Twisting",
+        activity: "Twisters Class",
         time: "7:00-8:30 PM",
+        color: '#ffc776',
       },
     ],
   },
@@ -161,13 +159,9 @@ const schedule = [
         color: '#d72933',
       },
       {
-        activity: "Cheer Prep Class (age 10 & up)",
+        activity: "Twisters Class",
         time: "5:00-6:30 PM",
         color: '#ffc776',
-      },
-      {
-        activity: "Twisting",
-        time: "5:00-6:30 PM",
       },
     ],
   },
@@ -182,6 +176,7 @@ const schedule = [
       {
         activity: "Jump Class",
         time: "10:30-11:30 AM",
+        color: '#00bcd4',
       },
       {
         activity: "Intermediate Tumbling",
