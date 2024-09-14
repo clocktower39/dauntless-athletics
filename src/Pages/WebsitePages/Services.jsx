@@ -111,7 +111,7 @@ export default function Services() {
                   <li>Twisting</li>
                 </ul>
 
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: '25px', }}>
+                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{
@@ -127,7 +127,6 @@ export default function Services() {
                     <KeyboardArrowRightIcon /> See Classes
                   </Button>
                 </Grid>
-
               </Box>
             </Grid>
 
@@ -165,7 +164,7 @@ export default function Services() {
                     skills.
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: '25px', }}>
+                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{
@@ -199,8 +198,7 @@ export default function Services() {
                       padding: "15px",
                     }}
                   >
-                    <GavelIcon sx={{ fontSize: "inherit" }} /> TUMBLING
-                    CONTRACTING SERVICES
+                    <GavelIcon sx={{ fontSize: "inherit" }} /> TUMBLING CONTRACTING SERVICES
                   </Typography>
                   <Typography
                     textAlign="center"
@@ -215,7 +213,7 @@ export default function Services() {
                     clinics.
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: '25px', }}>
+                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{
@@ -263,17 +261,14 @@ export default function Services() {
               direction="column"
               alignItems="center"
             >
-              <HubIcon sx={{ fontSize: "5em", padding: "10px", color: '#ffba43',  }} />
+              <HubIcon sx={{ fontSize: "5em", padding: "10px", color: "#ffba43" }} />
               <Typography
                 textAlign="center"
                 sx={{ fontFamily: "montserrat", fontSize: "24px", padding: "15px" }}
               >
                 Gyms
               </Typography>
-              <Typography
-                textAlign="center"
-                sx={{ fontFamily: "source sans pro", color: "#FFF" }}
-              >
+              <Typography textAlign="center" sx={{ fontFamily: "source sans pro", color: "#FFF" }}>
                 We visit gyms that are working to build a strong tumbling program and need help
                 coaching their recreational tumbling. Note we do NOT coach cheer teams. If your
                 cheer leaders take one of our recreational classes then we will help them improve
@@ -293,17 +288,14 @@ export default function Services() {
               direction="column"
               alignItems="center"
             >
-              <SchoolIcon sx={{ fontSize: "5em", padding: "10px", color: '#bfd382', }} />
+              <SchoolIcon sx={{ fontSize: "5em", padding: "10px", color: "#bfd382" }} />
               <Typography
                 textAlign="center"
                 sx={{ fontFamily: "montserrat", fontSize: "24px", padding: "15px" }}
               >
                 High School/ Jr. High Tumbling
               </Typography>
-              <Typography
-                textAlign="center"
-                sx={{ fontFamily: "source sans pro", color: "#FFF" }}
-              >
+              <Typography textAlign="center" sx={{ fontFamily: "source sans pro", color: "#FFF" }}>
                 We visit both High Schools and Jr. Highs to work with the athletes on their tumbling
                 skills. We make sure that they are able to perform and execute the skills that their
                 coach wants them to do in their routine with good form and position.
@@ -319,17 +311,14 @@ export default function Services() {
               direction="column"
               alignItems="center"
             >
-              <Diversity2Icon sx={{ fontSize: "5em", padding: "10px", color: '#afe0ff', }} />
+              <Diversity2Icon sx={{ fontSize: "5em", padding: "10px", color: "#afe0ff" }} />
               <Typography
                 textAlign="center"
                 sx={{ fontFamily: "montserrat", fontSize: "24px", padding: "15px" }}
               >
                 Dance Studio Tumbling
               </Typography>
-              <Typography
-                textAlign="center"
-                sx={{ fontFamily: "source sans pro", color: "#FFF" }}
-              >
+              <Typography textAlign="center" sx={{ fontFamily: "source sans pro", color: "#FFF" }}>
                 We visit Dance Studios and work with the dancers on their tumbling skills and
                 position. The goal is to help them perform the skills that they put into their
                 dances.
@@ -364,25 +353,26 @@ export default function Services() {
           <Typography variant="body1" sx={{ ...classes.policyAndProcedureDescriptionText }}>
             Each class will be called in at its appropriate scheduled time by Dauntless Athletics
             staff. Students are to remain in the observation area until called in by our staff. No
-            students are permitted in gym or waiting area, before or after class. Without a staff
-            member present.
+            students are permitted in the gym or waiting area, before or after class. Without a
+            staff member present.
           </Typography>
           <Typography variant="body1" sx={{ ...classes.policyAndProcedureDescriptionText }}>
             Parents are responsible for their children before and after class and must supervise all
             children in the lobby areas at all times.{" "}
           </Typography>
           <Typography variant="body1" sx={{ ...classes.policyAndProcedureDescriptionText }}>
-            Dauntless Athletics does have scheduled closures. Please refer to the annual calendar on
-            the back of our welcome letter for the complete listing. Because some months we have 5
-            weeks of instruction, there will be NO pro-rated tuition for gym closures. We allow a
-            vacation pro-rate in the months of June and July only (2 weeks maximum). Vacation
-            pro-rate forms must be turned in by the beginning of the month in which the pro-rate
-            occurs.
+            Dauntless Athletics does have scheduled closures. Please refer to the closure calendar
+            on the contact us page on the website. Because some months we have 5 weeks of
+            instruction, there will be NO prorated tuition for gym closures.
           </Typography>
           <Typography variant="body1" sx={{ ...classes.policyAndProcedureDescriptionText }}>
-            Withdrawal Policy: if you decided to withdrawal, you must notify the office in writing,
-            30 days prior to withdrawal. Withdrawal slips are available at the front office for your
-            convenience. If notice is not received, you will continue to be charged.
+            Withdrawal Policy: if you decided to withdraw, you must notify the office in writing, 30
+            days prior to withdrawal. An email must be sent to info@dauntlessathletics.com If notice
+            is not received, you will continue to be charged.
+          </Typography>
+          <Typography variant="body1" sx={{ ...classes.policyAndProcedureDescriptionText }}>
+            If payment for tuition is overdue your student will not be able to attend class until we
+            have received tuition payment.
           </Typography>
           <Typography variant="body1" sx={{ ...classes.policyAndProcedureDescriptionText }}>
             If you encounter a problem or concern at the facility, please bring the problem to our
