@@ -4,16 +4,21 @@ import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
 import domPic from "../../assets/Anthony-Damiani-Dauntless-Athletics-2021.jpg";
 import amyPic from "../../assets/Amy-Damiani-Dauntless-Athletics-2020.jpg";
-import gagePic from "../../assets/Gage-Pruitt-Dauntless-Athletics-2021.jpg";
+import gagePic from "../../assets/Gage-Pruitt-Dauntless-Athletics-2024.jpg";
 import anniePic from "../../assets/annie-ong-dauntless-authletics-2023.jpg";
 import oathaPic from "../../assets/Oatha-Council-Dauntless-Athletics-2022.jpg";
 import adriennePic from "../../assets/Adrienne-Traynor-Dauntless-Athletics-2022.jpg";
-import callaPic from "../../assets/calla-reed-dauntless-athletics-2023.jpg";
 import eliasPic from "../../assets/elias-espinosa-dauntless-athletics-2023.jpg";
 import carlosPic from "../../assets/Carlos-Solis-Dauntless-Athletics-2022.jpg";
-import dantePic from "../../assets/Dante-Labarre-Dauntless-Athletics-2020.jpg";
-import jonPic from "../../assets/Matt-Kearns-Dauntless-Athletics-2022.jpg";
+import dantePic from "../../assets/Dante-Labarre-Dauntless-Athletics-2024.jpg";
+import jonPic from "../../assets/Jon-Kearns-Dauntless-Athletics-2024.jpg";
 import mattPic from "../../assets/Matt-Kearns-Dauntless-Athletics-2022.jpg";
+import stevenPic from "../../assets/Steven-Williams-Dauntless-Athletics-2024.jpg";
+import brandonPic from "../../assets/Brandon-Dawa-Dauntless-Athletics-2024.jpg";
+import bellaPic from "../../assets/Bella-Unknown-Dauntless-Athletics-2024.jpg";
+import sadiePic from "../../assets/Sadie-Unknown-Dauntless-Athletics-2024.jpg";
+import emilyPic from "../../assets/Emily-Mckane-Dauntless-Athletics-2024.jpg";
+import miaPic from "../../assets/Mia-Franz-Dauntless-Athletics-2024.jpg";
 
 export default function Staff() {
   const staff = [
@@ -38,14 +43,19 @@ export default function Staff() {
       picture: anniePic,
     },
     {
-      displayName: "Oatha Council",
-      positionTitle: "Stunting and Tumbling Coach",
-      picture: oathaPic,
-    },
-    {
       displayName: "Dante Labarre",
       positionTitle: "Lead Tumbling Coach",
       picture: dantePic,
+    },
+    {
+      displayName: "Brandon Dawa",
+      positionTitle: "Stunting and Tumbling Coach",
+      picture: brandonPic,
+    },
+    {
+      displayName: "Oatha Council",
+      positionTitle: "Stunting and Tumbling Coach",
+      picture: oathaPic,
     },
     {
       displayName: "Adrienne Traynor",
@@ -72,6 +82,31 @@ export default function Staff() {
       positionTitle: "Stunting Coach",
       picture: mattPic,
     },
+    {
+      displayName: "Steven Williams",
+      positionTitle: "Tumbling Coach",
+      picture: stevenPic,
+    },
+    {
+      displayName: "Bella Hughes",
+      positionTitle: "Tumbling Coach",
+      picture: bellaPic,
+    },
+    {
+      displayName: "Sadie",
+      positionTitle: "Tumbling and Stunting Coach",
+      picture: sadiePic,
+    },
+    {
+      displayName: "Emily McKane",
+      positionTitle: "Tumbling and Stunting Coach",
+      picture: emilyPic,
+    },
+    {
+      displayName: "Mia Franz",
+      positionTitle: "Choreography",
+      picture: miaPic,
+    },
   ];
 
   const StaffMemberCard = ({ employee }) => {
@@ -84,7 +119,8 @@ export default function Staff() {
             justifyContent: "center",
           }}
         >
-          <img src={employee.picture} alt="Employee Image" style={{ maxWidth: '362px', maxHeight: '400px'}} />
+          {/* Request all image as same size */}
+          <img src={employee.picture} alt="Employee Image" style={{ maxWidth: '100%', maxHeight: '100%'}} />
           <Typography
             sx={{
               position: "absolute", // Absolutely position within the relative container
