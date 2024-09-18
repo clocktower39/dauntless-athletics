@@ -246,6 +246,7 @@ export default function Home() {
               <Grid container>
                 <Grid
                   container
+                  item
                   xs={12}
                   md={4}
                   sx={{ backgroundColor: "rgb(174, 213, 129)", padding: "50px" }}
@@ -262,6 +263,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
+                  item
                   xs={12}
                   md={4}
                   sx={{ backgroundColor: "rgb(0, 188, 212)", padding: "50px" }}
@@ -282,6 +284,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
+                  item
                   xs={12}
                   md={4}
                   sx={{ backgroundColor: "rgb(55, 57, 76)", padding: "50px" }}
@@ -301,6 +304,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
+                  item
                   xs={12}
                   sx={{ backgroundColor: "rgb(167, 130, 230)", padding: "50px" }}
                 >
@@ -317,6 +321,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
+                  item
                   xs={12}
                   sx={{ backgroundColor: "rgb(0, 219, 255)", padding: "50px" }}
                 >
