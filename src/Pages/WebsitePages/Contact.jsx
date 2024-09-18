@@ -274,6 +274,18 @@ export default function Contact() {
               </Grid>
             </Grid>
           </Grid>
+          <Grid container item justifyContent="center" >
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
+              width="100%"
+              height="450"
+              frameborder="0"
+              style={{ border: 0 }}
+              allowfullscreen=""
+              aria-hidden="false"
+              tabindex="0"
+            ></iframe>
+          </Grid>
           <Grid container spacing={3} sx={{ padding: "25px 0" }}>
             <Grid container item xs={12}>
               <Typography sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
@@ -284,19 +296,36 @@ export default function Contact() {
               <TextField label="Name" fullWidth required sx={{ ...classes.contactFormTextField }} />
             </Grid>
             <Grid container item xs={12}>
-              <TextField label="Email" fullWidth required sx={{ ...classes.contactFormTextField }} />
+              <TextField
+                label="Email"
+                fullWidth
+                required
+                sx={{ ...classes.contactFormTextField }}
+              />
             </Grid>
             <Grid container item xs={12}>
               <TextField label="Phone Number" fullWidth sx={{ ...classes.contactFormTextField }} />
             </Grid>
             <Grid container item xs={12}>
-              <TextField label="Subject" fullWidth required sx={{ ...classes.contactFormTextField }} />
+              <TextField
+                label="Subject"
+                fullWidth
+                required
+                sx={{ ...classes.contactFormTextField }}
+              />
             </Grid>
             <Grid container item xs={12}>
-              <TextField label="Message" multiline minRows={4} fullWidth required sx={{ ...classes.contactFormTextField }} />
+              <TextField
+                label="Message"
+                multiline
+                minRows={4}
+                fullWidth
+                required
+                sx={{ ...classes.contactFormTextField }}
+              />
             </Grid>
             <Grid container item xs={12}>
-              <Button variant="contained" >Submit Message</Button>
+              <Button variant="contained">Submit Message</Button>
             </Grid>
           </Grid>
         </Container>
