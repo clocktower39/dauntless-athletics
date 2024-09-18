@@ -1,6 +1,6 @@
 import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
-import { Box, Container, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Divider, Grid, TextField, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
 import ContactBannerImg from "../../assets/ContactBannerImg.jpg";
 import {
@@ -26,6 +26,24 @@ const classes = {
     fontFamily: "montserrat",
     fontSize: "3em",
     textTransform: "uppercase",
+  },
+  contactFormTextField: {
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "rgb(57, 64, 80)", // Outline color
+      },
+      "&:hover fieldset": {
+        borderColor: "rgb(57, 64, 80)", // Outline color on hover
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "rgb(57, 64, 80)", // Outline color when focused
+      },
+      backgroundColor: "rgb(24, 24, 40)", // Background color
+      color: "white", // Font color
+    },
+    "& .MuiInputLabel-root": {
+      color: "white", // Label color
+    },
   },
 };
 
@@ -56,7 +74,7 @@ export default function Contact() {
         }}
       >
         <Container maxWidth="lg">
-          <Grid container sx={{ padding: "50px 0" }}>
+          <Grid container sx={{ padding: "25px 0" }}>
             <Grid container item xs={12} md={3}>
               <Grid container item xs={12} justifyContent="center">
                 <PhoneIcon sx={{ fontSize: "64px", padding: "25px 0" }} />
@@ -254,6 +272,31 @@ export default function Contact() {
                   1501 E. Baseline Rd., Building 5, Suite 106 Gilbert, AZ 85233
                 </Typography>
               </Grid>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3} sx={{ padding: "25px 0" }}>
+            <Grid container item xs={12}>
+              <Typography sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
+                CONTACT OUR TEAM
+              </Typography>
+            </Grid>
+            <Grid container item xs={12}>
+              <TextField label="Name" fullWidth required sx={{ ...classes.contactFormTextField }} />
+            </Grid>
+            <Grid container item xs={12}>
+              <TextField label="Email" fullWidth required sx={{ ...classes.contactFormTextField }} />
+            </Grid>
+            <Grid container item xs={12}>
+              <TextField label="Phone Number" fullWidth sx={{ ...classes.contactFormTextField }} />
+            </Grid>
+            <Grid container item xs={12}>
+              <TextField label="Subject" fullWidth required sx={{ ...classes.contactFormTextField }} />
+            </Grid>
+            <Grid container item xs={12}>
+              <TextField label="Message" multiline minRows={4} fullWidth required sx={{ ...classes.contactFormTextField }} />
+            </Grid>
+            <Grid container item xs={12}>
+              <Button variant="contained" >Submit Message</Button>
             </Grid>
           </Grid>
         </Container>
