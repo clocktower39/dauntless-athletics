@@ -131,7 +131,6 @@ export default function Staff() {
               textAlign: "center", // Center the text horizontally
               width: "100%", // Ensure it can be centered properly
               fontFamily: "montserrat",
-              fontSize: "1.5em",
               textTransform: "uppercase",
               color: '#fff',
               fontSize: '19px',
@@ -150,7 +149,6 @@ export default function Staff() {
               textAlign: "center", // Center the text horizontally
               width: "100%", // Ensure it can be centered properly
               fontFamily: "Source Sans Pro",
-              fontSize: "1.5em",
               color: '#fff',
               fontSize: '16px',
             }}

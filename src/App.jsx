@@ -33,27 +33,31 @@ function App() {
       : true;
   };
 
+  useEffect(() => {
+    // Dispatch the event after the component is mounted and rendered
+    document.dispatchEvent(new Event("render-event"));
+  }, []);
 
   return (
-      <Router>
-        <Routes>
-          {/* Default website pages, anyone can access */}
-          {checkSubDomain() ? (
-            <>
-              <Route exact path="/" element={<WebsiteHome />} />
-              <Route exact path="/camps" element={<Camps />} />
-              <Route exact path="/class-schedule" element={<ClassSchedule />} />
-              <Route exact path="/services" element={<Services />} />
-              <Route exact path="/staff" element={<Staff />} />
-              <Route exact path="/facility" element={<Facility />} />
-              <Route exact path="/contact-us" element={<Contact />} />
-            </>
-          ) : (
-            <> {/* App */}</>
-          )}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Router>
+    <Router>
+      <Routes>
+        {/* Default website pages, anyone can access */}
+        {checkSubDomain() ? (
+          <>
+            <Route exact path="/" element={<WebsiteHome />} />
+            <Route exact path="/camps" element={<Camps />} />
+            <Route exact path="/class-schedule" element={<ClassSchedule />} />
+            <Route exact path="/services" element={<Services />} />
+            <Route exact path="/staff" element={<Staff />} />
+            <Route exact path="/facility" element={<Facility />} />
+            <Route exact path="/contact-us" element={<Contact />} />
+          </>
+        ) : (
+          <> {/* App */}</>
+        )}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Router>
   );
 }
 
