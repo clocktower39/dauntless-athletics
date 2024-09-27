@@ -15,8 +15,8 @@ import jonPic from "../../assets/Jon-Kearns-Dauntless-Athletics-2024.jpg";
 import mattPic from "../../assets/Matt-Kearns-Dauntless-Athletics-2022.jpg";
 import stevenPic from "../../assets/Steven-Williams-Dauntless-Athletics-2024.jpg";
 import brandonPic from "../../assets/Brandon-Dawa-Dauntless-Athletics-2024.jpg";
-import bellaPic from "../../assets/Bella-Unknown-Dauntless-Athletics-2024.jpg";
-import sadiePic from "../../assets/Sadie-Unknown-Dauntless-Athletics-2024.jpg";
+import bellaPic from "../../assets/Bella-Hughes-Dauntless-Athletics-2024.jpg";
+import sadiePic from "../../assets/Sadie-Halliday-Dauntless-Athletics-2024.jpg";
 import emilyPic from "../../assets/Emily-Mckane-Dauntless-Athletics-2024.jpg";
 import miaPic from "../../assets/Mia-Franz-Dauntless-Athletics-2024.jpg";
 
@@ -120,11 +120,11 @@ export default function Staff() {
           }}
         >
           {/* Request all image as same size */}
-          <img src={employee.picture} alt="Employee Image" style={{ maxWidth: '100%', maxHeight: '100%'}} />
+          <img src={employee.picture} alt="Employee Image" style={{ minWidth: '100%', maxWidth:'362px', maxHeight: '100%'}} />
           <Typography
             sx={{
               position: "absolute", // Absolutely position within the relative container
-              bottom: 105,
+              bottom: 90,
               left: "50%", // Center horizontally
               transform: "translate(-50%, 50%)", // Adjust the exact centering
               zIndex: 2, // Ensure it's above the image
@@ -133,8 +133,8 @@ export default function Staff() {
               fontFamily: "montserrat",
               fontSize: "1.5em",
               textTransform: "uppercase",
-              maxHeight: "250px",
               color: '#fff',
+              fontSize: '19px',
             }}
             variant="h4"
           >
@@ -143,23 +143,22 @@ export default function Staff() {
           <Typography
             sx={{
               position: "absolute", // Absolutely position within the relative container
-              bottom: 50,
+              bottom: 65,
               left: "50%", // Center horizontally
               transform: "translate(-50%, 50%)", // Adjust the exact centering
               zIndex: 2, // Ensure it's above the image
               textAlign: "center", // Center the text horizontally
               width: "100%", // Ensure it can be centered properly
-              fontFamily: "montserrat",
+              fontFamily: "Source Sans Pro",
               fontSize: "1.5em",
-              textTransform: "uppercase",
-              maxHeight: "250px",
               color: '#fff',
+              fontSize: '16px',
             }}
             variant="h4"
           >
             {employee.positionTitle}
           </Typography>
-            <Box sx={{ height: '120px', width: '100%', backgroundColor: 'red', position: 'absolute', bottom: 0,}}/>
+            <Box sx={{ height: '120px', width: '100%', backgroundColor: '#FF1B22', position: 'absolute', bottom: 0,}}/>
         </Box>
       </Grid>
     );
@@ -189,7 +188,7 @@ export default function Staff() {
         >
           Meet Our Staff
         </Typography>
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ padding: '25px 0'}}>
           <Divider sx={{ backgroundColor: "#53c7d6", width: "25%", margin: "auto" }} />
           <Typography
             variant="body1"
@@ -210,7 +209,7 @@ export default function Staff() {
           <Typography
             sx={{
               fontSize: "36px",
-              color: "rgb(95, 114, 127)",
+              color: "#FFF",
               fontFamily: "montserrat",
               textTransform: "uppercase",
               padding: "25px",
