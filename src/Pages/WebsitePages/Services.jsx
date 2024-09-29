@@ -33,7 +33,7 @@ const classes = {
     textTransform: "uppercase",
   },
   policyAndProcedureDescriptionText: {
-    color: "rgb(95, 114, 127)",
+    color: "#FFF",
     fontFamily: "source sans pro",
     fontSize: "16px",
     padding: "7.5px 0",
@@ -332,7 +332,7 @@ export default function Services() {
           textAlign="center"
           variant="h2"
           sx={{
-            color: "rgb(60, 57, 80)",
+            color: "#FFF",
             fontFamily: "montserrat",
             textTransform: "uppercase",
             fontSize: {
