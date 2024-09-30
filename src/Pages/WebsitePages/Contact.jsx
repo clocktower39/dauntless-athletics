@@ -274,7 +274,7 @@ export default function Contact() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container item justifyContent="center" >
+          <Grid container item justifyContent="center">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
               width="100%"
@@ -290,6 +290,25 @@ export default function Contact() {
             <Grid container item xs={12}>
               <Typography sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                 CONTACT OUR TEAM
+              </Typography>
+            </Grid>
+            <Grid container item xs={12}>
+              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
+                We sincerely apologize for any inconvenience caused by an issue with our email
+                system between September 12, 2024 until 8:20 PM on September 17, 2024. If you
+                contacted us during this time and have not received a response, we kindly ask you to
+                resubmit your email or reach out to us to confirm that we received your message.
+              </Typography>
+            </Grid>
+            <Grid container item xs={12}>
+              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
+                We greatly appreciate your patience and understanding, and we look forward to
+                assisting you.
+              </Typography>
+            </Grid>
+            <Grid container item xs={12}>
+              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
+                Thank you!
               </Typography>
             </Grid>
             <Grid container item xs={12}>
