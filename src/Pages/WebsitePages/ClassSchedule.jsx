@@ -158,11 +158,6 @@ const schedule = [
         time: "4:00-5:00 PM",
         color: '#d72933',
       },
-      {
-        activity: "Twisters Class",
-        time: "5:00-6:30 PM",
-        color: '#ffc776',
-      },
     ],
   },
   {
