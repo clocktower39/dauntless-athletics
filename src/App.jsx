@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
 import Camps from "./Pages/WebsitePages/Camps";
+import CollegeCombine from "./Pages/WebsitePages/CollegeCombine";
 import ClassSchedule from "./Pages/WebsitePages/ClassSchedule";
 import Services from "./Pages/WebsitePages/Services";
 import Staff from "./Pages/WebsitePages/Staff";
@@ -46,6 +47,7 @@ function App() {
           <>
             <Route exact path="/" element={<WebsiteHome />} />
             <Route exact path="/camps" element={<Camps />} />
+            <Route exact path="/college-combine" element={<CollegeCombine />} />
             <Route exact path="/class-schedule" element={<ClassSchedule />} />
             <Route exact path="/services" element={<Services />} />
             <Route exact path="/staff" element={<Staff />} />
