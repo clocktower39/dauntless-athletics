@@ -13,9 +13,9 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { Menu as MenuIcon, Facebook, Instagram, YouTube } from "@mui/icons-material";
+import { Menu as MenuIcon, ShoppingCart as ShoppingCartIcon, Facebook, Instagram, YouTube } from "@mui/icons-material";
 import useWindowWidth from "../../Hooks/WindowWidth";
-import DauntlessAthleticsLogoDesktopCircleImg from '../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png';
+import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
 const classes = {
   TopDivider: {
@@ -68,28 +68,29 @@ export default function WebsiteNavbar() {
     if (path === "/#" && location.pathname === "/" && !location.hash) {
       return true;
     }
-  
+
     // Exact match for hash-based paths (like Classes or Tuition sections)
-    if (path.startsWith('/#')) {
-      const [pathname, hash] = path.split('#');
+    if (path.startsWith("/#")) {
+      const [pathname, hash] = path.split("#");
       return location.pathname === pathname && location.hash === `#${hash}`;
     }
-  
+
     // Handle non-hash paths that might end with "/#"
-    if (!path.includes('#') || path.endsWith('/#')) {
-      const normalizedPath = path.endsWith('/#') ? path.slice(0, -1) : path; // Remove "/#" from the end
+    if (!path.includes("#") || path.endsWith("/#")) {
+      const normalizedPath = path.endsWith("/#") ? path.slice(0, -1) : path; // Remove "/#" from the end
       return location.pathname === normalizedPath;
     }
-  
+
     return false; // Default return false if none of the conditions match
   };
-  
+
   const navItems = [
     { name: "Home", link: "/#" },
     { name: "Classes", link: "/#dauntless-classes-section" },
     { name: "Tuition", link: "/#tuition-section" },
     { name: "Camps", link: "/camps/#" },
-    { name: "Merch", link: "https://stores.inksoft.com/dauntless_apparel/shop/home" },
+    { name: "Combine", link: "/college-combine/#" },
+    // { name: "Merch", link: "https://stores.inksoft.com/dauntless_apparel/shop/home" },
     { name: "Schedule", link: "/class-schedule/#" },
     { name: "Services", link: "/services/#" },
     { name: "Staff", link: "/staff/#" },
@@ -107,19 +108,58 @@ export default function WebsiteNavbar() {
       <Divider sx={classes.TopDivider} />
       <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
-          <IconButton color="inherit">
+          <IconButton
+            color="inherit"
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgb(244, 67, 54)",
+              },
+            }}
+          >
             <Facebook />
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton
+            color="inherit"
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgb(244, 67, 54)",
+              },
+            }}
+          >
             <Instagram />
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton
+            color="inherit"
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgb(244, 67, 54)",
+              },
+            }}
+          >
             <YouTube />
           </IconButton>
           <Button
             variant="contained"
+            size="small"
             sx={{
               backgroundColor: "rgb(153, 169, 181)",
+              margin: "0 5px",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "rgb(244, 67, 54)",
+              },
+            }}
+            component={Link}
+            to={"https://stores.inksoft.com/dauntless_apparel/shop/home"}
+          >
+            <ShoppingCartIcon sx={{ fontSize: '1.3em', }} />{" "}Merch
+          </Button>
+          <Button
+            variant="contained"
+            size="small"
+            sx={{
+              backgroundColor: "rgb(153, 169, 181)",
+              margin: "0 5px",
               textTransform: "none",
               "&:hover": {
                 backgroundColor: "rgb(244, 67, 54)",
@@ -151,7 +191,7 @@ export default function WebsiteNavbar() {
                   key={item.name}
                   sx={{
                     textTransform: "none",
-                    color: item.textColor || '#fff',
+                    color: item.textColor || "#fff",
                     backgroundColor: "#000",
                     fontSize: {
                       xs: "9px",
@@ -220,8 +260,9 @@ export default function WebsiteNavbar() {
             to={item.link}
             sx={{
               ...classes.MenuItem,
-              color: isActive(item.link) ? "#00f" : item.textColor || "rgb(153, 169, 181)",
-              backgroundColor: isActive(item.link) ? "rgba(0, 0, 255, 0.1)" : "inherit",
+              color: isActive(item.link) ? "#FFF" : item.textColor || "rgb(153, 169, 181)",
+              backgroundColor: isActive(item.link) ? "#181828" : "inherit",
+              borderLeft: isActive(item.link) && "3px solid #F44336",
             }}
           >
             {item.name}
