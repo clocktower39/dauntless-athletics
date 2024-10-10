@@ -90,7 +90,6 @@ export default function WebsiteNavbar() {
     { name: "Tuition", link: "/#tuition-section" },
     { name: "Camps", link: "/camps/#" },
     { name: "Combine", link: "/college-combine/#" },
-    // { name: "Merch", link: "https://stores.inksoft.com/dauntless_apparel/shop/home" },
     { name: "Schedule", link: "/class-schedule/#" },
     { name: "Services", link: "/services/#" },
     { name: "Staff", link: "/staff/#" },
@@ -115,6 +114,8 @@ export default function WebsiteNavbar() {
                 backgroundColor: "rgb(244, 67, 54)",
               },
             }}
+            component={Link}
+            to={"https://www.facebook.com/dauntlessathletics"}
           >
             <Facebook />
           </IconButton>
@@ -125,6 +126,8 @@ export default function WebsiteNavbar() {
                 backgroundColor: "rgb(244, 67, 54)",
               },
             }}
+            component={Link}
+            to={"https://www.instagram.com/dauntless_athletics"}
           >
             <Instagram />
           </IconButton>
@@ -135,6 +138,8 @@ export default function WebsiteNavbar() {
                 backgroundColor: "rgb(244, 67, 54)",
               },
             }}
+            component={Link}
+            to={"https://www.youtube.com/channel/UCyH9jh0OGP1pV2T7jyfBb2g"}
           >
             <YouTube />
           </IconButton>
@@ -142,6 +147,7 @@ export default function WebsiteNavbar() {
             variant="contained"
             size="small"
             sx={{
+              fontSize: '.7em',
               backgroundColor: "rgb(153, 169, 181)",
               margin: "0 5px",
               textTransform: "none",
@@ -158,13 +164,18 @@ export default function WebsiteNavbar() {
             variant="contained"
             size="small"
             sx={{
+              fontSize: '.7em',
               backgroundColor: "rgb(153, 169, 181)",
-              margin: "0 5px",
+              margin: "0 2.5px",
               textTransform: "none",
+              whiteSpace: "nowrap",
+              minWidth: "100px",
               "&:hover": {
                 backgroundColor: "rgb(244, 67, 54)",
               },
             }}
+            component={Link}
+            to={"https://portal.iclasspro.com/dauntlessathletics/create-account-01-verify-email"}
           >
             Create Account
           </Button>
@@ -175,7 +186,7 @@ export default function WebsiteNavbar() {
         <Box sx={{ ...classes.ToolbarContent }}>
           <IconButton
             component={Link}
-            to={"/"}
+            to={"/#"}
             sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}
           >
             <Avatar

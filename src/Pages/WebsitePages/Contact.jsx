@@ -24,7 +24,7 @@ const classes = {
     color: "#3c3950", // Text color
     width: "100%", // Ensure it can be centered properly
     fontFamily: "montserrat",
-    fontSize: "3em",
+    fontSize: "2.2em",
     textTransform: "uppercase",
   },
   contactFormTextField: {
@@ -60,7 +60,7 @@ export default function Contact() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <ContactPhoneOutlinedIcon sx={{ fontSize: "8em", color: "rgb(145, 160, 172)" }} />
+              <ContactPhoneOutlinedIcon sx={{ fontSize: "5em", color: "rgb(145, 160, 172)" }} />
             </Grid>
           </Grid>
         </Container>
@@ -96,23 +96,27 @@ export default function Contact() {
                   alignContent: "flex-start",
                 }}
               >
-                <Typography
-                  sx={{
-                    fontFamily: "source sans pro",
-                    fontSize: "16px",
-                  }}
-                >
-                  (480) 214-3908
-                </Typography>
-                <Typography
-                  sx={{
-                    fontFamily: "source sans pro",
-                    fontSize: "16px",
-                  }}
-                >
-                  {" "}
-                  info@dauntlessathletics.com
-                </Typography>
+                <Grid container item xs={12} justifyContent="center" >
+                  <Typography
+                    sx={{
+                      fontFamily: "source sans pro",
+                      fontSize: "16px",
+                    }}
+                  >
+                    (480) 214-3908
+                  </Typography>
+                </Grid>
+                <Grid container item xs={12} justifyContent="center" >
+                  <Typography
+                    sx={{
+                      fontFamily: "source sans pro",
+                      fontSize: "16px",
+                    }}
+                  >
+                    {" "}
+                    info@dauntlessathletics.com
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
 

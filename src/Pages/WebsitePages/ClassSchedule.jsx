@@ -18,7 +18,7 @@ const classes = {
     color: "#3c3950", // Text color
     width: "100%", // Ensure it can be centered properly
     fontFamily: "montserrat",
-    fontSize: "3em",
+    fontSize: "2.2em",
     textTransform: "uppercase",
   },
 };
@@ -243,7 +243,7 @@ export default function ClassSchedule() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <ScheduleIcon sx={{ fontSize: "5em" }} />
+              <ScheduleIcon sx={{ fontSize: "5em", }} />
             </Grid>
           </Grid>
         </Container>

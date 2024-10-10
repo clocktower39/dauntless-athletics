@@ -22,7 +22,7 @@ const classes = {
     color: "#3c3950", // Text color
     width: "100%", // Ensure it can be centered properly
     fontFamily: "montserrat",
-    fontSize: "3em",
+    fontSize: "2.2em",
     textTransform: "uppercase",
   },
 };
@@ -40,7 +40,7 @@ export default function Facility() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <HomeOutlinedIcon sx={{ fontSize: "8em", color: "#fff" }} />
+              <HomeOutlinedIcon sx={{ fontSize: "5em", color: "#fff" }} />
             </Grid>
           </Grid>
         </Container>

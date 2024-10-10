@@ -1,5 +1,6 @@
 import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
+import { HashLink as Link } from "react-router-hash-link";
 import { Button, Box, Container, Paper, Grid, Typography } from "@mui/material";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
@@ -30,7 +31,7 @@ const classes = {
     color: "#3c3950", // Text color
     width: "100%", // Ensure it can be centered properly
     fontFamily: "montserrat",
-    fontSize: "3em",
+    fontSize: "2.2em",
     textTransform: "uppercase",
   },
   policyAndProcedureDescriptionText: {
@@ -54,7 +55,7 @@ export default function CollegeCombine() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <MiscellaneousServicesIcon sx={{ fontSize: "8em", color: "#fff" }} />
+              <MiscellaneousServicesIcon sx={{ fontSize: "5em", color: "#fff" }} />
             </Grid>
           </Grid>
         </Container>
@@ -142,6 +143,8 @@ export default function CollegeCombine() {
                         borderColor: "rgb(221, 51, 51)",
                       },
                     }}
+                    component={Link}
+                    to={"https://app.iclasspro.com/portal/dauntlessathletics/camp-details/509?typeId=22&filters=%7B%7D"}
                   >
                     <KeyboardArrowRightIcon /> See Available Openings
                   </Button>
@@ -192,6 +195,8 @@ export default function CollegeCombine() {
                         borderColor: "rgb(221, 51, 51)",
                       },
                     }}
+                    component={Link}
+                    to={"/contact-us/#"}
                   >
                     <KeyboardArrowRightIcon /> Contact Us
                   </Button>
