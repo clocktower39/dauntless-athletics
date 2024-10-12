@@ -38,6 +38,14 @@ const classes = {
     maxWidth: "lg", // Adjust this value as needed
     padding: "0 16px", // Add padding if necessary
   },
+  ToolbarButtonHover :{
+    "&:hover": {
+      backgroundColor: "rgb(244, 67, 54)",
+    },
+  },
+  ToolbarIcon: {
+    fontSize: '1.5rem',
+  },
   MenuPaper: {
     backgroundColor: "rgb(33, 35, 49)", // Menu background color
     border: "1px solid rgb(73, 76, 100)",
@@ -109,39 +117,27 @@ export default function WebsiteNavbar() {
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
           <IconButton
             color="inherit"
-            sx={{
-              "&:hover": {
-                backgroundColor: "rgb(244, 67, 54)",
-              },
-            }}
+            sx={{ ...classes.ToolbarButtonHover, }}
             component={Link}
             to={"https://www.facebook.com/dauntlessathletics"}
           >
-            <Facebook />
+            <Facebook sx={{ ...classes.ToolbarIcon, }} />
           </IconButton>
           <IconButton
             color="inherit"
-            sx={{
-              "&:hover": {
-                backgroundColor: "rgb(244, 67, 54)",
-              },
-            }}
+            sx={{ ...classes.ToolbarButtonHover, }}
             component={Link}
             to={"https://www.instagram.com/dauntless_athletics"}
           >
-            <Instagram />
+            <Instagram sx={{ ...classes.ToolbarIcon, }} />
           </IconButton>
           <IconButton
             color="inherit"
-            sx={{
-              "&:hover": {
-                backgroundColor: "rgb(244, 67, 54)",
-              },
-            }}
+            sx={{ ...classes.ToolbarButtonHover, }}
             component={Link}
             to={"https://www.youtube.com/channel/UCyH9jh0OGP1pV2T7jyfBb2g"}
           >
-            <YouTube />
+            <YouTube sx={{ ...classes.ToolbarIcon, }} />
           </IconButton>
           <Button
             variant="contained"
@@ -151,9 +147,7 @@ export default function WebsiteNavbar() {
               backgroundColor: "rgb(153, 169, 181)",
               margin: "0 5px",
               textTransform: "none",
-              "&:hover": {
-                backgroundColor: "rgb(244, 67, 54)",
-              },
+              ...classes.ToolbarButtonHover,
             }}
             component={Link}
             to={"https://stores.inksoft.com/dauntless_apparel/shop/home"}
@@ -170,9 +164,7 @@ export default function WebsiteNavbar() {
               textTransform: "none",
               whiteSpace: "nowrap",
               minWidth: "100px",
-              "&:hover": {
-                backgroundColor: "rgb(244, 67, 54)",
-              },
+              ...classes.ToolbarButtonHover,
             }}
             component={Link}
             to={"https://portal.iclasspro.com/dauntlessathletics/create-account-01-verify-email"}
