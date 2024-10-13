@@ -54,7 +54,7 @@ export default function Services() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <MiscellaneousServicesIcon sx={{ fontSize: "5em", color: "#fff" }} />
+              <MiscellaneousServicesIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "#fff" }} />
             </Grid>
           </Grid>
         </Container>

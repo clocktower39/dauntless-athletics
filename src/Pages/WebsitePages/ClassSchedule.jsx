@@ -243,7 +243,7 @@ export default function ClassSchedule() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <ScheduleIcon sx={{ fontSize: "5em", }} />
+              <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>
         </Container>

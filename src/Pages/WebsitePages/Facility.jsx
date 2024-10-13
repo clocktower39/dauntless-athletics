@@ -25,7 +25,7 @@ const classes = {
     fontSize: "2.2em",
     textTransform: "uppercase",
   },
-};
+};``
 
 export default function Facility() {
   return (
@@ -40,7 +40,7 @@ export default function Facility() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <HomeOutlinedIcon sx={{ fontSize: "5em", color: "#fff" }} />
+              <HomeOutlinedIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "#fff" }} />
             </Grid>
           </Grid>
         </Container>

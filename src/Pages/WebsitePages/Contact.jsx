@@ -60,7 +60,7 @@ export default function Contact() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <ContactPhoneOutlinedIcon sx={{ fontSize: "5em", color: "rgb(145, 160, 172)" }} />
+              <ContactPhoneOutlinedIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "rgb(145, 160, 172)" }} />
             </Grid>
           </Grid>
         </Container>

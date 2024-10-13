@@ -45,7 +45,9 @@ const classes = {
   },
   ToolbarIcon: {
     fontSize: '1.5rem',
-  },
+    maxWidth: '1.5rem',
+    maxHeight: '1.5rem',
+  },  
   MenuPaper: {
     backgroundColor: "rgb(33, 35, 49)", // Menu background color
     border: "1px solid rgb(73, 76, 100)",
