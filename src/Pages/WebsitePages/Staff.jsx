@@ -16,7 +16,6 @@ import mattPic from "../../assets/Matt-Kearns-Dauntless-Athletics-2022.jpg";
 import stevenPic from "../../assets/Steven-Williams-Dauntless-Athletics-2024.jpg";
 import brandonPic from "../../assets/Brandon-Dawa-Dauntless-Athletics-2024.jpg";
 import bellaPic from "../../assets/Bella-Hughes-Dauntless-Athletics-2024.jpg";
-import sadiePic from "../../assets/Sadie-Halliday-Dauntless-Athletics-2024.jpg";
 import emilyPic from "../../assets/Emily-Mckane-Dauntless-Athletics-2024.jpg";
 import miaPic from "../../assets/Mia-Franz-Dauntless-Athletics-2024.jpg";
 
@@ -79,7 +78,7 @@ export default function Staff() {
     },
     {
       displayName: "Matt Kearns",
-      positionTitle: "Stunting Coach",
+      positionTitle: "Stunting and Tumbling Coach",
       picture: mattPic,
     },
     {
@@ -91,11 +90,6 @@ export default function Staff() {
       displayName: "Bella Hughes",
       positionTitle: "Tumbling Coach",
       picture: bellaPic,
-    },
-    {
-      displayName: "Sadie",
-      positionTitle: "Tumbling and Stunting Coach",
-      picture: sadiePic,
     },
     {
       displayName: "Emily McKane",
