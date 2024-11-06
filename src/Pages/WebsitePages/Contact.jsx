@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Button, Container, Divider, Grid, TextField, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
@@ -45,9 +45,159 @@ const classes = {
       color: "white", // Label color
     },
   },
+  contactFormSubmitButton: {
+    backgroundColor: loading ? "grey.500" : "primary.main",
+    color: "white",
+    "&.Mui-disabled": {
+      backgroundColor: "grey.700",
+      color: "grey.300",
+    },
+  }
+};
+
+const ContactFormInput = ({
+  fieldProperty,
+  label,
+  value,
+  error,
+  multiline = false,
+  minRows = null,
+  helperText,
+  type,
+  setContactFormData,
+}) => {
+  return (
+    <Grid container item xs={12} sx={{ ...classes.contactFormTextField }}>
+      <TextField
+        color="secondary"
+        sx={classes.textField}
+        fullWidth
+        label={label}
+        value={value}
+        error={!!error}
+        helperText={error ? helperText : null}
+        multiline={multiline}
+        minRows={minRows}
+        type={type}
+        onChange={(e) =>
+          setContactFormData((prev) => ({
+            ...prev,
+            [fieldProperty]: {
+              ...prev[fieldProperty],
+              value: e.target.value,
+              error: false,
+              helperText: null,
+            },
+          }))
+        }
+        required
+      />
+    </Grid>
+  );
 };
 
 export default function Contact() {
+  const [contactFormData, setContactFormData] = useState({
+    name: {
+      label: "Name",
+      value: "",
+      error: null,
+      helperText: null,
+      type: "text",
+    },
+    email: {
+      label: "Email",
+      value: "",
+      error: null,
+      helperText: null,
+      type: "email",
+    },
+    phoneNumber: {
+      label: "Phone Number",
+      value: "",
+      error: null,
+      helperText: null,
+      type: "phone",
+    },
+    subject: {
+      label: "Subject",
+      value: "",
+      error: null,
+      helperText: null,
+      type: "text",
+    },
+    message: {
+      label: "Message",
+      value: "",
+      error: null,
+      helperText: null,
+      type: "text",
+      multiline: true,
+      minRows: 4,
+    },
+  });
+
+  const [contactFormSubmissionStatus, setContactFormSubmissionStatus] = useState({
+    status: "draft",
+    error: false,
+    errorMessage: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const fieldProperties = Object.keys(contactFormData);
+
+  const setError = (fieldProperty, hasError, helperText) => {
+    setContactFormData((prev) => ({
+      ...prev,
+      [fieldProperty]: {
+        ...prev[fieldProperty],
+        error: hasError,
+        helperText: helperText,
+      },
+    }));
+  };
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    setContactFormSubmissionStatus({
+      status: "draft",
+      error: false,
+      errorMessage: "",
+    });
+    let formHasErrors = false;
+
+    fieldProperties.forEach((fieldProperty) => {
+      if (contactFormData[fieldProperty].value === "") {
+        setError(fieldProperty, true, `${contactFormData[fieldProperty].label} is required.`);
+        formHasErrors = true;
+      } else {
+        setError(fieldProperty, false, null);
+      }
+    });
+
+    if (formHasErrors) {
+      setContactFormSubmissionStatus({
+        status: "draft",
+        error: true,
+        errorMessage: "Please correct the above errors before sending.",
+      });
+      setLoading(false);
+    } else {
+      setTimeout(() => {
+        setContactFormSubmissionStatus({
+          status: "error",
+          error: true,
+          errorMessage:
+            "Error sending, please try again or directly email info@dauntlessathletics.com",
+        });
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   return (
     <>
       <WebsiteNavbar />
@@ -60,7 +210,14 @@ export default function Contact() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <ContactPhoneOutlinedIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "rgb(145, 160, 172)" }} />
+              <ContactPhoneOutlinedIcon
+                sx={{
+                  fontSize: "5em",
+                  maxHeight: "5em",
+                  maxWidth: "5em",
+                  color: "rgb(145, 160, 172)",
+                }}
+              />
             </Grid>
           </Grid>
         </Container>
@@ -96,7 +253,7 @@ export default function Contact() {
                   alignContent: "flex-start",
                 }}
               >
-                <Grid container item xs={12} justifyContent="center" >
+                <Grid container item xs={12} justifyContent="center">
                   <Typography
                     sx={{
                       fontFamily: "source sans pro",
@@ -106,7 +263,7 @@ export default function Contact() {
                     (480) 214-3908
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center" >
+                <Grid container item xs={12} justifyContent="center">
                   <Typography
                     sx={{
                       fontFamily: "source sans pro",
@@ -296,60 +453,39 @@ export default function Contact() {
                 CONTACT OUR TEAM
               </Typography>
             </Grid>
-            <Grid container item xs={12}>
-              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
-                We sincerely apologize for any inconvenience caused by an issue with our email
-                system between September 12, 2024 until 8:20 PM on September 17, 2024. If you
-                contacted us during this time and have not received a response, we kindly ask you to
-                resubmit your email or reach out to us to confirm that we received your message.
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
-                We greatly appreciate your patience and understanding, and we look forward to
-                assisting you.
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
-                Thank you!
-              </Typography>
-            </Grid>
-            <Grid container item xs={12}>
-              <TextField label="Name" fullWidth required sx={{ ...classes.contactFormTextField }} />
-            </Grid>
-            <Grid container item xs={12}>
-              <TextField
-                label="Email"
-                fullWidth
-                required
-                sx={{ ...classes.contactFormTextField }}
+
+            {fieldProperties.map((fieldProperty) => (
+              <ContactFormInput
+                key={fieldProperty}
+                fieldProperty={fieldProperty}
+                label={contactFormData[fieldProperty].label}
+                value={contactFormData[fieldProperty].value}
+                error={contactFormData[fieldProperty].error}
+                helperText={contactFormData[fieldProperty].helperText}
+                type={contactFormData[fieldProperty].type || "text"}
+                setContactFormData={setContactFormData}
+                multiline={contactFormData[fieldProperty].multiline}
+                minRows={contactFormData[fieldProperty].minRows}
               />
-            </Grid>
+            ))}
+
             <Grid container item xs={12}>
-              <TextField label="Phone Number" fullWidth sx={{ ...classes.contactFormTextField }} />
+              <Button
+                variant="contained"
+                onClick={handleContactSubmit}
+                disabled={loading}
+                sx={classes.contactFormSubmitButton}
+              >
+                Submit Message
+              </Button>
             </Grid>
-            <Grid container item xs={12}>
-              <TextField
-                label="Subject"
-                fullWidth
-                required
-                sx={{ ...classes.contactFormTextField }}
-              />
-            </Grid>
-            <Grid container item xs={12}>
-              <TextField
-                label="Message"
-                multiline
-                minRows={4}
-                fullWidth
-                required
-                sx={{ ...classes.contactFormTextField }}
-              />
-            </Grid>
-            <Grid container item xs={12}>
-              <Button variant="contained">Submit Message</Button>
-            </Grid>
+            {contactFormSubmissionStatus.error && (
+              <Grid container item xs={12}>
+                <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
+                  {contactFormSubmissionStatus.errorMessage}
+                </Typography>
+              </Grid>
+            )}
           </Grid>
         </Container>
       </Box>
