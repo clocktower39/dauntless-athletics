@@ -45,14 +45,6 @@ const classes = {
       color: "white", // Label color
     },
   },
-  contactFormSubmitButton: {
-    backgroundColor: loading ? "grey.500" : "primary.main",
-    color: "white",
-    "&.Mui-disabled": {
-      backgroundColor: "grey.700",
-      color: "grey.300",
-    },
-  }
 };
 
 const ContactFormInput = ({
@@ -474,7 +466,14 @@ export default function Contact() {
                 variant="contained"
                 onClick={handleContactSubmit}
                 disabled={loading}
-                sx={classes.contactFormSubmitButton}
+                sx={{
+                  backgroundColor: loading ? "grey.500" : "primary.main",
+                  color: "white",
+                  "&.Mui-disabled": {
+                    backgroundColor: "grey.700",
+                    color: "grey.300",
+                  },
+                }}
               >
                 Submit Message
               </Button>
