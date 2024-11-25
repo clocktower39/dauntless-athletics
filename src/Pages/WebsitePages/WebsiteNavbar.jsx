@@ -7,11 +7,14 @@ import {
   Box,
   Button,
   Divider,
+  Grid,
+  Typography,
   IconButton,
   Stack,
   Toolbar,
   Menu,
   MenuItem,
+  Dialog,
 } from "@mui/material";
 import { Menu as MenuIcon, ShoppingCart as ShoppingCartIcon, Facebook, Instagram, YouTube } from "@mui/icons-material";
 import useWindowWidth from "../../Hooks/WindowWidth";
@@ -115,6 +118,14 @@ export default function WebsiteNavbar() {
   return (
     <AppBar position="sticky">
       <Divider sx={classes.TopDivider} />
+      <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
+         <Grid container item xs={12} justifyContent="center" >
+              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000", textAlign: 'center', }}>
+                Attention: We will be closed for the Holiday from Wednesday 11/27 - Saturday 11/30.
+              </Typography>
+            </Grid>
+      </Toolbar>
+      <Divider sx={classes.BottomDivider} />
       <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
           <IconButton
