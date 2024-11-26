@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { HashLink as Link } from "react-router-hash-link";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import {
   AppBar,
   Avatar,
@@ -16,7 +16,13 @@ import {
   MenuItem,
   Dialog,
 } from "@mui/material";
-import { Menu as MenuIcon, ShoppingCart as ShoppingCartIcon, Facebook, Instagram, YouTube } from "@mui/icons-material";
+import {
+  Menu as MenuIcon,
+  ShoppingCart as ShoppingCartIcon,
+  Facebook,
+  Instagram,
+  YouTube,
+} from "@mui/icons-material";
 import useWindowWidth from "../../Hooks/WindowWidth";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
@@ -41,16 +47,16 @@ const classes = {
     maxWidth: "lg", // Adjust this value as needed
     padding: "0 16px", // Add padding if necessary
   },
-  ToolbarButtonHover :{
+  ToolbarButtonHover: {
     "&:hover": {
       backgroundColor: "rgb(244, 67, 54)",
     },
   },
   ToolbarIcon: {
-    fontSize: '1.5rem',
-    maxWidth: '1.5rem',
-    maxHeight: '1.5rem',
-  },  
+    fontSize: "1.5rem",
+    maxWidth: "1.5rem",
+    maxHeight: "1.5rem",
+  },
   MenuPaper: {
     backgroundColor: "rgb(33, 35, 49)", // Menu background color
     border: "1px solid rgb(73, 76, 100)",
@@ -119,44 +125,53 @@ export default function WebsiteNavbar() {
     <AppBar position="sticky">
       <Divider sx={classes.TopDivider} />
       <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
-         <Grid container item xs={12} justifyContent="center" >
-              <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000", textAlign: 'center', }}>
-                Attention: We will be closed for the Holiday from Wednesday 11/27 - Saturday 11/30.
-              </Typography>
-            </Grid>
+        <Grid container item xs={12} justifyContent="center">
+          <Typography
+            sx={{
+              fontFamily: "montserrat",
+              fontSize: "16px",
+              color: "#ff0000",
+              textAlign: "center",
+              padding: "7.5px 0px",
+            }}
+          >
+            Attention - Holiday Closure: We will be closed from Wednesday, November 27th, through
+            Sunday, December 1st. Classes will resume on Monday, December 2nd. <br /> Thank you and Happy Thanksgiving!
+          </Typography>
+        </Grid>
       </Toolbar>
       <Divider sx={classes.BottomDivider} />
       <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
           <IconButton
             color="inherit"
-            sx={{ ...classes.ToolbarButtonHover, }}
+            sx={{ ...classes.ToolbarButtonHover }}
             component={Link}
             to={"https://www.facebook.com/dauntlessathletics"}
           >
-            <Facebook sx={{ ...classes.ToolbarIcon, }} />
+            <Facebook sx={{ ...classes.ToolbarIcon }} />
           </IconButton>
           <IconButton
             color="inherit"
-            sx={{ ...classes.ToolbarButtonHover, }}
+            sx={{ ...classes.ToolbarButtonHover }}
             component={Link}
             to={"https://www.instagram.com/dauntless_athletics"}
           >
-            <Instagram sx={{ ...classes.ToolbarIcon, }} />
+            <Instagram sx={{ ...classes.ToolbarIcon }} />
           </IconButton>
           <IconButton
             color="inherit"
-            sx={{ ...classes.ToolbarButtonHover, }}
+            sx={{ ...classes.ToolbarButtonHover }}
             component={Link}
             to={"https://www.youtube.com/channel/UCyH9jh0OGP1pV2T7jyfBb2g"}
           >
-            <YouTube sx={{ ...classes.ToolbarIcon, }} />
+            <YouTube sx={{ ...classes.ToolbarIcon }} />
           </IconButton>
           <Button
             variant="contained"
             size="small"
             sx={{
-              fontSize: '.7em',
+              fontSize: ".7em",
               backgroundColor: "rgb(153, 169, 181)",
               margin: "0 5px",
               textTransform: "none",
@@ -165,13 +180,13 @@ export default function WebsiteNavbar() {
             component={Link}
             to={"https://stores.inksoft.com/dauntless_apparel/shop/home"}
           >
-            <ShoppingCartIcon sx={{ fontSize: '1.3em', }} />{" "}Merch
+            <ShoppingCartIcon sx={{ fontSize: "1.3em" }} /> Merch
           </Button>
           <Button
             variant="contained"
             size="small"
             sx={{
-              fontSize: '.7em',
+              fontSize: ".7em",
               backgroundColor: "rgb(153, 169, 181)",
               margin: "0 2.5px",
               textTransform: "none",
