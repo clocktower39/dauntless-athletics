@@ -25,6 +25,9 @@ import {
 } from "@mui/icons-material";
 import useWindowWidth from "../../Hooks/WindowWidth";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import utc from "dayjs/plugin/utc";
 
 const classes = {
   TopDivider: {
@@ -73,6 +76,7 @@ export default function WebsiteNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const toolbarRef = useRef(null); // Reference for the second Toolbar
   const location = useLocation(); // Get the current location
+  const hasAnnouncement = false;
 
   const handleMenuClick = () => {
     setMenuOpen(true); // Open the menu
@@ -124,23 +128,30 @@ export default function WebsiteNavbar() {
   return (
     <AppBar position="sticky">
       <Divider sx={classes.TopDivider} />
-      <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
-        <Grid container item xs={12} justifyContent="center">
-          <Typography
-            sx={{
-              fontFamily: "montserrat",
-              fontSize: "16px",
-              color: "#ff0000",
-              textAlign: "center",
-              padding: "7.5px 0px",
-            }}
-          >
-            Attention - Holiday Closure: We will be closed from Wednesday, November 27th, through
-            Sunday, December 1st. Classes will resume on Monday, December 2nd. <br /> Thank you and Happy Thanksgiving!
-          </Typography>
-        </Grid>
-      </Toolbar>
-      <Divider sx={classes.BottomDivider} />
+      {hasAnnouncement && (
+        <>
+          <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
+            <Grid container item xs={12} justifyContent="center">
+              <Typography
+                sx={{
+                  fontFamily: "montserrat",
+                  fontSize: "16px",
+                  color: "#ff0000",
+                  textAlign: "center",
+                  padding: "7.5px 0px",
+                }}
+              >
+                We will be closed from {dayjs.utc(new Date("2024-12-22")).format("dddd, MMMM Do")}{" "}
+                through {dayjs.utc(new Date("2025-01-01")).format("dddd, MMMM Do")}. <br />
+                Classes will resume on {dayjs
+                  .utc(new Date("2025-01-02"))
+                  .format("dddd, MMMM Do")}. <br /> Thank you and Happy Holidays!
+              </Typography>
+            </Grid>
+          </Toolbar>
+          <Divider sx={classes.BottomDivider} />
+        </>
+      )}
       <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
           <IconButton
