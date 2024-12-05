@@ -30,27 +30,27 @@ const schedule = [
       {
         activity: "Flexibility",
         time: "4:00-5:00 PM",
-        color: '#00bcd4',
+        color: "#00bcd4",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Open Gym (*High School & College)",
         time: "8:30-10:30 PM",
-        color: '#a3ff25',
+        color: "#a3ff25",
       },
     ],
   },
@@ -60,17 +60,17 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Flexibility",
         time: "4:00-5:00 PM",
-        color: '#00bcd4',
+        color: "#00bcd4",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Stunting/Flier Class",
@@ -79,7 +79,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Stunting/Flier Class",
@@ -88,7 +88,7 @@ const schedule = [
       {
         activity: "Twisters Class",
         time: "7:00-8:30 PM",
-        color: '#ffc776',
+        color: "#ffc776",
       },
     ],
   },
@@ -98,17 +98,17 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Twisters Class",
         time: "6:00-7:30 PM",
-        color: '#ffc776',
+        color: "#ffc776",
       },
     ],
   },
@@ -118,17 +118,17 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Strength",
         time: "4:00-5:00 PM",
-        color: '#00bcd4',
+        color: "#00bcd4",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Stunting/Flier Class",
@@ -137,7 +137,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Stunting/Flier Class",
@@ -146,7 +146,7 @@ const schedule = [
       {
         activity: "Twisters Class",
         time: "7:00-8:30 PM",
-        color: '#ffc776',
+        color: "#ffc776",
       },
     ],
   },
@@ -156,7 +156,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
     ],
   },
@@ -166,17 +166,17 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "9:30-10:00 AM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Jump Class",
         time: "10:30-11:30 AM",
-        color: '#00bcd4',
+        color: "#00bcd4",
       },
       {
         activity: "Intermediate Tumbling",
         time: "10:30-12:00 PM",
-        color: '#d72933',
+        color: "#d72933",
       },
       {
         activity: "Stunting/Flier Class",
@@ -194,11 +194,21 @@ const schedule = [
   },
 ];
 
+const holidaySchedule = [
+  "Mar 29th – Mar 31st",
+  "May 27th",
+  "Jul 1st – Jul 7th",
+  "Sept 2nd",
+  "Oct 31st",
+  "Nov 27th – Dec 1st",
+  "Dec 22nd – Jan 1st",
+];
+
 export default function ClassSchedule() {
   const DaySchedule = ({ day, activities }) => {
-    const ActivityDetails = ({ activity, time, color="#FFF" }) => {
+    const ActivityDetails = ({ activity, time, color = "#FFF" }) => {
       return (
-        <Grid container item xs={12} sx={{ padding: "5px 25px", color: color, }}>
+        <Grid container item xs={12} sx={{ padding: "5px 25px", color: color }}>
           <Grid container item xs={8}>
             {activity}:
           </Grid>
@@ -230,6 +240,19 @@ export default function ClassSchedule() {
       </Grid>
     );
   };
+  
+  const HolidayClosure = ({ range }) => {
+    return (
+      <Grid container item xs={12} sx={{ padding: "5px 25px", color: '#FFF' }}>
+        <Grid container item xs={8}>
+          {range}:
+        </Grid>
+        <Grid container item xs={4} justifyContent="flex-end">
+          Closed
+        </Grid>
+      </Grid>
+    );
+  };
 
   return (
     <>
@@ -243,7 +266,7 @@ export default function ClassSchedule() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
+              <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em" }} />
             </Grid>
           </Grid>
         </Container>
@@ -272,12 +295,32 @@ export default function ClassSchedule() {
           {schedule.map((day) => (
             <DaySchedule day={day.day} activities={day.activities} />
           ))}
+
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={2} sm={3} md={4}>
+              <Divider sx={{ bgcolor: "#f4524d" }} />
+            </Grid>
+            <Grid item xs={8} sm={6} md={4}>
+              <Typography
+                color="#ffffff"
+                variant="h6"
+                textAlign="center"
+                sx={{ textTransform: "uppercase", fontFamily: "montserrat" }}
+              >
+                Holiday Schedule
+              </Typography>
+            </Grid>
+            <Grid item xs={2} sm={3} md={4}>
+              <Divider sx={{ bgcolor: "#f4524d" }} />
+            </Grid>
+          </Grid>
+          
+          {holidaySchedule.map(range => <HolidayClosure range={range} />)}
+
           <Grid item xs={12} sx={{ padding: "25px" }}>
             <Divider sx={{ bgcolor: "#eee", marginBottom: "1.1em" }} />
           </Grid>
-          <Typography
-            sx={{ color: "#FFF", fontFamily: "Source Sans Pro", padding: "25px" }}
-          >
+          <Typography sx={{ color: "#FFF", fontFamily: "Source Sans Pro", padding: "25px" }}>
             We require a written 30 day notice in order to drop enrollments. Students will need to
             bring water bottles to class. If your child has been sick. We ask that they please not
             attend class that week. We want to keep everyone safe and healthy!
