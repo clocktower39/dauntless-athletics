@@ -76,7 +76,7 @@ export default function WebsiteNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const toolbarRef = useRef(null); // Reference for the second Toolbar
   const location = useLocation(); // Get the current location
-  const hasAnnouncement = false;
+  const hasAnnouncement = true;
 
   const handleMenuClick = () => {
     setMenuOpen(true); // Open the menu
