@@ -330,7 +330,7 @@ export default function Contact() {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    <span>Mar 29th – Mar 31st:</span>
+                    <span>Apr 18th – Apr 20th:</span>
                     <span style={{ paddingLeft: "25px" }}>Closed</span>
                   </li>
                   <li
@@ -340,7 +340,7 @@ export default function Contact() {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    <span>May 27th:</span>
+                    <span>May 26th:</span>
                     <span>Closed</span>
                   </li>
                   <li
@@ -350,7 +350,7 @@ export default function Contact() {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    <span>Jul 1st – Jul 7th:</span>
+                    <span>Jun 29th – Jul 6th:</span>
                     <span>Closed</span>
                   </li>
                   <li
@@ -360,7 +360,7 @@ export default function Contact() {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    <span>Sept 2nd:</span>
+                    <span>Sept 1st:</span>
                     <span>Closed</span>
                   </li>
                   <li
@@ -380,7 +380,7 @@ export default function Contact() {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    <span>Nov 27th – Dec 1st:</span>
+                    <span>Nov 26th – Nov 30th:</span>
                     <span>Closed</span>
                   </li>
                   <li
@@ -390,7 +390,7 @@ export default function Contact() {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    <span>Dec 22nd – Jan 1st:</span>
+                    <span>Dec 24th – Jan 4th:</span>
                     <span>Closed</span>
                   </li>
                 </ul>

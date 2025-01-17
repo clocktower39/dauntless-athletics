@@ -195,13 +195,13 @@ const schedule = [
 ];
 
 const holidaySchedule = [
-  "Mar 29th – Mar 31st",
-  "May 27th",
-  "Jul 1st – Jul 7th",
-  "Sept 2nd",
+  "Apr 18th – Apr 20th",
+  "May 26th",
+  "Jun 29th – Jul 6th",
+  "Sept 1st",
   "Oct 31st",
-  "Nov 27th – Dec 1st",
-  "Dec 22nd – Jan 1st",
+  "Nov 26th – Nov 30th",
+  "Dec 24th – Jan 4th",
 ];
 
 export default function ClassSchedule() {

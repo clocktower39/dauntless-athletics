@@ -294,12 +294,9 @@ export default function Home() {
                   </Typography>
                   <Typography variant="h4" sx={{ ...classes.WhyChooseUs.h4.main }}>
                     <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
-                      Cheer Prep Classes!{" "}
+                      Stretch & Strength Training Programs!{" "}
                     </Typography>
-                    For ages 4 and up{" "}
-                    <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
-                      Motions, Jumps, Stunts, Tumble
-                    </Typography>
+                    Building a foundation for your skills{" "}
                   </Typography>
                 </Grid>
                 <Grid
