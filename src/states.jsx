@@ -7,6 +7,7 @@ import {
   CropFree as CropFreeIcon,
   Storm as StormIcon,
   School as SchoolIcon,
+  Campaign as CampaignIcon,
 } from "@mui/icons-material";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -122,6 +123,17 @@ export const camps = [
     color: "#8e43ba",
     date: dayjs.utc(new Date("2025-01-26")).format("dddd, MMMM Do"),
     time: "1:00 - 4:00 pm",
+    place: "Dauntless Athletics",
+    cost: 69,
+    buttonText: "Register For Camp",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
+  },
+  {
+    icon: <CampaignIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    title: "Presidents' Day Camp",
+    color: "#065E99",
+    date: dayjs.utc(new Date("2025-02-17")).format("dddd, MMMM Do"),
+    time: "9:00 am - 12:00 pm",
     place: "Dauntless Athletics",
     cost: 69,
     buttonText: "Register For Camp",
