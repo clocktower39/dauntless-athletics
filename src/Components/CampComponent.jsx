@@ -34,22 +34,22 @@ export default function CampComponent({ camp, index }) {
       </Grid>
       <Grid container justifyContent="center">
         <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
-          Date: {camp?.date}
+          <strong>Date:</strong> {camp.date.start ? `${camp.date.start} - ${camp.date.end}` : camp.date}
         </Typography>
       </Grid>
       <Grid container justifyContent="center">
         <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
-          Time: {camp.time}
+        <strong>Time:</strong> {camp.time}
         </Typography>
       </Grid>
       <Grid container justifyContent="center">
         <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
-          Place: {camp.place}
+        <strong>Place:</strong> {camp.place}
         </Typography>
       </Grid>
       <Grid container justifyContent="center">
         <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
-          Cost: ${camp.cost} per athlete
+        <strong>Cost:</strong> {camp.cost.week ? `$${camp.cost.day} per day OR $${camp.cost.week} a week` : `$${camp.cost}`} per athlete
         </Typography>
       </Grid>
       <Grid container justifyContent="center">
