@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     PrerenderSPAPlugin({
       staticDir: './dist',
-      routes: ['/','/camps','/class-schedule','/services','/staff','/facility','/contact-us'],
+      routes: ['/','/camps','/college-combine','/class-schedule','/services','/staff','/facility','/contact-us'],
       renderer: new PuppeteerRenderer({
         headless: true,
         renderAfterDocumentEvent: 'render-event',
