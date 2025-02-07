@@ -40,6 +40,16 @@ const classes = {
     fontSize: "16px",
     padding: "7.5px 0",
   },
+  saveTheDate: {
+    backgroundColor: "#F44336",
+    padding: "7.5px",
+  },
+  saveTheDateText: {
+    color: "#3c3950",
+    width: "100%", // Ensure it can be centered properly
+    fontFamily: "montserrat",
+    textTransform: "uppercase",
+  },
 };
 
 export default function CollegeCombine() {
@@ -55,10 +65,26 @@ export default function CollegeCombine() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <MiscellaneousServicesIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "#fff" }} />
+              <MiscellaneousServicesIcon
+                sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "#fff" }}
+              />
             </Grid>
           </Grid>
         </Container>
+      </Box>
+
+      <Box sx={classes.saveTheDate}>
+        <Grid container item xs={12} >
+          <Typography sx={{ ...classes.saveTheDateText, textDecoration: 'underline', padding: '15px', }} variant="h4" textAlign="center">
+            Save the Date!
+          </Typography>
+          <Typography sx={classes.saveTheDateText} variant="h6" textAlign="center">
+            Event Date: July 19, 2025
+          </Typography>
+          <Typography sx={classes.saveTheDateText} variant="h6" textAlign="center">
+            More Information Coming Soon!
+          </Typography>
+        </Grid>
       </Box>
 
       <Box sx={{ backgroundColor: "#000" }}>
@@ -70,7 +96,7 @@ export default function CollegeCombine() {
                   color: "#fff",
                   border: "3px solid rgb(36, 36, 36)",
                   margin: "35px 0",
-                  width: '100%'
+                  width: "100%",
                 }}
               >
                 <ReactPlayer
@@ -144,7 +170,9 @@ export default function CollegeCombine() {
                       },
                     }}
                     component={Link}
-                    to={"https://app.iclasspro.com/portal/dauntlessathletics/camp-details/509?typeId=22&filters=%7B%7D"}
+                    to={
+                      "https://app.iclasspro.com/portal/dauntlessathletics/camp-details/509?typeId=22&filters=%7B%7D"
+                    }
                   >
                     <KeyboardArrowRightIcon /> See Available Openings
                   </Button>
@@ -204,7 +232,6 @@ export default function CollegeCombine() {
               </Box>
             </Grid>
           </Grid>
-
         </Container>
 
         <CaptivateMinds />
