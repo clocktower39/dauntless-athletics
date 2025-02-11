@@ -94,7 +94,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 40,
     buttonText: "Register For Clinic",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
   },
   {
     icon: <StarsIcon sx={{ ...classes.DauntlessCampIcon }} />,
@@ -105,7 +105,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 40,
     buttonText: "Register For Clinic",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
   },
   {
     icon: <SportsGymnasticsIcon sx={{ ...classes.DauntlessCampIcon }} />,
@@ -138,7 +138,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 40,
     buttonText: "Register For Clinic",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
   },
   {
     icon: <StarsIcon sx={{ ...classes.DauntlessCampIcon }} />,
@@ -149,7 +149,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 40,
     buttonText: "Register For Clinic",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
   },
   {
     icon: <SportsGymnasticsIcon sx={{ ...classes.DauntlessCampIcon }} />,
@@ -185,7 +185,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: { day: 55, week: 150, },
     buttonText: "Register For Camp",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/27",
   },
   {
     icon: <EmojiEventsIcon sx={{ ...classes.DauntlessCampIcon }} />,
@@ -199,7 +199,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: { day: 55, week: 150, },
     buttonText: "Register For Camp",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/27",
   },
 ];
 
