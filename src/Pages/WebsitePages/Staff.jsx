@@ -2,104 +2,91 @@ import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
-import domPic from "../../assets/Anthony-Damiani-Dauntless-Athletics-2021.jpg";
-import amyPic from "../../assets/Amy-Damiani-Dauntless-Athletics-2020.jpg";
-import gagePic from "../../assets/Gage-Pruitt-Dauntless-Athletics-2024.jpg";
-import anniePic from "../../assets/annie-ong-dauntless-authletics-2023.jpg";
-import oathaPic from "../../assets/Oatha-Council-Dauntless-Athletics-2022.jpg";
-import adriennePic from "../../assets/Adrienne-Traynor-Dauntless-Athletics-2022.jpg";
-import eliasPic from "../../assets/elias-espinosa-dauntless-athletics-2023.jpg";
-import carlosPic from "../../assets/Carlos-Solis-Dauntless-Athletics-2022.jpg";
-import dantePic from "../../assets/Dante-Labarre-Dauntless-Athletics-2024.jpg";
-import jonPic from "../../assets/Jon-Kearns-Dauntless-Athletics-2024.jpg";
-import mattPic from "../../assets/Matt-Kearns-Dauntless-Athletics-2022.jpg";
-import stevenPic from "../../assets/Steven-Williams-Dauntless-Athletics-2024.jpg";
-import brandonPic from "../../assets/Brandon-Dawa-Dauntless-Athletics-2024.jpg";
-import bellaPic from "../../assets/Bella-Hughes-Dauntless-Athletics-2024.jpg";
-import emilyPic from "../../assets/Emily-Mckane-Dauntless-Athletics-2024.jpg";
-import miaPic from "../../assets/Mia-Franz-Dauntless-Athletics-2024.jpg";
+
+
+
 
 export default function Staff() {
   const staff = [
     {
       displayName: "Anthony “DOM” Damiani",
       positionTitle: "Owner | Head Coach",
-      picture: domPic,
+      picture: "/images/staff/Anthony-Damiani-Dauntless-Athletics-2021.jpg",
     },
     {
       displayName: "Amy Damiani",
       positionTitle: "Front Office Manager",
-      picture: amyPic,
+      picture: "/images/staff/Amy-Damiani-Dauntless-Athletics-2020.jpg",
     },
     {
       displayName: "Gage Pruitt",
       positionTitle: "Director of Operations",
-      picture: gagePic,
+      picture: "/images/staff/Gage-Pruitt-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Annie Ong",
       positionTitle: "Event Coordinator/High School Coach",
-      picture: anniePic,
+      picture: "/images/staff/annie-ong-dauntless-authletics-2023.jpg",
     },
     {
       displayName: "Dante Labarre",
       positionTitle: "Lead Tumbling Coach",
-      picture: dantePic,
+      picture: "/images/staff/Dante-Labarre-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Brandon Dawa",
       positionTitle: "Stunting and Tumbling Coach",
-      picture: brandonPic,
+      picture: "/images/staff/Brandon-Dawa-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Oatha Council",
       positionTitle: "Stunting and Tumbling Coach",
-      picture: oathaPic,
+      picture: "/images/staff/Oatha-Council-Dauntless-Athletics-2022.jpg",
     },
     {
       displayName: "Adrienne Traynor",
       positionTitle: "Stunting and Tumbling Coach",
-      picture: adriennePic,
+      picture: "/images/staff/Adrienne-Traynor-Dauntless-Athletics-2022.jpg",
     },
     {
       displayName: "Elias Espinosa",
       positionTitle: "Tumbling and Stunting Coach",
-      picture: eliasPic,
+      picture: "/images/staff/elias-espinosa-dauntless-athletics-2023.jpg",
     },
     {
       displayName: "Carlos Solis",
       positionTitle: "Tumbling and Stunting Coach",
-      picture: carlosPic,
+      picture: "/images/staff/Carlos-Solis-Dauntless-Athletics-2022.jpg",
     },
     {
       displayName: "Jon Kearns",
       positionTitle: "Stunting and Tumbling Coach",
-      picture: jonPic,
+      picture: "/images/staff/Jon-Kearns-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Matt Kearns",
       positionTitle: "Stunting and Tumbling Coach",
-      picture: mattPic,
+      picture: "/images/staff/Matt-Kearns-Dauntless-Athletics-2022.jpg",
     },
     {
       displayName: "Steven Williams",
       positionTitle: "Tumbling Coach",
-      picture: stevenPic,
+      picture: "/images/staff/Steven-Williams-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Bella Hughes",
       positionTitle: "Tumbling Coach",
-      picture: bellaPic,
+      picture: "/images/staff/Bella-Hughes-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Emily McKane",
       positionTitle: "Tumbling and Stunting Coach",
-      picture: emilyPic,
+      picture: "/images/staff/Emily-Mckane-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Mia Franz",
       positionTitle: "Choreography",
-      picture: miaPic,
+      picture: "/images/staff/Mia-Franz-Dauntless-Athletics-2024.jpg",
     },
   ];
 

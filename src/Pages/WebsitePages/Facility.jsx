@@ -2,16 +2,11 @@ import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
-import FacilityBannerImg from "../../assets/FacilityBannerImg.jpg";
-import BuildingOutsideImg from "../../assets/dauntless_athletics_front_of_building.png";
-import BuildingWholeSclaeImg from "../../assets/dauntless_athletics_view_of_whole_gym-scaled.jpeg";
-import BuildingFrontViewImg from "../../assets/dauntless_athletics_front_view_gym-scaled.jpg";
-import BuildingSideViewImg from "../../assets/dauntless_athletics_side_view_gym-scaled.jpeg";
 import { HomeOutlined as HomeOutlinedIcon } from "@mui/icons-material";
 
 const classes = {
   mainImgBox: {
-    backgroundImage: `url(${FacilityBannerImg})`,
+    backgroundImage: `url(/images/facility/FacilityBannerImg.jpg)`,
     backgroundRepeat: "no-repeat",
     backgroundPositionX: "center",
     backgroundPositionY: "top",
@@ -55,7 +50,7 @@ export default function Facility() {
       >
         <Container maxWidth="lg">
           <img
-            src={BuildingOutsideImg}
+            src={'/images/facility/dauntless_athletics_front_of_building.png'}
             style={{ width: "calc(100% - 40px)", height: "auto", padding: "20px" }}
           />
           <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
@@ -66,7 +61,7 @@ export default function Facility() {
           <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
 
           <img
-            src={BuildingWholeSclaeImg}
+            src={'/images/facility/dauntless_athletics_view_of_whole_gym-scaled.jpeg'}
             style={{ width: "calc(100% - 40px)", height: "auto", padding: "20px" }}
           />
 
@@ -80,11 +75,11 @@ export default function Facility() {
           <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
 
           <img
-            src={BuildingFrontViewImg}
+            src={'/images/facility/dauntless_athletics_front_view_gym-scaled.jpg'}
             style={{ width: "calc(50% - 20px)", height: "auto", padding: "10px" }}
           />
           <img
-            src={BuildingSideViewImg}
+            src={'/images/facility/dauntless_athletics_side_view_gym-scaled.jpeg'}
             style={{ width: "calc(50% - 20px)", height: "auto", padding: "10px" }}
           />
 
