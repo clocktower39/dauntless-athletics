@@ -5,7 +5,7 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
 export default function CampComponent({ camp, index }) {
-  const today = dayjs.utc().add(-2, "day").startOf("day");
+  const today = dayjs.utc().add(-31, "hours").startOf("day");
 
   const hasDatePast = (camp) => {
     if (camp.date?.start) {
