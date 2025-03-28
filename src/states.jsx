@@ -129,7 +129,7 @@ export const camps = [
     title: "Focused Tumbling Clinic Aerial",
     color: "#065E99",
     date: dayjs.utc(new Date("2025-05-17")),
-    time: "5:30 - 6:30 pm",
+    time: "4:30 - 5:30 pm",
     place: "Dauntless Athletics",
     cost: 25,
     buttonText: "Register For Clinic",
