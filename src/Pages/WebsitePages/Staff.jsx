@@ -15,18 +15,13 @@ export default function Staff() {
     },
     {
       displayName: "Amy Damiani",
-      positionTitle: "Front Office Manager",
+      positionTitle: "Manager",
       picture: "/images/staff/Amy-Damiani-Dauntless-Athletics-2020.jpg",
     },
     {
       displayName: "Gage Pruitt",
       positionTitle: "Director of Operations",
       picture: "/images/staff/Gage-Pruitt-Dauntless-Athletics-2024.jpg",
-    },
-    {
-      displayName: "Annie Ong",
-      positionTitle: "Event Coordinator/High School Coach",
-      picture: "/images/staff/annie-ong-dauntless-authletics-2023.jpg",
     },
     {
       displayName: "Dante Labarre",
@@ -82,6 +77,11 @@ export default function Staff() {
       displayName: "Emily McKane",
       positionTitle: "Tumbling and Stunting Coach",
       picture: "/images/staff/Emily-Mckane-Dauntless-Athletics-2024.jpg",
+    },
+    {
+      displayName: "Sadie Halliday",
+      positionTitle: "Tumbling Coach",
+      picture: "/images/staff/Sadie-Halliday-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Mia Franz",
