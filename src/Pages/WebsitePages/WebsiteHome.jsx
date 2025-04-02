@@ -8,7 +8,6 @@ import CampComponent from "../../Components/CampComponent";
 import PricingCard from "../../Components/PricingCard";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
-import { CheckCircle as CheckCircleIcon } from "@mui/icons-material";
 import DauntlessAthleticsTumblingCampsImg from '../../assets/Dauntless-Athletics-Tumbling-Camps.jpg';
 
 const classes = {
@@ -94,7 +93,7 @@ export default function Home() {
                       paddingBottom: "1.4em",
                     }}
                   >
-                    8 Years{" "}
+                    9 Years{" "}
                     <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
                       Going Strong
                     </Typography>
@@ -102,25 +101,14 @@ export default function Home() {
                 </Grid>
                 <Grid>
                   <Typography sx={{ fontFamily: "Source Sans Pro" }}>
-                    As we approach 8 years of being open we would like to take the time to thank
-                    each and everyone of you for being a part of our journey the last 8 years! We
+                    As we approach 9 years of being open we would like to take the time to thank
+                    each and everyone of you for being a part of our journey the last 9 years! We
                     appreciate all the love and support you have shown us these past years.
                   </Typography>
                   <br />
 
-                  <Typography sx={{ fontFamily: "Source Sans Pro" }}>
-                    While we have had time to reflect on the last 8 years, we have decided to make
-                    some changes at Dauntless. We are very excited to welcome back Coach Dante as of
-                    Monday, March 6th! Coach Dante has been a part of Dauntless from the start and
-                    we are excited to see him back in the gym! In the next few weeks you will notice
-                    some changes in our tumbling classes, we are getting back to the roots of what
-                    Dauntless was when we began and you will be seeing more hands on coaching during
-                    class time!
-                  </Typography>
-                  <br />
-
                   <Typography sx={{ fontFamily: "source sans pro" }}>
-                    We are excited for the journey of year 8 and can’t wait to see the improvements
+                    We are excited for the journey of year 9 and can’t wait to see the improvements
                     and goals being achieved by every athlete here!
                   </Typography>
                 </Grid>
@@ -221,7 +209,12 @@ export default function Home() {
                   ))}
                 </Grid>
                 <Grid container justifyContent="center">
-                  <ReactPlayer url="https://youtu.be/Oiz0gypDSRI" controls />
+                  <ReactPlayer url="https://youtu.be/Q6D9xUJm7jI"
+                    width="100%"
+                    height="80vh"
+                    muted
+                    loop
+                    playing />
                 </Grid>
               </Grid>
 
