@@ -84,6 +84,46 @@ export default function Staff() {
       picture: "/images/staff/Sadie-Halliday-Dauntless-Athletics-2024.jpg",
     },
     {
+      displayName: "Andie Turinsky",
+      positionTitle: "Front desk & Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Kylie Perkins",
+      positionTitle: "Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Brock Pugmire",
+      positionTitle: "Tumbling & Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Justice Cox",
+      positionTitle: "Front desk & Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Abby Brinton",
+      positionTitle: "Stunting & Tumbling Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Jordynne del Pinal",
+      positionTitle: "Tumbling & Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Bailee Schiff",
+      positionTitle: "Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Avis Ebron",
+      positionTitle: "Tumbling & Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
       displayName: "Mia Franz",
       positionTitle: "Choreography",
       picture: "/images/staff/Mia-Franz-Dauntless-Athletics-2024.jpg",
@@ -115,6 +155,7 @@ export default function Staff() {
               textTransform: "uppercase",
               color: '#fff',
               fontSize: '19px',
+              fontWeight: 600,
             }}
             variant="h4"
           >
