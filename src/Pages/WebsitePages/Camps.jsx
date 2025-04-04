@@ -4,7 +4,7 @@ import WebsiteNavbar from "./WebsiteNavbar";
 import CampComponent from "../../Components/CampComponent";
 import Footer from "../../Components/Footer";
 import { Box, Container, Grid, Typography } from "@mui/material";
-import DauntlessPeakYourPerformanceImg from "../../assets/Dauntless-Peak-Your-Performance.png";
+import { Groups as GroupsIcon } from "@mui/icons-material";
 import StepOneImg from "../../assets/Step-1-Evaluate.png";
 import StepTwoImg from "../../assets/Step-2-Breakdown.png";
 import StepThreeImg from "../../assets/Step-3-Spot-It.png";
@@ -12,40 +12,24 @@ import StepFourImg from "../../assets/Step-4-Get-It.png";
 
 const classes = {
   mainImgBox: {
-    position: "relative", // Essential for absolute positioning of children
-    width: "100%",
-    height: "55vh", // Matching the image height
-    backgroundColor: "black",
+    backgroundColor: `#F44336`,
+    padding: "7.5px",
   },
   overlayText: {
-    position: "absolute", // Absolutely position within the relative container
-    top: "50%", // Center vertically
-    left: "50%", // Center horizontally
-    transform: "translate(-50%, -50%)", // Adjust the exact centering
-    color: "white", // Text color
-    zIndex: 2, // Ensure it's above the image
-    textAlign: "center", // Center the text horizontally
-    width: "100%", // Ensure it can be centered properly
+    width: "100%",
     fontFamily: "montserrat",
-    fontSize: {
-      xs: "2em",
-      sm: "2em",
-      md: "3em",
-      lg: "4em",
-      xl: "5em",
-    },
+    fontSize: "2.2em",
+    fontWeight: 500,
     textTransform: "uppercase",
   },
   image: {
-    position: "absolute", // Position relative to the container
-    top: 0,
-    left: 0,
-    width: "100%",
+    display: 'none',
+    width: "auto",
     height: "100%",
-    objectFit: "cover", // Maintain aspect ratio while covering the area
+    maxHeight: '900px',
   },
   stepImgBox: {
-    position: "relative", // This is crucial for correct positioning
+    position: "relative",
     display: "flex",
     justifyContent: "center",
   },
@@ -54,13 +38,13 @@ const classes = {
     width: "144px",
   },
   stepOverlayText: {
-    position: "absolute", // Absolutely position within the relative container
-    top: "50%", // Center vertically
-    left: "50%", // Center horizontally
-    transform: "translate(-50%, -50%)", // Adjust the exact centering
-    zIndex: 2, // Ensure it's above the image
-    textAlign: "center", // Center the text horizontally
-    width: "100%", // Ensure it can be centered properly
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    zIndex: 2,
+    textAlign: "center",
+    width: "100%",
     fontFamily: "montserrat",
     fontSize: "1.5em",
     textTransform: "uppercase",
@@ -72,12 +56,21 @@ export default function Camps() {
     <>
       <WebsiteNavbar />
       <Box sx={classes.mainImgBox}>
-        <img src={DauntlessPeakYourPerformanceImg} alt="Inspiring Mountain" style={classes.image} />
-        <Typography sx={classes.overlayText} variant="h4">
-          Camps
-          <br /> That Peak Your Skills
-        </Typography>
+        <Container maxWidth="lg">
+          <Grid container>
+            <Grid container item xs={8} alignItems="center">
+              <Typography sx={classes.overlayText} variant="h4">
+                Camps
+              </Typography>
+            </Grid>
+            <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
+              <GroupsIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
+            </Grid>
+          </Grid>
+        </Container>
       </Box>
+      <Box>
+        <img src="/images/camps/Dauntless-Athletics-Camp-Group-Image.jpg" alt="Inspiring Mountain" style={classes.image} /></Box>
       <Box sx={{ backgroundColor: "#000", color: '#FFF', }}>
         <Container maxWidth="md">
           <Typography
@@ -119,21 +112,7 @@ export default function Camps() {
               <Typography
                 sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
               >
-                Sign ups will occur weekly.
-              </Typography>
-            </li>
-            <li>
-              <Typography
-                sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
-              >
                 These camps will not affect your current enrollment.
-              </Typography>
-            </li>
-            <li>
-              <Typography
-                sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
-              >
-                Nothing will be charged unless enrolling in the new classes.
               </Typography>
             </li>
           </ul>

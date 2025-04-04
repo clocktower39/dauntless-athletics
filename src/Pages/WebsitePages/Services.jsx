@@ -15,7 +15,6 @@ import {
   Gavel as GavelIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
-import ServicesBannerImg from "../../assets/ServicesBannerImg.jpg";
 
 const classes = {
   mainImgBox: {

@@ -135,7 +135,7 @@ export default function Staff() {
       <Grid container item xs={12} md={6} lg={4} justifyContent="center">
         <Box
           sx={{
-            position: "relative", // This is crucial for correct positioning
+            position: "relative",
             display: "flex",
             justifyContent: "center",
           }}
@@ -144,13 +144,13 @@ export default function Staff() {
           <img src={employee.picture} alt="Employee Image" style={{ minWidth: '100%', maxWidth:'362px', maxHeight: '100%'}} />
           <Typography
             sx={{
-              position: "absolute", // Absolutely position within the relative container
+              position: "absolute",
               bottom: 90,
-              left: "50%", // Center horizontally
-              transform: "translate(-50%, 50%)", // Adjust the exact centering
-              zIndex: 2, // Ensure it's above the image
-              textAlign: "center", // Center the text horizontally
-              width: "100%", // Ensure it can be centered properly
+              left: "50%",
+              transform: "translate(-50%, 50%)",
+              zIndex: 2,
+              textAlign: "center",
+              width: "100%",
               fontFamily: "montserrat",
               textTransform: "uppercase",
               color: '#fff',
@@ -163,13 +163,13 @@ export default function Staff() {
           </Typography>
           <Typography
             sx={{
-              position: "absolute", // Absolutely position within the relative container
+              position: "absolute",
               bottom: 65,
-              left: "50%", // Center horizontally
-              transform: "translate(-50%, 50%)", // Adjust the exact centering
-              zIndex: 2, // Ensure it's above the image
-              textAlign: "center", // Center the text horizontally
-              width: "100%", // Ensure it can be centered properly
+              left: "50%",
+              transform: "translate(-50%, 50%)",
+              zIndex: 2,
+              textAlign: "center",
+              width: "100%",
               fontFamily: "Source Sans Pro",
               color: '#fff',
               fontSize: '16px',

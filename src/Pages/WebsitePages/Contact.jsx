@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Button, Container, Divider, Grid, TextField, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
-import ContactBannerImg from "../../assets/ContactBannerImg.jpg";
 import {
   ContactPhoneOutlined as ContactPhoneOutlinedIcon,
   Phone as PhoneIcon,

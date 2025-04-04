@@ -1,7 +1,6 @@
 import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
-import ClassScheduleBannerImg from "../../assets/ClassScheduleBannerImg.jpg";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
 import Footer from "../../Components/Footer";
 
@@ -11,7 +10,6 @@ const classes = {
     padding: "7.5px",
   },
   overlayText: {
-    // color: "#FFF",
     width: "100%",
     fontFamily: "montserrat",
     fontSize: "2.2em",
