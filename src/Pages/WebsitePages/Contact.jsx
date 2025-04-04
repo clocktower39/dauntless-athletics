@@ -13,18 +13,14 @@ import {
 
 const classes = {
   mainImgBox: {
-    backgroundImage: `url(${ContactBannerImg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPositionX: "center",
-    backgroundPositionY: "top",
-    backgroundSize: "cover",
+    backgroundColor: `#F44336`,
     padding: "7.5px",
   },
   overlayText: {
-    color: "#3c3950", // Text color
-    width: "100%", // Ensure it can be centered properly
+    width: "100%",
     fontFamily: "montserrat",
     fontSize: "2.2em",
+    fontWeight: 500,
     textTransform: "uppercase",
   },
   contactFormTextField: {
@@ -207,7 +203,6 @@ export default function Contact() {
                   fontSize: "5em",
                   maxHeight: "5em",
                   maxWidth: "5em",
-                  color: "rgb(145, 160, 172)",
                 }}
               />
             </Grid>

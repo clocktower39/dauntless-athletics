@@ -6,18 +6,14 @@ import { HomeOutlined as HomeOutlinedIcon } from "@mui/icons-material";
 
 const classes = {
   mainImgBox: {
-    backgroundImage: `url(/images/facility/FacilityBannerImg.jpg)`,
-    backgroundRepeat: "no-repeat",
-    backgroundPositionX: "center",
-    backgroundPositionY: "top",
-    backgroundSize: "cover",
+    backgroundColor: `#F44336`,
     padding: "7.5px",
   },
   overlayText: {
-    color: "#3c3950", // Text color
-    width: "100%", // Ensure it can be centered properly
+    width: "100%",
     fontFamily: "montserrat",
     fontSize: "2.2em",
+    fontWeight: 500,
     textTransform: "uppercase",
   },
 };``
@@ -35,7 +31,7 @@ export default function Facility() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <HomeOutlinedIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "#fff" }} />
+              <HomeOutlinedIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>
         </Container>

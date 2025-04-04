@@ -7,18 +7,15 @@ import Footer from "../../Components/Footer";
 
 const classes = {
   mainImgBox: {
-    backgroundImage: `url(${ClassScheduleBannerImg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPositionX: "center",
-    backgroundPositionY: "top",
-    backgroundSize: "cover",
+    backgroundColor: `#F44336`,
     padding: "7.5px",
   },
   overlayText: {
-    color: "#3c3950", // Text color
-    width: "100%", // Ensure it can be centered properly
+    // color: "#FFF",
+    width: "100%",
     fontFamily: "montserrat",
     fontSize: "2.2em",
+    fontWeight: 500,
     textTransform: "uppercase",
   },
 };
@@ -266,7 +263,7 @@ export default function ClassSchedule() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em" }} />
+              <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>
         </Container>

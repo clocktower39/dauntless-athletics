@@ -1,7 +1,7 @@
 import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { HashLink as Link } from "react-router-hash-link";
-import { Button, Box, Container, Paper, Grid, Typography } from "@mui/material";
+import { Button, Box, Container, Divider, Paper, Grid, Typography } from "@mui/material";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
 import {
@@ -20,18 +20,14 @@ import ReactPlayer from "react-player";
 
 const classes = {
   mainImgBox: {
-    backgroundImage: `url(${ServicesBannerImg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPositionX: "center",
-    backgroundPositionY: "top",
-    backgroundSize: "cover",
+    backgroundColor: `#F44336`,
     padding: "7.5px",
   },
   overlayText: {
-    color: "#3c3950", // Text color
-    width: "100%", // Ensure it can be centered properly
+    width: "100%",
     fontFamily: "montserrat",
     fontSize: "2.2em",
+    fontWeight: 500,
     textTransform: "uppercase",
   },
   policyAndProcedureDescriptionText: {
@@ -45,8 +41,7 @@ const classes = {
     padding: "7.5px",
   },
   saveTheDateText: {
-    color: "#3c3950",
-    width: "100%", // Ensure it can be centered properly
+    width: "100%",
     fontFamily: "montserrat",
     textTransform: "uppercase",
   },
@@ -66,13 +61,13 @@ export default function CollegeCombine() {
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
               <MiscellaneousServicesIcon
-                sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "#fff" }}
+                sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em" }}
               />
             </Grid>
           </Grid>
         </Container>
       </Box>
-
+      <Divider />
       <Box sx={classes.saveTheDate}>
         <Grid container item xs={12} >
           <Typography sx={{ ...classes.saveTheDateText, textDecoration: 'underline', padding: '15px', }} variant="h4" textAlign="center">

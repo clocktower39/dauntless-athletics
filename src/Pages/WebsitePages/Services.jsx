@@ -19,18 +19,14 @@ import ServicesBannerImg from "../../assets/ServicesBannerImg.jpg";
 
 const classes = {
   mainImgBox: {
-    backgroundImage: `url(${ServicesBannerImg})`,
-    backgroundRepeat: "no-repeat",
-    backgroundPositionX: "center",
-    backgroundPositionY: "top",
-    backgroundSize: "cover",
+    backgroundColor: `#F44336`,
     padding: "7.5px",
   },
   overlayText: {
-    color: "#3c3950", // Text color
-    width: "100%", // Ensure it can be centered properly
+    width: "100%",
     fontFamily: "montserrat",
     fontSize: "2.2em",
+    fontWeight: 500,
     textTransform: "uppercase",
   },
   policyAndProcedureDescriptionText: {
@@ -54,7 +50,7 @@ export default function Services() {
               </Typography>
             </Grid>
             <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
-              <MiscellaneousServicesIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", color: "#fff" }} />
+              <MiscellaneousServicesIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>
         </Container>
@@ -103,7 +99,7 @@ export default function Services() {
                     marginLeft: "15%",
                   }}
                 >
-                  <li>Girls Private Lessons</li>
+                  <li>Private Lessons</li>
                   <li>High School Onsite Training</li>
                   <li>Strength, Conditioning, and Flexibility</li>
                   <li>Stunting/Flier Class</li>
@@ -306,29 +302,6 @@ export default function Services() {
                 We visit both High Schools and Jr. Highs to work with the athletes on their tumbling
                 skills. We make sure that they are able to perform and execute the skills that their
                 coach wants them to do in their routine with good form and position.
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              sx={{ color: "#fff" }}
-              direction="column"
-              alignItems="center"
-            >
-              <Diversity2Icon sx={{ fontSize: "5em", padding: "10px", color: "#afe0ff" }} />
-              <Typography
-                textAlign="center"
-                sx={{ fontFamily: "montserrat", fontSize: "24px", padding: "15px" }}
-              >
-                Dance Studio Tumbling
-              </Typography>
-              <Typography textAlign="center" sx={{ fontFamily: "source sans pro", color: "#FFF" }}>
-                We visit Dance Studios and work with the dancers on their tumbling skills and
-                position. The goal is to help them perform the skills that they put into their
-                dances.
               </Typography>
             </Grid>
           </Grid>
