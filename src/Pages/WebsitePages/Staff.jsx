@@ -132,7 +132,7 @@ export default function Staff() {
 
   const StaffMemberCard = ({ employee }) => {
     return (
-      <Grid container item xs={12} md={6} lg={4} justifyContent="center">
+      <Grid container  size={{ xs: 12, md: 6, lg: 4, }} justifyContent="center">
         <Box
           sx={{
             position: "relative",

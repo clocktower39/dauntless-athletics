@@ -19,7 +19,7 @@ export default function CampComponent({ camp, index }) {
 
   return (
     hasDatePast(camp) && (
-      <Grid xs={12} sm={6} md={4} sx={{ margin: "50px 0" }}>
+      <Grid size={{ xs: 12, sm: 6, md: 4, }} sx={{ margin: "50px 0" }}>
         <Grid container justifyContent="center">
           <Box
             sx={{

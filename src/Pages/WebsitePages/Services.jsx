@@ -43,12 +43,12 @@ export default function Services() {
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={8} alignItems="center">
+            <Grid container size={8} alignItems="center">
               <Typography sx={classes.overlayText} variant="h4">
                 Our Services
               </Typography>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
+            <Grid container size={4} justifyContent="flex-end" alignItems="center">
               <MiscellaneousServicesIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>
@@ -58,7 +58,7 @@ export default function Services() {
       <Box sx={{ backgroundColor: "#000" }}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={12} md={6}>
+            <Grid container  size={{ xs: 12, md: 6, }} >
               <Box
                 sx={{
                   color: "#fff",
@@ -107,7 +107,7 @@ export default function Services() {
                   <li>Twisting</li>
                 </ul>
 
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
+                <Grid container size={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{
@@ -128,7 +128,7 @@ export default function Services() {
               </Box>
             </Grid>
 
-            <Grid container item xs={12} md={6}>
+            <Grid container size={{ xs: 12, md: 6, }} >
               <Box
                 sx={{
                   color: "#fff",
@@ -137,7 +137,7 @@ export default function Services() {
                   padding: "35px",
                 }}
               >
-                <Grid container item xs={12} justifyContent="center" sx={{ color: "#fff" }}>
+                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
                   <Typography
                     textAlign="center"
                     sx={{
@@ -162,7 +162,7 @@ export default function Services() {
                     skills.
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
+                <Grid container size={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{
@@ -189,7 +189,7 @@ export default function Services() {
                   padding: "35px",
                 }}
               >
-                <Grid container item xs={12} justifyContent="center" sx={{ color: "#fff" }}>
+                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
                   <Typography
                     textAlign="center"
                     sx={{
@@ -213,7 +213,7 @@ export default function Services() {
                     clinics.
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
+                <Grid container size={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{
@@ -252,13 +252,10 @@ export default function Services() {
               </Typography>
             </Typography>
           </Grid>
-          <Grid container spacing={2} sx={{ paddingBottom: "75px" }}>
+          <Grid container spacing={2} justifyContent="space-around" sx={{ paddingBottom: "75px" }}>
             <Grid
               container
-              item
-              xs={12}
-              sm={6}
-              md={4}
+              size={{ xs: 12, sm: 6, md: 4, }}
               sx={{ color: "#fff" }}
               direction="column"
               alignItems="center"
@@ -282,10 +279,7 @@ export default function Services() {
             </Grid>
             <Grid
               container
-              item
-              xs={12}
-              sm={6}
-              md={4}
+              size={{ xs: 12, sm: 6, md: 4, }}
               sx={{ color: "#fff" }}
               direction="column"
               alignItems="center"

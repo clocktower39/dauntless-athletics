@@ -203,11 +203,11 @@ export default function ClassSchedule() {
   const DaySchedule = ({ day, activities }) => {
     const ActivityDetails = ({ activity, time, color = "#FFF" }) => {
       return (
-        <Grid container item xs={12} sx={{ padding: "5px 25px", color: color }}>
-          <Grid container item xs={8}>
+        <Grid container size={12} sx={{ padding: "5px 25px", color: color }}>
+          <Grid container size={8}>
             {activity}:
           </Grid>
-          <Grid container item xs={4} justifyContent="flex-end">
+          <Grid container size={4} justifyContent="flex-end">
             {time}
           </Grid>
         </Grid>
@@ -215,8 +215,8 @@ export default function ClassSchedule() {
     };
 
     return (
-      <Grid container xs={12} sx={{ color: "white", padding: "15px 0" }}>
-        <Grid container item xs={12}>
+      <Grid container size={12} sx={{ color: "white", padding: "15px 0" }}>
+        <Grid container size={12}>
           <Typography
             variant="h4"
             sx={{
@@ -238,11 +238,11 @@ export default function ClassSchedule() {
   
   const HolidayClosure = ({ range }) => {
     return (
-      <Grid container item xs={12} sx={{ padding: "5px 25px", color: '#FFF' }}>
-        <Grid container item xs={8}>
+      <Grid container size={12} sx={{ padding: "5px 25px", color: '#FFF' }}>
+        <Grid container size={8}>
           {range}:
         </Grid>
-        <Grid container item xs={4} justifyContent="flex-end">
+        <Grid container size={4} justifyContent="flex-end">
           Closed
         </Grid>
       </Grid>
@@ -255,12 +255,12 @@ export default function ClassSchedule() {
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={8} alignItems="center">
+            <Grid container size={8} alignItems="center">
               <Typography sx={classes.overlayText} variant="h4">
                 Class Schedule
               </Typography>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
+            <Grid container size={4} justifyContent="flex-end" alignItems="center">
               <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>
@@ -269,10 +269,10 @@ export default function ClassSchedule() {
       <Box sx={{ backgroundColor: "#000", padding: "50px 0" }}>
         <Container maxWidth="lg">
           <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4, }} >
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
-            <Grid item xs={10} sm={8} md={4}>
+            <Grid size={{ xs: 10, sm: 8, md: 4, }} >
               <Typography
                 color="#ffffff"
                 variant="h6"
@@ -282,7 +282,7 @@ export default function ClassSchedule() {
                 Current Class Schedule
               </Typography>
             </Grid>
-            <Grid item xs={1} sm={2} md={4}>
+            <Grid size={{ xs: 1, sm: 2, md: 4, }} >
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
           </Grid>
@@ -292,10 +292,10 @@ export default function ClassSchedule() {
           ))}
 
           <Grid container justifyContent="center" alignItems="center">
-            <Grid item xs={2} sm={3} md={4}>
+            <Grid size={{ xs: 2, sm: 3, md: 4, }} >
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
-            <Grid item xs={8} sm={6} md={4}>
+            <Grid size={{ xs: 8, sm: 6, md: 4, }} >
               <Typography
                 color="#ffffff"
                 variant="h6"
@@ -305,14 +305,14 @@ export default function ClassSchedule() {
                 Holiday Schedule
               </Typography>
             </Grid>
-            <Grid item xs={2} sm={3} md={4}>
+            <Grid size={{ xs: 2, sm: 3, md: 4, }} >
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
           </Grid>
           
           {holidaySchedule.map(range => <HolidayClosure range={range} />)}
 
-          <Grid item xs={12} sx={{ padding: "25px" }}>
+          <Grid size={12} sx={{ padding: "25px" }}>
             <Divider sx={{ bgcolor: "#eee", marginBottom: "1.1em" }} />
           </Grid>
           <Typography sx={{ color: "#FFF", fontFamily: "Source Sans Pro", padding: "25px" }}>

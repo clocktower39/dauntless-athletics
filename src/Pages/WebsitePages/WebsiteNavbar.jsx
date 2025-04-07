@@ -131,7 +131,7 @@ export default function WebsiteNavbar() {
       {hasAnnouncement && (
         <>
           <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
-            <Grid container item xs={12} justifyContent="center">
+            <Grid container size={12} justifyContent="center">
               <Typography
                 sx={{
                   fontFamily: "montserrat",

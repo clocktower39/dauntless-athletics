@@ -18,8 +18,7 @@ const TopFooter = () => {
         container
         justifyContent="center"
         alignContent="center"
-        xs={12}
-        sm={6}
+        size={{ xs: 12, sm: 6, }}
         sx={{ padding: "50px 0" }}
       >
         <Avatar
@@ -28,8 +27,8 @@ const TopFooter = () => {
           sx={{ width: "75%", height: "auto", maxWidth: "210px" }}
         />
       </Grid>
-      <Grid container xs={12} sm={6}>
-        <Grid item xs={12}>
+      <Grid container size={{ xs: 12, sm: 6, }} >
+        <Grid size={12}>
           <Typography
             variant="h5"
             color="white"
@@ -43,7 +42,7 @@ const TopFooter = () => {
             Dauntless Athletics
           </Typography>
         </Grid>
-        <Grid item xs={12} sx={{ color: "rgb(153, 169, 181)", fontFamily: "source sans pro" }}>
+        <Grid size={12} sx={{ color: "rgb(153, 169, 181)", fontFamily: "source sans pro" }}>
           <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
             <LocationOnOutlinedIcon sx={{ fontFamily: "inherit", fontSize: "inherit" }} /> Address:
           </Typography>
@@ -51,10 +50,10 @@ const TopFooter = () => {
             1501 E. Baseline Rd., Building 5, Suite 106, Gilbert, AZ 85233
           </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Divider sx={{ bgcolor: "white", margin: "1.1em 0" }} />
         </Grid>
-        <Grid item xs={12} sx={{ color: "rgb(153, 169, 181)", fontFamily: "source sans pro" }}>
+        <Grid size={12} sx={{ color: "rgb(153, 169, 181)", fontFamily: "source sans pro" }}>
           {/* Phone Number */}
           <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
             <a href="tel:+14802143908" style={{ textDecoration: "none", color: "inherit" }}>
@@ -91,7 +90,7 @@ const BottomFooter = () => {
       }}
     >
       {/* Social Media Icons Row */}
-      <Grid item container justifyContent="center" sx={{ marginBottom: 2 }}>
+      <Grid container size={12} justifyContent="center" sx={{ marginBottom: 2 }}>
         <IconButton component={Link} to="https://www.facebook.com/dauntlessathletics" sx={{ color: "rgb(78, 100, 181)" }}>
           <Facebook />
         </IconButton>
@@ -104,30 +103,30 @@ const BottomFooter = () => {
       </Grid>
 
       {/* Navigation Buttons Row */}
-      <Grid item>
+      <Grid>
         <Button component={Link} to="/#" sx={{ color: "rgb(153, 169, 181)" }}>Home</Button>
       </Grid>
-      <Grid item>
+      <Grid>
         <Divider sx={{ bgcolor: "rgb(153, 169, 181)", height: "1em" }} orientation="vertical" />
       </Grid>
-      <Grid item>
+      <Grid>
         <Button component={Link} to="/class-schedule/#" sx={{ color: "rgb(153, 169, 181)" }}>Class Schedule</Button>
       </Grid>
-      <Grid item>
+      <Grid>
         <Divider sx={{ bgcolor: "rgb(153, 169, 181)", height: "1em" }} orientation="vertical" />
       </Grid>
-      <Grid item>
+      <Grid>
         <Button component={Link} to="/services/#" sx={{ color: "rgb(153, 169, 181)" }}>Services</Button>
       </Grid>
-      <Grid item>
+      <Grid>
         <Divider sx={{ bgcolor: "rgb(153, 169, 181)", height: "1em" }} orientation="vertical" />
       </Grid>
-      <Grid item>
+      <Grid>
         <Button component={Link} to="/contact-us/#" sx={{ color: "rgb(153, 169, 181)" }}>Contact Us</Button>
       </Grid>
 
       {/* Copyright Component */}
-      <Grid container item xs={12} sx={{ marginTop: 2, justifyContent: "center" }}>
+      <Grid container size={12} sx={{ marginTop: 2, justifyContent: "center" }}>
         <Copyright />
       </Grid>
     </Grid>
@@ -136,7 +135,7 @@ const BottomFooter = () => {
 
 const Copyright = () => {
   return (
-    <Grid item>
+    <Grid>
       <Typography variant="body2" color="rgb(153, 169, 181)">
         {"© "}
         {new Date().getFullYear()} Dauntless Athletics

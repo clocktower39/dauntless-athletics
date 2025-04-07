@@ -53,12 +53,12 @@ export default function CollegeCombine() {
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={8} alignItems="center">
+            <Grid container size={8} alignItems="center">
               <Typography sx={classes.overlayText} variant="h4">
                 College Combine
               </Typography>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
+            <Grid container size={4} justifyContent="flex-end" alignItems="center">
               <MiscellaneousServicesIcon
                 sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em" }}
               />
@@ -68,7 +68,7 @@ export default function CollegeCombine() {
       </Box>
       <Divider />
       <Box sx={classes.saveTheDate}>
-        <Grid container item xs={12} >
+        <Grid container size={12} >
           <Typography sx={{ ...classes.saveTheDateText, textDecoration: 'underline', padding: '15px', }} variant="h4" textAlign="center">
             Save the Date!
           </Typography>
@@ -84,7 +84,7 @@ export default function CollegeCombine() {
       <Box sx={{ backgroundColor: "#000" }}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={12} md={6}>
+            <Grid container size={{ xs: 12, md: 6, }} >
               <Box
                 sx={{
                   color: "#fff",
@@ -103,7 +103,7 @@ export default function CollegeCombine() {
               </Box>
             </Grid>
 
-            <Grid container item xs={12} md={6}>
+            <Grid container size={{ xs: 12, md: 6, }} >
               <Box
                 sx={{
                   color: "#fff",
@@ -112,7 +112,7 @@ export default function CollegeCombine() {
                   padding: "35px",
                 }}
               >
-                <Grid container item xs={12} justifyContent="center" sx={{ color: "#fff" }}>
+                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
                   <Typography
                     textAlign="center"
                     sx={{
@@ -151,7 +151,7 @@ export default function CollegeCombine() {
                     filled out! IT WILL BE SENT TO THE EMAIL ON FILE.**
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
+                <Grid container size={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{
@@ -180,7 +180,7 @@ export default function CollegeCombine() {
                   padding: "35px",
                 }}
               >
-                <Grid container item xs={12} justifyContent="center" sx={{ color: "#fff" }}>
+                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
                   <Typography
                     textAlign="center"
                     sx={{
@@ -205,7 +205,7 @@ export default function CollegeCombine() {
                     clinics.
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center" sx={{ padding: "25px" }}>
+                <Grid container size={12} justifyContent="center" sx={{ padding: "25px" }}>
                   <Button
                     variant="outlined"
                     sx={{

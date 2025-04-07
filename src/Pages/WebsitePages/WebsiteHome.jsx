@@ -80,8 +80,8 @@ export default function Home() {
           >
             <Grid container>
               <Grid container>
-                <Grid container justifyContent="center">
-                  <Grid item xs={12}>
+                <Grid container justifyContent="center" size={12}>
+                  <Grid size={12}>
                     <Divider sx={{ bgcolor: "white", marginBottom: "1.1em" }} />
                   </Grid>
                   <Typography
@@ -115,8 +115,8 @@ export default function Home() {
               </Grid>
 
               <Grid container>
-                <Grid container justifyContent="center">
-                  <Grid item xs={12}>
+                <Grid container justifyContent="center" size={12} >
+                  <Grid size={12}>
                     <Divider sx={{ bgcolor: "white", margin: "1.1em 0" }} />
                   </Grid>
                   <Typography
@@ -130,7 +130,7 @@ export default function Home() {
                     </Typography>
                   </Typography>
                 </Grid>
-                <Grid container justifyContent="center" sx={{ paddingBottom: "3em" }}>
+                <Grid container size={12} justifyContent="center" sx={{ paddingBottom: "3em" }}>
                   <Typography
                     sx={{
                       fontFamily: "source sans pro",
@@ -158,7 +158,7 @@ export default function Home() {
               </Grid>
 
               <Grid container id="dauntless-classes-section">
-                <Grid container justifyContent="center">
+                <Grid container size={12} justifyContent="center">
                   <Typography
                     variant="h3"
                     textAlign="center"
@@ -174,7 +174,7 @@ export default function Home() {
                     </Typography>
                   </Typography>
                 </Grid>
-                <Grid container justifyContent="center">
+                <Grid container size={12} justifyContent="center">
                   <Typography textAlign="center">
                     We will captivate the minds of your children and teach them skills they thought
                     they could never learn!
@@ -186,12 +186,10 @@ export default function Home() {
                     <Grid
                       key={`${c.title}-${index}`}
                       container
-                      item
-                      xs={12}
-                      sm={6}
+                      size={{ xs: 12, sm: 6, }}
                       sx={{ padding: "75px 0px" }}
                     >
-                      <Grid container item xs={9} sm={8}>
+                      <Grid container size={{ xs: 9, sm: 8, }} >
                         <Typography
                           variant="h5"
                           sx={{ textTransform: "uppercase", padding: "15px 0" }}
@@ -202,13 +200,13 @@ export default function Home() {
                           {c.description}
                         </Typography>
                       </Grid>
-                      <Grid container item xs={3} sm={4} alignItems="flex-start">
+                      <Grid container  size={{ xs: 3, sm: 4, }} alignItems="flex-start">
                         {c?.icon}
                       </Grid>
                     </Grid>
                   ))}
                 </Grid>
-                <Grid container justifyContent="center">
+                <Grid container size={12} justifyContent="center">
                   <ReactPlayer url="https://youtu.be/Q6D9xUJm7jI"
                     width="100%"
                     height="80vh"
@@ -218,11 +216,11 @@ export default function Home() {
                 </Grid>
               </Grid>
 
-              <Grid container>
-                <Grid item xs={12}>
+              <Grid container size={12} >
+                <Grid size={12}>
                   <Divider sx={{ bgcolor: "white", margin: "1.1em 0" }} />
                 </Grid>
-                <Grid container justifyContent="center" sx={{ margin: "75px" }}>
+                <Grid container size={12} justifyContent="center" sx={{ margin: "75px" }}>
                   <Typography
                     variant="h3"
                     textAlign="center"
@@ -239,9 +237,7 @@ export default function Home() {
               <Grid container>
                 <Grid
                   container
-                  item
-                  xs={12}
-                  md={4}
+                  size={{ xs: 12, md: 4, }}
                   sx={{ backgroundColor: "rgb(174, 213, 129)", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
@@ -256,9 +252,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
-                  item
-                  xs={12}
-                  md={4}
+                  size={{ xs: 12, md: 4, }}
                   sx={{ backgroundColor: "rgb(0, 188, 212)", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
@@ -277,9 +271,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
-                  item
-                  xs={12}
-                  md={4}
+                  size={{ xs: 12, md: 4, }}
                   sx={{ backgroundColor: "rgb(55, 57, 76)", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
@@ -294,8 +286,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
-                  item
-                  xs={12}
+                  size={{ xs: 12, }}
                   sx={{ backgroundColor: "rgb(167, 130, 230)", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
@@ -311,8 +302,7 @@ export default function Home() {
                 </Grid>
                 <Grid
                   container
-                  item
-                  xs={12}
+                  size={12}
                   sx={{ backgroundColor: "rgb(0, 219, 255)", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
@@ -328,7 +318,7 @@ export default function Home() {
                 </Grid>
               </Grid>
               <Grid container id="tuition-section" sx={{ paddingTop: "200px" }}>
-                <Grid container justifyContent="center">
+                <Grid container size={12} justifyContent="center">
                   <Typography
                     variant="h3"
                     textAlign="center"
@@ -345,7 +335,7 @@ export default function Home() {
                   </Typography>
                 </Grid>
                 <Grid container justifyContent="center">
-                  <Grid container item xs={12} justifyContent="center">
+                  <Grid container size={12} justifyContent="center">
                     <Typography
                       textAlign="center"
                       variant="caption"
@@ -365,11 +355,7 @@ export default function Home() {
                       <Grid
                         key={option.title}
                         container
-                        item
-                        xs={12}
-                        sm={6}
-                        md={4}
-                        lg={3}
+                        size={{ xs: 12, sm: 6, md: 4, lg: 3, }}
                         justifyContent="center"
                       >
                         <PricingCard

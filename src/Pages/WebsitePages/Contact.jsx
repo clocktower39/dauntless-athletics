@@ -54,7 +54,7 @@ const ContactFormInput = ({
   setContactFormData,
 }) => {
   return (
-    <Grid container item xs={12} sx={{ ...classes.contactFormTextField }}>
+    <Grid container size={12} sx={{ ...classes.contactFormTextField }}>
       <TextField
         color="secondary"
         sx={classes.textField}
@@ -191,12 +191,12 @@ export default function Contact() {
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={8} alignItems="center">
+            <Grid container size={8} alignItems="center">
               <Typography sx={classes.overlayText} variant="h4">
                 Contact Us
               </Typography>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
+            <Grid container size={4} justifyContent="flex-end" alignItems="center">
               <ContactPhoneOutlinedIcon
                 sx={{
                   fontSize: "5em",
@@ -218,19 +218,18 @@ export default function Contact() {
       >
         <Container maxWidth="lg">
           <Grid container sx={{ padding: "25px 0" }}>
-            <Grid container item xs={12} md={3}>
-              <Grid container item xs={12} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} >
+              <Grid container size={12} justifyContent="center">
                 <PhoneIcon sx={{ fontSize: "64px", padding: "25px 0" }} />
               </Grid>
-              <Grid container item xs={12} justifyContent="center">
+              <Grid container size={12} justifyContent="center">
                 <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   CONTACT
                 </Typography>
               </Grid>
               <Grid
                 container
-                item
-                xs={12}
+                size={12}
                 justifyContent="center"
                 sx={{
                   padding: "15px 0",
@@ -239,7 +238,7 @@ export default function Contact() {
                   alignContent: "flex-start",
                 }}
               >
-                <Grid container item xs={12} justifyContent="center">
+                <Grid container size={12} justifyContent="center">
                   <Typography
                     sx={{
                       fontFamily: "source sans pro",
@@ -249,7 +248,7 @@ export default function Contact() {
                     (480) 214-3908
                   </Typography>
                 </Grid>
-                <Grid container item xs={12} justifyContent="center">
+                <Grid container size={12} justifyContent="center">
                   <Typography
                     sx={{
                       fontFamily: "source sans pro",
@@ -263,21 +262,20 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container item xs={12} md={3}>
-              <Grid container item xs={12} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} >
+              <Grid container size={12} justifyContent="center">
                 <EventAvailableOutlinedIcon
                   sx={{ color: "rgb(76, 173, 201)", fontSize: "64px", padding: "25px 0" }}
                 />
               </Grid>
-              <Grid container item xs={12} justifyContent="center">
+              <Grid container size={12} justifyContent="center">
                 <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   CLASS SCHEDULE
                 </Typography>
               </Grid>
               <Grid
                 container
-                item
-                xs={12}
+                size={12}
                 justifyContent="center"
                 sx={{ padding: "15px 0", flexGrow: 1, minHeight: "150px" }}
               >
@@ -292,21 +290,20 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container item xs={12} md={3}>
-              <Grid container item xs={12} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} >
+              <Grid container size={12} justifyContent="center">
                 <EventBusyOutlinedIcon
                   sx={{ color: "rgb(117, 214, 156)", fontSize: "64px", padding: "25px 0" }}
                 />
               </Grid>
-              <Grid container item xs={12} justifyContent="center">
+              <Grid container size={12} justifyContent="center">
                 <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   HOLIDAY SCHEDULE
                 </Typography>
               </Grid>
               <Grid
                 container
-                item
-                xs={12}
+                size={12}
                 justifyContent="center"
                 sx={{ padding: "15px 0", flexGrow: 1, flexShrink: 0, minHeight: "150px" }}
               >
@@ -391,21 +388,20 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container item xs={12} md={3}>
-              <Grid container item xs={12} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} >
+              <Grid container size={12} justifyContent="center">
                 <LocationOnIcon
                   sx={{ color: "rgb(244, 82, 77)", fontSize: "64px", padding: "25px 0" }}
                 />
               </Grid>
-              <Grid container item xs={12} justifyContent="center">
+              <Grid container size={12} justifyContent="center">
                 <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                   ADDRESS
                 </Typography>
               </Grid>
               <Grid
                 container
-                item
-                xs={12}
+                size={12}
                 justifyContent="center"
                 sx={{ padding: "15px", flexGrow: 1, minHeight: "150px" }}
               >
@@ -421,7 +417,7 @@ export default function Contact() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid container item justifyContent="center">
+          <Grid container justifyContent="center">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
               width="100%"
@@ -434,7 +430,7 @@ export default function Contact() {
             ></iframe>
           </Grid>
           <Grid container spacing={3} sx={{ padding: "25px 0" }}>
-            <Grid container item xs={12}>
+            <Grid container size={12}>
               <Typography sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
                 CONTACT OUR TEAM
               </Typography>
@@ -455,7 +451,7 @@ export default function Contact() {
               />
             ))}
 
-            <Grid container item xs={12}>
+            <Grid container size={12}>
               <Button
                 variant="contained"
                 onClick={handleContactSubmit}
@@ -473,7 +469,7 @@ export default function Contact() {
               </Button>
             </Grid>
             {contactFormSubmissionStatus.error && (
-              <Grid container item xs={12}>
+              <Grid container size={12}>
                 <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
                   {contactFormSubmissionStatus.errorMessage}
                 </Typography>

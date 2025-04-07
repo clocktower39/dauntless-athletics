@@ -6,7 +6,7 @@ export default function CaptivateMinds() {
   return (
     <Box sx={{ backgroundColor: "#FFD848", padding: "50px 0" }}>
       <Grid container justifyContent="center" alignItems="center">
-        <Grid container item justifyContent="center" alignItems="center">
+        <Grid container justifyContent="center" alignItems="center">
           <img
             src={Logo470x377}
             alt="Dauntless Athletics Logo"
@@ -14,7 +14,7 @@ export default function CaptivateMinds() {
           />
         </Grid>
 
-        <Grid container item justifyContent="center" alignItems="center">
+        <Grid container justifyContent="center" alignItems="center">
           <Typography
             textAlign="center"
             sx={{
@@ -29,7 +29,7 @@ export default function CaptivateMinds() {
           </Typography>
         </Grid>
 
-        <Grid container item justifyContent="center" alignItems="center">
+        <Grid container justifyContent="center" alignItems="center">
           <Button
             variant="outlined"
             sx={{

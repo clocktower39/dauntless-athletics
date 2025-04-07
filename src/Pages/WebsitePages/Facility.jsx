@@ -25,12 +25,12 @@ export default function Facility() {
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={8} alignItems="center">
+            <Grid container size={8} alignItems="center">
               <Typography sx={classes.overlayText} variant="h4">
                 The Facility
               </Typography>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
+            <Grid container size={4} justifyContent="flex-end" alignItems="center">
               <HomeOutlinedIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>

@@ -58,12 +58,12 @@ export default function Camps() {
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container item xs={8} alignItems="center">
+            <Grid container size={8} alignItems="center">
               <Typography sx={classes.overlayText} variant="h4">
                 Camps
               </Typography>
             </Grid>
-            <Grid container item xs={4} justifyContent="flex-end" alignItems="center">
+            <Grid container size={4} justifyContent="flex-end" alignItems="center">
               <GroupsIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
             </Grid>
           </Grid>
@@ -146,7 +146,7 @@ export default function Camps() {
         </Container>
         <Container maxWidth="lg">
           <Grid container spacing={5} sx={{ padding: "25px" }}>
-            <Grid container item xs={12} md={3} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepOneImg} alt="Step 1" style={classes.stepImage} />
@@ -160,7 +160,7 @@ export default function Camps() {
               </Box>
             </Grid>
 
-            <Grid container item xs={12} md={3} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepTwoImg} alt="Step 2" style={classes.stepImage} />
@@ -174,7 +174,7 @@ export default function Camps() {
               </Box>
             </Grid>
 
-            <Grid container item xs={12} md={3} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepThreeImg} alt="Step 3" style={classes.stepImage} />
@@ -188,7 +188,7 @@ export default function Camps() {
               </Box>
             </Grid>
 
-            <Grid container item xs={12} md={3} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepFourImg} alt="Step 4" style={classes.stepImage} />
