@@ -17,6 +17,7 @@ import {
   Dialog,
 } from "@mui/material";
 import {
+  Close as CloseIcon,
   Menu as MenuIcon,
   ShoppingCart as ShoppingCartIcon,
   Facebook,
@@ -40,7 +41,6 @@ const classes = {
   },
   Toolbar: {
     backgroundColor: "#0C0D0D",
-    justifyContent: "center", // Center children
   },
   ToolbarContent: {
     // Used for content inside Toolbar
@@ -76,7 +76,16 @@ export default function WebsiteNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const toolbarRef = useRef(null); // Reference for the second Toolbar
   const location = useLocation(); // Get the current location
-  const hasAnnouncement = false;
+
+  const hasAnnouncement = true;
+  const [dismissed, setDismissed] = useState(() => {
+    return localStorage.getItem("announcementDismissedEaster") === "true";
+  });
+  
+  const handleDismiss = () => {
+    localStorage.setItem("announcementDismissedEaster", "true");
+    setDismissed(true);
+  };
 
   const handleMenuClick = () => {
     setMenuOpen(true); // Open the menu
@@ -128,31 +137,38 @@ export default function WebsiteNavbar() {
   return (
     <AppBar position="sticky">
       <Divider sx={classes.TopDivider} />
-      {hasAnnouncement && (
+      {hasAnnouncement && !dismissed && (
         <>
-          <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
-            <Grid container size={12} justifyContent="center">
-              <Typography
-                sx={{
-                  fontFamily: "montserrat",
-                  fontSize: "16px",
-                  color: "#ff0000",
-                  textAlign: "center",
-                  padding: "7.5px 0px",
-                }}
-              >
-                We will be closed from {dayjs.utc(new Date("2024-12-22")).format("dddd, MMMM Do")}{" "}
-                through {dayjs.utc(new Date("2025-01-01")).format("dddd, MMMM Do")}. <br />
-                Classes will resume on {dayjs
-                  .utc(new Date("2025-01-02"))
-                  .format("dddd, MMMM Do")}. <br /> Thank you and Happy Holidays!
-              </Typography>
+          <Toolbar variant="dense" sx={{ ...classes.Toolbar, display: 'block' }}>
+            <Grid container size={12}>
+              <Grid container size={11} justifyContent="center" >
+                <Typography
+                  sx={{
+                    fontFamily: "montserrat",
+                    fontSize: "16px",
+                    color: "#ff0000",
+                    textAlign: "center",
+                    padding: "7.5px 0px",
+                  }}
+                >
+                  We will be closed from {dayjs.utc(new Date("2025-04-18")).format("dddd, MMMM Do")}{" "}
+                  through {dayjs.utc(new Date("2025-04-20")).format("dddd, MMMM Do")}. <br />
+                  Classes will resume on {dayjs
+                    .utc(new Date("2025-04-21"))
+                    .format("dddd, MMMM Do")}. <br /> Thank you!
+                </Typography>
+              </Grid>
+              <Grid container size={1} alignItems="center" justifyContent="center" >
+                <IconButton onClick={handleDismiss} >
+                  <CloseIcon sx={{ color: '#FFF' }} />
+                </IconButton>
+              </Grid>
             </Grid>
           </Toolbar>
           <Divider sx={classes.BottomDivider} />
         </>
       )}
-      <Toolbar variant="dense" sx={{ ...classes.TopToolbar, ...classes.Toolbar }}>
+      <Toolbar variant="dense" sx={{ ...classes.Toolbar }}>
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
           <IconButton
             color="inherit"
