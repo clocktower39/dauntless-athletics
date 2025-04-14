@@ -30,37 +30,37 @@ export default function Staff() {
     },
     {
       displayName: "Brandon Dawa",
-      positionTitle: "Stunting and Tumbling Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Brandon-Dawa-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Oatha Council",
-      positionTitle: "Stunting and Tumbling Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Oatha-Council-Dauntless-Athletics-2022.jpg",
     },
     {
       displayName: "Adrienne Traynor",
-      positionTitle: "Stunting and Tumbling Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Adrienne-Traynor-Dauntless-Athletics-2022.jpg",
     },
     {
       displayName: "Elias Espinosa",
-      positionTitle: "Tumbling and Stunting Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/elias-espinosa-dauntless-athletics-2023.jpg",
     },
     {
       displayName: "Carlos Solis",
-      positionTitle: "Tumbling and Stunting Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Carlos-Solis-Dauntless-Athletics-2022.jpg",
     },
     {
       displayName: "Jon Kearns",
-      positionTitle: "Stunting and Tumbling Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Jon-Kearns-Dauntless-Athletics-2024.jpg",
     },
     {
       displayName: "Matt Kearns",
-      positionTitle: "Stunting and Tumbling Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Matt-Kearns-Dauntless-Athletics-2022.jpg",
     },
     {
@@ -75,7 +75,7 @@ export default function Staff() {
     },
     {
       displayName: "Emily McKane",
-      positionTitle: "Tumbling and Stunting Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Emily-Mckane-Dauntless-Athletics-2024.jpg",
     },
     {
@@ -90,27 +90,32 @@ export default function Staff() {
     },
     {
       displayName: "Kylie Perkins",
-      positionTitle: "Stunting Coach",
-      picture: "/images/staff/Pending_Picture.jpg",
-    },
-    {
-      displayName: "Brock Pugmire",
-      positionTitle: "Tumbling & Stunting Coach",
-      picture: "/images/staff/Pending_Picture.jpg",
-    },
-    {
-      displayName: "Justice Cox",
       positionTitle: "Front desk & Stunting Coach",
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
-      displayName: "Abby Brinton",
+      displayName: "Justice Cox",
+      positionTitle: "Front desk, Stunting & Tumbling Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Avery Evans",
       positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
       displayName: "Jordynne del Pinal",
-      positionTitle: "Tumbling & Stunting Coach",
+      positionTitle: "Stunting & Tumbling Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Brock Pugmire",
+      positionTitle: "Stunting & Tumbling Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Abby Brinton",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
@@ -120,7 +125,7 @@ export default function Staff() {
     },
     {
       displayName: "Avis Ebron",
-      positionTitle: "Tumbling & Stunting Coach",
+      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
