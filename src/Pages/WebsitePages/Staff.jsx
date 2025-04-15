@@ -3,9 +3,6 @@ import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
 
-
-
-
 export default function Staff() {
   const staff = [
     {

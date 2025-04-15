@@ -140,7 +140,7 @@ export default function Home() {
                     * All Camps have Limited Availability
                   </Typography>
                 </Grid>
-                <Grid container justifyContent="center" sx={{ paddingBottom: "3em" }}>
+                <Grid container size={12} justifyContent="center" sx={{ paddingBottom: "3em" }}>
                   <Link to="/camps/#">
                     <img
                       alt="Dauntless Athletics Tumbling Camp Banner"
@@ -150,7 +150,7 @@ export default function Home() {
                     />
                   </Link>
                 </Grid>
-                <Grid container justifyContent="center">
+                <Grid container size={12} justifyContent="center">
                   {camps.map((camp, index) => (
                     <CampComponent key={`${camp.title}-${index}`} camp={camp} index={index} />
                   ))}

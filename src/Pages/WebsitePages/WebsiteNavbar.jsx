@@ -27,8 +27,6 @@ import {
 import useWindowWidth from "../../Hooks/WindowWidth";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
-import utc from "dayjs/plugin/utc";
 
 const classes = {
   TopDivider: {
@@ -43,12 +41,10 @@ const classes = {
     backgroundColor: "#0C0D0D",
   },
   ToolbarContent: {
-    // Used for content inside Toolbar
     display: "flex",
     alignItems: "center",
     width: "100%",
-    maxWidth: "lg", // Adjust this value as needed
-    padding: "0 16px", // Add padding if necessary
+    padding: "0 16px",
   },
   ToolbarButtonHover: {
     "&:hover": {
@@ -61,11 +57,11 @@ const classes = {
     maxHeight: "1.5rem",
   },
   MenuPaper: {
-    backgroundColor: "rgb(33, 35, 49)", // Menu background color
+    backgroundColor: "rgb(33, 35, 49)",
     border: "1px solid rgb(73, 76, 100)",
   },
   MenuItem: {
-    color: "rgb(153, 169, 181)", // Menu item font color
+    color: "rgb(153, 169, 181)",
     borderBottom: "1px solid rgb(73, 76, 100)",
     padding: "12.5px",
   },
