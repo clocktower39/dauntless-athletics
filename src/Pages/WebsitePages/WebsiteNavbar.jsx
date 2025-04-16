@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import {
   Close as CloseIcon,
+  Notifications,
   Menu as MenuIcon,
   ShoppingCart as ShoppingCartIcon,
   Facebook,
@@ -70,17 +71,22 @@ const classes = {
 export default function WebsiteNavbar() {
   const wide = useWindowWidth(1045);
   const [menuOpen, setMenuOpen] = useState(false);
-  const toolbarRef = useRef(null); // Reference for the second Toolbar
-  const location = useLocation(); // Get the current location
+  const toolbarRef = useRef(null);
+  const location = useLocation();
 
   const hasAnnouncement = true;
   const [dismissed, setDismissed] = useState(() => {
     return localStorage.getItem("announcementDismissedEaster") === "true";
   });
-  
+
   const handleDismiss = () => {
-    localStorage.setItem("announcementDismissedEaster", "true");
+    localStorage.setItem("announcementDismissed", "true");
     setDismissed(true);
+  };
+
+  const handleRestoreAnnouncement = () => {
+    localStorage.removeItem("announcementDismissed");
+    setDismissed(false);
   };
 
   const handleMenuClick = () => {
@@ -135,9 +141,9 @@ export default function WebsiteNavbar() {
       <Divider sx={classes.TopDivider} />
       {hasAnnouncement && !dismissed && (
         <>
-          <Toolbar variant="dense" sx={{ ...classes.Toolbar, display: 'block' }}>
+          <Toolbar variant="dense" sx={{ ...classes.Toolbar, display: "block" }}>
             <Grid container size={12}>
-              <Grid container size={11} justifyContent="center" >
+              <Grid container size={11} justifyContent="center">
                 <Typography
                   sx={{
                     fontFamily: "montserrat",
@@ -149,14 +155,13 @@ export default function WebsiteNavbar() {
                 >
                   We will be closed from {dayjs.utc(new Date("2025-04-18")).format("dddd, MMMM Do")}{" "}
                   through {dayjs.utc(new Date("2025-04-20")).format("dddd, MMMM Do")}. <br />
-                  Classes will resume on {dayjs
-                    .utc(new Date("2025-04-21"))
-                    .format("dddd, MMMM Do")}. <br /> Thank you!
+                  Classes will resume on {dayjs.utc(new Date("2025-04-21")).format("dddd, MMMM Do")}
+                  . <br /> Thank you!
                 </Typography>
               </Grid>
-              <Grid container size={1} alignItems="center" justifyContent="center" >
-                <IconButton onClick={handleDismiss} >
-                  <CloseIcon sx={{ color: '#FFF' }} />
+              <Grid container size={1} alignItems="center" justifyContent="center">
+                <IconButton onClick={handleDismiss}>
+                  <CloseIcon sx={{ color: "#FFF" }} />
                 </IconButton>
               </Grid>
             </Grid>
@@ -165,6 +170,17 @@ export default function WebsiteNavbar() {
         </>
       )}
       <Toolbar variant="dense" sx={{ ...classes.Toolbar }}>
+        {hasAnnouncement && dismissed && (
+            <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-start" }}>
+              <IconButton
+                onClick={handleRestoreAnnouncement}
+                color="inherit"
+                sx={{ ...classes.ToolbarButtonHover }}
+              >
+                <Notifications sx={{ ...classes.ToolbarIcon }} />
+              </IconButton>
+            </Box>
+          )}
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
           <IconButton
             color="inherit"
