@@ -74,20 +74,33 @@ export default function WebsiteNavbar() {
   const toolbarRef = useRef(null);
   const location = useLocation();
 
-  const hasAnnouncement = true;
+  const hasAnnouncement = false;
+
+  const announcementMessage = `We will be closed from ${dayjs.utc(new Date("2025-04-18")).format("dddd, MMMM Do")} through ${dayjs.utc(new Date("2025-04-20")).format("dddd, MMMM Do")}.
+  Classes will resume on ${dayjs.utc(new Date("2025-04-21")).format("dddd, MMMM Do")}.
+  Thank you!`;
+
+  const announcementKey = `announcementDismissed_${btoa(announcementMessage)}`;
   const [dismissed, setDismissed] = useState(() => {
-    return localStorage.getItem("announcementDismissedEaster") === "true";
+    return localStorage.getItem(announcementKey) === "true";
   });
 
   const handleDismiss = () => {
-    localStorage.setItem("announcementDismissed", "true");
+    localStorage.setItem(announcementKey, "true");
     setDismissed(true);
   };
 
   const handleRestoreAnnouncement = () => {
-    localStorage.removeItem("announcementDismissed");
+    localStorage.removeItem(announcementKey);
     setDismissed(false);
   };
+  
+  // Cleanup old keys
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith("announcementDismissed_") && key !== announcementKey) {
+      localStorage.removeItem(key);
+    }
+  });
 
   const handleMenuClick = () => {
     setMenuOpen(true); // Open the menu
@@ -151,12 +164,10 @@ export default function WebsiteNavbar() {
                     color: "#ff0000",
                     textAlign: "center",
                     padding: "7.5px 0px",
+                    whiteSpace: "pre-line",
                   }}
                 >
-                  We will be closed from {dayjs.utc(new Date("2025-04-18")).format("dddd, MMMM Do")}{" "}
-                  through {dayjs.utc(new Date("2025-04-20")).format("dddd, MMMM Do")}. <br />
-                  Classes will resume on {dayjs.utc(new Date("2025-04-21")).format("dddd, MMMM Do")}
-                  . <br /> Thank you!
+                  {announcementMessage}
                 </Typography>
               </Grid>
               <Grid container size={1} alignItems="center" justifyContent="center">
@@ -171,16 +182,16 @@ export default function WebsiteNavbar() {
       )}
       <Toolbar variant="dense" sx={{ ...classes.Toolbar }}>
         {hasAnnouncement && dismissed && (
-            <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-start" }}>
-              <IconButton
-                onClick={handleRestoreAnnouncement}
-                color="inherit"
-                sx={{ ...classes.ToolbarButtonHover }}
-              >
-                <Notifications sx={{ ...classes.ToolbarIcon }} />
-              </IconButton>
-            </Box>
-          )}
+          <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-start" }}>
+            <IconButton
+              onClick={handleRestoreAnnouncement}
+              color="inherit"
+              sx={{ ...classes.ToolbarButtonHover }}
+            >
+              <Notifications sx={{ ...classes.ToolbarIcon }} />
+            </IconButton>
+          </Box>
+        )}
         <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
           <IconButton
             color="inherit"
