@@ -146,6 +146,34 @@ export const camps = [
     buttonText: "Register For Camp",
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
   },
+  {
+    icon: <EmojiEventsIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    title: "June Summer Camp",
+    color: "#f01313",
+    date: {
+      start: dayjs.utc(new Date("2025-06-23")),
+      end: dayjs.utc(new Date("2025-06-25")),
+    },
+    time: "9:00 am - 12:00 pm",
+    place: "Dauntless Athletics",
+    cost: { day: 55, week: 150 },
+    buttonText: "Register For Camp",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/28",
+  },
+  {
+    icon: <EmojiEventsIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    title: "July Summer Camp",
+    color: "#8e43ba",
+    date: {
+      start: dayjs.utc(new Date("2025-07-07")),
+      end: dayjs.utc(new Date("2025-07-09")),
+    },
+    time: "9:00 am - 12:00 pm",
+    place: "Dauntless Athletics",
+    cost: { day: 55, week: 150 },
+    buttonText: "Register For Camp",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/28",
+  },
 ];
 
 export const dauntlessClasses = [
