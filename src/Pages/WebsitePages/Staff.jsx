@@ -66,11 +66,6 @@ export default function Staff() {
       picture: "/images/staff/Steven-Williams-Dauntless-Athletics-2024.jpg",
     },
     {
-      displayName: "Bella Hughes",
-      positionTitle: "Tumbling Coach",
-      picture: "/images/staff/Bella-Hughes-Dauntless-Athletics-2024.jpg",
-    },
-    {
       displayName: "Emily McKane",
       positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Emily-Mckane-Dauntless-Athletics-2024.jpg",
