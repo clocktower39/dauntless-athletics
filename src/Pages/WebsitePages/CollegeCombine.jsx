@@ -68,15 +68,23 @@ export default function CollegeCombine() {
       </Box>
       <Divider />
       <Box sx={classes.saveTheDate}>
-        <Grid container size={12} >
-          <Typography sx={{ ...classes.saveTheDateText, textDecoration: 'underline', padding: '15px', }} variant="h4" textAlign="center">
-            Save the Date!
+        <Grid container size={12}>
+          <Typography
+            sx={{ ...classes.saveTheDateText, padding: "15px" }}
+            variant="h4"
+            textAlign="center"
+          >
+            CHS Dauntless College Combine
           </Typography>
-          <Typography sx={classes.saveTheDateText} variant="h6" textAlign="center">
+          <Typography sx={{ ...classes.saveTheDateText }} variant="h6" textAlign="center">
             Event Date: July 19, 2025
           </Typography>
-          <Typography sx={classes.saveTheDateText} variant="h6" textAlign="center">
-            More Information Coming Soon!
+          <Typography sx={{ ...classes.saveTheDateText, fontSize: "1em" }} variant="h6" textAlign="center">
+            See More Information and Enroll{" "}
+            <a href="https://cusd80.ce.eleyo.com/course/4043/cct-25-26/chs-dauntless-college-combine">
+              Here
+            </a>
+            !
           </Typography>
         </Grid>
       </Box>
@@ -84,7 +92,7 @@ export default function CollegeCombine() {
       <Box sx={{ backgroundColor: "#000" }}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container size={{ xs: 12, md: 6, }} >
+            <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
                   color: "#fff",
@@ -103,7 +111,7 @@ export default function CollegeCombine() {
               </Box>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 6, }} >
+            <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
                   color: "#fff",
