@@ -78,7 +78,9 @@ export default function CollegeCombine() {
           >
             4th Annual Dauntless College Combine
           </Typography>
-          <img style={{ display: 'flex', alignItems: 'center', width: '100%', }} src="https://pictures.ce.eleyo.com/1000010/large/17448283619191158.png"/>
+          <Grid container size={12} justifyContent="center" >
+            <img src="https://pictures.ce.eleyo.com/1000010/large/17448283619191158.png" />
+          </Grid>
           <Typography sx={{ ...classes.saveTheDateText }} variant="h5" textAlign="center">
             Hosted at Chandler High Payne Gym
           </Typography>
@@ -86,10 +88,10 @@ export default function CollegeCombine() {
             Event Date: July 19, 2025
           </Typography>
           <Typography sx={{ ...classes.saveTheDateText }} variant="body1" textAlign="center">
-          Athlete Check in: 2:00 PM
+            Athlete Check in: 2:00 PM
           </Typography>
           <Typography sx={{ ...classes.saveTheDateText }} variant="body1" textAlign="center">
-          Combine: 2:30 - 6:30 PM
+            Combine: 2:30 - 6:30 PM
           </Typography>
           <Typography sx={{ ...classes.saveTheDateText, fontSize: "1em" }} variant="subtitle1" textAlign="center">
             See More Information and Enroll{" "}
