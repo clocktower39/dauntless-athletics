@@ -74,10 +74,10 @@ export default function WebsiteNavbar() {
   const toolbarRef = useRef(null);
   const location = useLocation();
 
-  const hasAnnouncement = false;
+  const hasAnnouncement = true;
 
-  const announcementMessage = `We will be closed from ${dayjs.utc(new Date("2025-04-18")).format("dddd, MMMM Do")} through ${dayjs.utc(new Date("2025-04-20")).format("dddd, MMMM Do")}.
-  Classes will resume on ${dayjs.utc(new Date("2025-04-21")).format("dddd, MMMM Do")}.
+  const announcementMessage = `We will be closed for Memorial Day
+  ${dayjs.utc(new Date("2025-05-26")).format("dddd, MMMM Do")}.
   Thank you!`;
 
   const announcementKey = `announcementDismissed_${btoa(announcementMessage)}`;
