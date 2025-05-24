@@ -44,7 +44,7 @@ const classes = {
         padding: "15px 0",
       },
       span: {
-        color: "#e7ff89",
+        color: "#ff0000",
         fontFamily: "inherit",
         fontWeight: "300",
       },
@@ -238,7 +238,7 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12, md: 4, }}
-                  sx={{ backgroundColor: "rgb(174, 213, 129)", padding: "50px" }}
+                  sx={{ backgroundColor: "#707070", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     01.
@@ -253,7 +253,7 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12, md: 4, }}
-                  sx={{ backgroundColor: "rgb(0, 188, 212)", padding: "50px" }}
+                  sx={{ backgroundColor: "#3a3a3a", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     02.
@@ -272,7 +272,7 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12, md: 4, }}
-                  sx={{ backgroundColor: "rgb(55, 57, 76)", padding: "50px" }}
+                  sx={{ backgroundColor: "#161A1D", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     03.
@@ -287,7 +287,7 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12, }}
-                  sx={{ backgroundColor: "rgb(167, 130, 230)", padding: "50px" }}
+                  sx={{ backgroundColor: "#0B090A", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     04.
@@ -303,7 +303,7 @@ export default function Home() {
                 <Grid
                   container
                   size={12}
-                  sx={{ backgroundColor: "rgb(0, 219, 255)", padding: "50px" }}
+                  sx={{ backgroundColor: "0D0509", padding: "50px" }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     05.
