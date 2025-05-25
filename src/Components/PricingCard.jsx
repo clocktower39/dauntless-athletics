@@ -66,7 +66,7 @@ function PricingCard(props) {
         <Typography
           variant="h2"
           component="div"
-          color="rgb(108, 124, 134)"
+          color="#ffffff"
           sx={{ fontFamily: "montserrat" }}
         >
           {cost}

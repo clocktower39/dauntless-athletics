@@ -234,7 +234,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#6391FF",
+    backgroundColor: "#F44336",
   },
   {
     title: "1.5 hours Each Week",
@@ -242,7 +242,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#B0DE79",
+    backgroundColor: "#3a3a3a",
   },
   {
     title: "2 hours Each Week",
@@ -250,7 +250,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#FF5B93",
+    backgroundColor: "#F44336",
   },
   {
     title: "2.5 hours Each Week",
@@ -258,7 +258,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#01E2FE",
+    backgroundColor: "#3a3a3a",
   },
   {
     title: "3 hours Each Week",
@@ -266,7 +266,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#6184D8",
+    backgroundColor: "#F44336",
   },
   {
     title: "3.5 hours Each Week",
@@ -274,7 +274,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#533A71",
+    backgroundColor: "#3a3a3a",
   },
   {
     title: "4 hours Each Week",
@@ -282,7 +282,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#00BFA5",
+    backgroundColor: "#F44336",
   },
   {
     title: "4.5 hours Each Week",
@@ -290,7 +290,7 @@ export const pricingOptions = [
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#5D737E",
+    backgroundColor: "#3a3a3a",
   },
   {
     title: "Private Lessons",
@@ -298,7 +298,7 @@ export const pricingOptions = [
     duration: "Call for Pricing",
     buttonText: "(480) 214-3908",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#86DD1C",
+    backgroundColor: "#F44336",
     optionalTextList: ["Prices vary by coach"],
   },
   {
@@ -307,7 +307,7 @@ export const pricingOptions = [
     duration: "1 - 1.5 Hours",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
-    backgroundColor: "#7EE0BF",
+    backgroundColor: "#3a3a3a",
     optionalTextList: ["$35 for 1 hour single class", "$45 for 1.5 hour single class"],
   },
   {
@@ -316,7 +316,7 @@ export const pricingOptions = [
     duration: "3 Hours",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/camps?camptype=1",
-    backgroundColor: "#83BCE9",
+    backgroundColor: "#F44336",
     optionalTextList: ["Beginner", "Intermediate", "Advanced", "*Price is per athlete"],
   },
 ];
