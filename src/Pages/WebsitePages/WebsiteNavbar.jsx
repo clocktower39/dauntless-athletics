@@ -74,7 +74,7 @@ export default function WebsiteNavbar() {
   const toolbarRef = useRef(null);
   const location = useLocation();
 
-  const hasAnnouncement = true;
+  const hasAnnouncement = false;
 
   const announcementMessage = `We will be closed for Memorial Day
   ${dayjs.utc(new Date("2025-05-26")).format("dddd, MMMM Do")}.
