@@ -121,6 +121,11 @@ export default function Staff() {
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
+      displayName: "Leo Borjas",
+      positionTitle: "Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
       displayName: "Mia Franz",
       positionTitle: "Choreography",
       picture: "/images/staff/Mia-Franz-Dauntless-Athletics-2024.jpg",
