@@ -286,7 +286,7 @@ export const pricingOptions = [
   },
   {
     title: "4.5 hours Each Week",
-    cost: "$175",
+    cost: "$180",
     duration: "Per Month",
     buttonText: "Schedule Now",
     buttonLink: "https://www.iclassprov2.com/parentportal/dauntlessathletics/classes",
