@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
-import { Box, Container, Divider, Grid, Typography } from "@mui/material";
+import { Box, Container, Divider, Grid, Typography, Skeleton } from "@mui/material";
 import Footer from "../../Components/Footer";
 
 export default function Staff() {
@@ -133,17 +133,43 @@ export default function Staff() {
   ];
 
   const StaffMemberCard = ({ employee }) => {
+    const [loaded, setLoaded] = useState(false);
+
     return (
-      <Grid container  size={{ xs: 12, md: 6, lg: 4, }} justifyContent="center">
+      <Grid container size={{ xs: 12, md: 6, lg: 4 }} justifyContent="center">
         <Box
-          sx={{
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-          }}
+          sx={
+            loaded
+              ? {
+                  position: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                }
+              : {
+                  position: "relative",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "100%",
+                  maxWidth: "362px",
+                }
+          }
         >
+          {!loaded && <Skeleton variant="rectangular" height="100px" animation="wave" />}
           {/* Request all image as same size */}
-          <img src={employee.picture} alt="Employee Image" style={{ minWidth: '100%', maxWidth:'362px', maxHeight: '100%'}} />
+          <img
+            src={employee.picture}
+            alt="Employee Image"
+            style={{
+              minWidth: "100%",
+              maxWidth: "362px",
+              maxHeight: "100%",
+              borderRadius: "4px",
+              display: loaded ? "block" : "none",
+            }}
+            onLoad={() => setLoaded(true)}
+          />
           <Typography
             sx={{
               position: "absolute",
@@ -155,8 +181,8 @@ export default function Staff() {
               width: "100%",
               fontFamily: "montserrat",
               textTransform: "uppercase",
-              color: '#fff',
-              fontSize: '19px',
+              color: "#fff",
+              fontSize: "19px",
               fontWeight: 600,
             }}
             variant="h4"
@@ -173,14 +199,22 @@ export default function Staff() {
               textAlign: "center",
               width: "100%",
               fontFamily: "Source Sans Pro",
-              color: '#fff',
-              fontSize: '16px',
+              color: "#fff",
+              fontSize: "16px",
             }}
             variant="h4"
           >
             {employee.positionTitle}
           </Typography>
-            <Box sx={{ height: '120px', width: '100%', backgroundColor: '#FF1B22', position: 'absolute', bottom: 0,}}/>
+          <Box
+            sx={{
+              height: "120px",
+              width: "100%",
+              backgroundColor: "#FF1B22",
+              position: "absolute",
+              bottom: 0,
+            }}
+          />
         </Box>
       </Grid>
     );
@@ -210,7 +244,7 @@ export default function Staff() {
         >
           Meet Our Staff
         </Typography>
-        <Container maxWidth="lg" sx={{ padding: '25px 0'}}>
+        <Container maxWidth="lg" sx={{ padding: "25px 0" }}>
           <Divider sx={{ backgroundColor: "#53c7d6", width: "25%", margin: "auto" }} />
           <Typography
             variant="body1"
