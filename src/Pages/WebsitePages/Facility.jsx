@@ -3,6 +3,7 @@ import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
 import { HomeOutlined as HomeOutlinedIcon } from "@mui/icons-material";
+import ImageWithSkeleton from "../../Components/ImageWithSkeleton"
 
 const classes = {
   mainImgBox: {
@@ -45,7 +46,7 @@ export default function Facility() {
         }}
       >
         <Container maxWidth="lg">
-          <img
+          <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_front_of_building.png'}
             style={{ width: "calc(100% - 40px)", height: "auto", padding: "20px" }}
           />
@@ -56,7 +57,7 @@ export default function Facility() {
 
           <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
 
-          <img
+          <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_view_of_whole_gym-scaled.jpeg'}
             style={{ width: "calc(100% - 40px)", height: "auto", padding: "20px" }}
           />
@@ -70,11 +71,11 @@ export default function Facility() {
 
           <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
 
-          <img
+          <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_front_view_gym-scaled.jpg'}
             style={{ width: "calc(50% - 20px)", height: "auto", padding: "10px" }}
           />
-          <img
+          <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_side_view_gym-scaled.jpeg'}
             style={{ width: "calc(50% - 20px)", height: "auto", padding: "10px" }}
           />
