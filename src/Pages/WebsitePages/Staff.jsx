@@ -156,7 +156,17 @@ export default function Staff() {
                 }
           }
         >
-          {!loaded && <Skeleton variant="rectangular" height="100px" animation="wave" />}
+          {!loaded && (
+            <Skeleton
+              variant="rectangular"
+              height={577}
+              width="100%"
+              animation="wave"
+              sx={{
+                bgcolor: "grey.900",
+              }}
+            />
+          )}
           {/* Request all image as same size */}
           <img
             src={employee.picture}
@@ -168,7 +178,7 @@ export default function Staff() {
               borderRadius: "4px",
               display: loaded ? "block" : "none",
             }}
-            onLoad={() => setLoaded(true)}
+            onLoad={() => setLoaded(false)}
           />
           <Typography
             sx={{
