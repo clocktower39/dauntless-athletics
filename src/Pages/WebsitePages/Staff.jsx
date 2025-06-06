@@ -161,7 +161,7 @@ export default function Staff() {
               variant="rectangular"
               height={577}
               width="100%"
-              animation="wave"
+              animation=""
               sx={{
                 bgcolor: "grey.900",
               }}
@@ -178,7 +178,7 @@ export default function Staff() {
               borderRadius: "4px",
               display: loaded ? "block" : "none",
             }}
-            onLoad={() => setLoaded(false)}
+            onLoad={() => setLoaded(true)}
           />
           <Typography
             sx={{
