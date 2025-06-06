@@ -20,7 +20,6 @@ const ImageWithSkeleton = ({ src, alt = "", style = {}, ...props }) => {
       <img
         src={src}
         alt={alt}
-        loading="lazy"
         onLoad={() => setLoaded(true)}
         style={{
           ...style,
