@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { HashLink as Link } from "react-router-hash-link";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Button, Container, Divider, Grid, TextField, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
@@ -218,7 +219,7 @@ export default function Contact() {
       >
         <Container maxWidth="lg">
           <Grid container sx={{ padding: "25px 0" }}>
-            <Grid container size={{ xs: 12, md: 3, }} >
+            <Grid container size={{ xs: 12, md: 3 }}>
               <Grid container size={12} justifyContent="center">
                 <PhoneIcon sx={{ fontSize: "64px", padding: "25px 0" }} />
               </Grid>
@@ -262,7 +263,7 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3, }} >
+            <Grid container size={{ xs: 12, md: 3 }}>
               <Grid container size={12} justifyContent="center">
                 <EventAvailableOutlinedIcon
                   sx={{ color: "rgb(76, 173, 201)", fontSize: "64px", padding: "25px 0" }}
@@ -280,6 +281,8 @@ export default function Contact() {
                 sx={{ padding: "15px 0", flexGrow: 1, minHeight: "150px" }}
               >
                 <Typography
+                  component={Link}
+                  to={"/class-schedule/#"}
                   sx={{
                     fontFamily: "source sans pro",
                     fontSize: "16px",
@@ -290,7 +293,7 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3, }} >
+            <Grid container size={{ xs: 12, md: 3 }}>
               <Grid container size={12} justifyContent="center">
                 <EventBusyOutlinedIcon
                   sx={{ color: "rgb(117, 214, 156)", fontSize: "64px", padding: "25px 0" }}
@@ -388,7 +391,7 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3, }} >
+            <Grid container size={{ xs: 12, md: 3 }}>
               <Grid container size={12} justifyContent="center">
                 <LocationOnIcon
                   sx={{ color: "rgb(244, 82, 77)", fontSize: "64px", padding: "25px 0" }}
