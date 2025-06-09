@@ -257,7 +257,7 @@ export default function Contact() {
                     }}
                   >
                     {" "}
-                    info@dauntlessathletics.com
+                    <a href="mailto:info@dauntlessathletics.com">info@dauntlessathletics.com</a>
                   </Typography>
                 </Grid>
               </Grid>
