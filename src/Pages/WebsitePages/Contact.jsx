@@ -246,7 +246,7 @@ export default function Contact() {
                       fontSize: "16px",
                     }}
                   >
-                    (480) 214-3908
+                    <a href="tel:4802143908">(480) 214-3908</a>
                   </Typography>
                 </Grid>
                 <Grid container size={12} justifyContent="center">
