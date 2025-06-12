@@ -23,10 +23,10 @@ const classes = {
     textTransform: "uppercase",
   },
   image: {
-    display: 'none',
+    display: "none",
     width: "auto",
     height: "100%",
-    maxHeight: '900px',
+    maxHeight: "900px",
   },
   stepImgBox: {
     position: "relative",
@@ -49,6 +49,17 @@ const classes = {
     fontSize: "1.5em",
     textTransform: "uppercase",
   },
+  PeakPerformanceCamp: {
+    backgroundColor: "#3a3a3a",
+    padding: "7.5px",
+  },
+  PeakPerformanceCampText: {
+    color: "#FFF",
+    width: "100%",
+    fontFamily: "montserrat",
+    textTransform: "uppercase",
+    padding: "3px",
+  },
 };
 
 export default function Camps() {
@@ -64,14 +75,19 @@ export default function Camps() {
               </Typography>
             </Grid>
             <Grid container size={4} justifyContent="flex-end" alignItems="center">
-              <GroupsIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
+              <GroupsIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em" }} />
             </Grid>
           </Grid>
         </Container>
       </Box>
       <Box>
-        <img src="/images/camps/Dauntless-Athletics-Camp-Group-Image.jpg" alt="Inspiring Mountain" style={classes.image} /></Box>
-      <Box sx={{ backgroundColor: "#000", color: '#FFF', }}>
+        <img
+          src="/images/camps/Dauntless-Athletics-Camp-Group-Image.jpg"
+          alt="Inspiring Mountain"
+          style={classes.image}
+        />
+      </Box>
+      <Box sx={{ backgroundColor: "#000", color: "#FFF" }}>
         <Container maxWidth="md">
           <Typography
             sx={{
@@ -116,6 +132,41 @@ export default function Camps() {
               </Typography>
             </li>
           </ul>
+          <Box sx={classes.PeakPerformanceCamp}>
+            <Grid container justifyContent="center">
+              <Typography
+                sx={{ ...classes.PeakPerformanceCampText, padding: "15px" }}
+                variant="h4"
+                textAlign="center"
+              >
+                Peak Performance Camp
+              </Typography>
+              <Typography sx={{ ...classes.PeakPerformanceCampText }} variant="h5" textAlign="center">
+                Hosted at Sun Devil Fitness Complex
+              </Typography>
+              <Typography sx={{ ...classes.PeakPerformanceCampText }} variant="body1" textAlign="center">
+                Event Date: June 20th & 21st
+              </Typography>
+              <Typography
+                sx={{ ...classes.PeakPerformanceCampText, fontSize: "1em" }}
+                variant="subtitle1"
+                textAlign="center"
+              >
+                <a href="https://sites.google.com/view/peakperformancecampqanda/home">FAQs</a>
+              </Typography>
+              <Typography
+                sx={{ ...classes.PeakPerformanceCampText, fontSize: "1em" }}
+                variant="subtitle1"
+                textAlign="center"
+              >
+                See More Information and Enroll{" "}
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1V-5ncRhGBZgratsZabDwtlg93Tt1u4yPfpor6JnR9GjImA/viewform?pli=1">
+                  Here
+                </a>
+                !
+              </Typography>
+            </Grid>
+          </Box>
           <Grid container justifyContent="center">
             {camps.map((camp, index) => (
               <CampComponent key={`${camp.title}-${index}`} camp={camp} index={index} />
@@ -146,7 +197,7 @@ export default function Camps() {
         </Container>
         <Container maxWidth="lg">
           <Grid container spacing={5} sx={{ padding: "25px" }}>
-            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepOneImg} alt="Step 1" style={classes.stepImage} />
@@ -160,7 +211,7 @@ export default function Camps() {
               </Box>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepTwoImg} alt="Step 2" style={classes.stepImage} />
@@ -174,7 +225,7 @@ export default function Camps() {
               </Box>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepThreeImg} alt="Step 3" style={classes.stepImage} />
@@ -188,7 +239,7 @@ export default function Camps() {
               </Box>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3, }} justifyContent="center">
+            <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
               <Box>
                 <Box sx={classes.stepImgBox}>
                   <img src={StepFourImg} alt="Step 4" style={classes.stepImage} />
