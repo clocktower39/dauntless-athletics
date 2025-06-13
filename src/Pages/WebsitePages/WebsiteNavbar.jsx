@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { useLocation } from "react-router";
 import {
@@ -14,7 +14,11 @@ import {
   Toolbar,
   Menu,
   MenuItem,
-  Dialog,
+  Paper,
+  Popper,
+  Grow,
+  ClickAwayListener,
+  MenuList,
 } from "@mui/material";
 import {
   Close as CloseIcon,
@@ -69,7 +73,7 @@ const classes = {
 };
 
 export default function WebsiteNavbar() {
-  const wide = useWindowWidth(1045);
+  const wide = useWindowWidth(850);
   const [menuOpen, setMenuOpen] = useState(false);
   const toolbarRef = useRef(null);
   const location = useLocation();
@@ -94,7 +98,7 @@ export default function WebsiteNavbar() {
     localStorage.removeItem(announcementKey);
     setDismissed(false);
   };
-  
+
   // Cleanup old keys
   Object.keys(localStorage).forEach((key) => {
     if (key.startsWith("announcementDismissed_") && key !== announcementKey) {
@@ -103,38 +107,55 @@ export default function WebsiteNavbar() {
   });
 
   const handleMenuClick = () => {
-    setMenuOpen(true); // Open the menu
+    setMenuOpen(true);
   };
 
   const handleMenuClose = () => {
-    setMenuOpen(false); // Close the menu
+    setMenuOpen(false);
   };
 
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+
   const isActive = (path) => {
+    if (!path) return false;
+
     // Exact match for the home path without a hash
-    if (path === "/#" && location.pathname === "/" && !location.hash) {
+    if (path === "/#" && location.pathname === "/") {
       return true;
     }
 
-    // Exact match for hash-based paths (like Classes or Tuition sections)
     if (path.startsWith("/#")) {
       const [pathname, hash] = path.split("#");
       return location.pathname === pathname && location.hash === `#${hash}`;
     }
 
-    // Handle non-hash paths that might end with "/#"
     if (!path.includes("#") || path.endsWith("/#")) {
-      const normalizedPath = path.endsWith("/#") ? path.slice(0, -1) : path; // Remove "/#" from the end
+      const normalizedPath = path.endsWith("/#") ? path.slice(0, -1) : path;
       return location.pathname === normalizedPath;
     }
 
-    return false; // Default return false if none of the conditions match
+    return false;
   };
 
   const navItems = [
-    { name: "Home", link: "/#" },
-    { name: "Classes", link: "/#dauntless-classes-section" },
-    { name: "Tuition", link: "/#tuition-section" },
+    {
+      name: "Home",
+      link: "/#",
+      submenu: [
+        { name: "Classes", link: "/#dauntless-classes-section" },
+        { name: "Tuition", link: "/#tuition-section" },
+      ],
+    },
     { name: "Camps", link: "/camps/#" },
     { name: "Combine", link: "/college-combine/#" },
     { name: "Schedule", link: "/class-schedule/#" },
@@ -267,27 +288,31 @@ export default function WebsiteNavbar() {
           </IconButton>
           {wide ? (
             <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
-              {navItems.map((item) => (
-                <Button
-                  key={item.name}
-                  sx={{
-                    textTransform: "none",
-                    color: item.textColor || "#fff",
-                    backgroundColor: "#000",
-                    fontSize: {
-                      xs: "9px",
-                      md: "13px",
-                    },
-                    border: isActive(item.link) ? "2px solid #FFF" : "none",
-                  }}
-                  component={Link}
-                  to={item.link}
-                  variant="contained"
-                  size="small"
-                >
-                  {item.name}
-                </Button>
-              ))}
+              {navItems.map((item) => {
+                if (item.submenu) {
+                  return <SubMenuItem key={item.name} item={item} isActive={isActive} isTouchDevice={isTouchDevice} />
+                }
+
+                return (
+                  <Button
+                    key={item.name}
+                    sx={{
+                      textTransform: "none",
+                      color: item.textColor || "#fff",
+                      backgroundColor: "#000",
+                      fontSize: { xs: "9px", md: "13px" },
+                      border: isActive(item.link) ? "2px solid #FFF" : "none",
+                    }}
+                    component={Link}
+                    to={item.link}
+                    variant="contained"
+                    size="small"
+                  >
+                    {item.name}
+                  </Button>
+                );
+              })}
+
             </Stack>
           ) : (
             <IconButton
@@ -333,23 +358,147 @@ export default function WebsiteNavbar() {
           },
         }}
       >
-        {navItems.map((item) => (
-          <MenuItem
-            key={item.name}
-            onClick={handleMenuClose}
-            component={Link}
-            to={item.link}
-            sx={{
-              ...classes.MenuItem,
-              color: isActive(item.link) ? "#FFF" : item.textColor || "rgb(153, 169, 181)",
-              backgroundColor: isActive(item.link) ? "#181828" : "inherit",
-              borderLeft: isActive(item.link) && "3px solid #F44336",
-            }}
-          >
-            {item.name}
-          </MenuItem>
-        ))}
+        {navItems.flatMap((item) => {
+          const baseItem = (
+            <MenuItem
+              key={item.name}
+              onClick={handleMenuClose}
+              component={Link}
+              to={item.link}
+              sx={{
+                ...classes.MenuItem,
+                color: isActive(item.link) ? "#FFF" : item.textColor || "rgb(153, 169, 181)",
+                backgroundColor: isActive(item.link) ? "#181828" : "inherit",
+                borderLeft: isActive(item.link) && "3px solid #F44336",
+              }}
+            >
+              {item.name}
+            </MenuItem>
+          );
+
+          const subItems = item.submenu?.map((sub) => (
+            <MenuItem
+              key={`${item.name}-${sub.name}`}
+              onClick={handleMenuClose}
+              component={Link}
+              to={sub.link}
+              sx={{
+                ...classes.MenuItem,
+                paddingLeft: "32px", // Indent for subitems
+                color: isActive(sub.link) ? "#FFF" : sub.textColor || "rgb(153, 169, 181)",
+                backgroundColor: isActive(sub.link) ? "#181828" : "inherit",
+                borderLeft: isActive(sub.link) && "3px solid #F44336",
+              }}
+            >
+              {sub.name}
+            </MenuItem>
+          )) || [];
+
+          return [baseItem, ...subItems];
+        })}
+
       </Menu>
     </AppBar>
   );
 }
+
+const SubMenuItem = ({ item, isActive, isTouchDevice }) => {
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
+  const closeTimer = useRef(null);
+
+  const handleOpen = () => {
+    clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    hasOpenedOnceRef.current = false;
+    closeTimer.current = setTimeout(() => setOpen(false), 200);
+  };
+
+  const cancelClose = () => clearTimeout(closeTimer.current);
+
+  const hasOpenedOnceRef = useRef(false);
+
+  const handleClick = (e) => {
+    if (isTouchDevice) {
+      if (!hasOpenedOnceRef.current) {
+        e.preventDefault();
+        hasOpenedOnceRef.current = true;
+        setOpen(true);
+      } else {
+        hasOpenedOnceRef.current = false; // reset on second tap
+        setOpen(false); // optional: close dropdown
+      }
+    }
+  };
+
+
+  return (
+    <>
+      <Button
+        component={Link}
+        to={item.link}
+        onClick={handleClick}
+        onMouseEnter={!isTouchDevice ? handleOpen : undefined}
+        onMouseLeave={!isTouchDevice ? handleClose : undefined}
+        ref={anchorRef}
+        sx={{
+          textTransform: "none",
+          color: item.textColor || "#fff",
+          backgroundColor: "#000",
+          fontSize: { xs: "9px", md: "13px" },
+          border: isActive(item.link) ? "2px solid #FFF" : "none",
+        }}
+        variant="contained"
+        size="small"
+      >
+        {item.name} ▾
+      </Button>
+
+      <Popper
+        open={open}
+        anchorEl={anchorRef.current}
+        placement="bottom-start"
+        transition
+        disablePortal
+      >
+        {({ TransitionProps }) => (
+          <Grow {...TransitionProps} style={{ transformOrigin: "top left" }}>
+            <Paper
+              onMouseEnter={!isTouchDevice ? cancelClose : undefined}
+              onMouseLeave={!isTouchDevice ? handleClose : undefined}
+              sx={{
+                backgroundColor: "rgb(33, 35, 49)",
+                border: "1px solid rgb(73, 76, 100)",
+              }}
+            >
+              <ClickAwayListener onClickAway={() => setOpen(false)}>
+                <MenuList disablePadding>
+                  {item.submenu.map((sub) => (
+                    <MenuItem
+                      key={sub.name}
+                      component={Link}
+                      to={sub.link}
+                      onClick={() => setOpen(false)}
+                      sx={{
+                        color: isActive(sub.link) ? "#FFF" : sub.textColor || "rgb(153, 169, 181)",
+                        backgroundColor: isActive(sub.link) ? "#181828" : "inherit",
+                        borderBottom: "1px solid rgb(73, 76, 100)",
+                        borderLeft: isActive(sub.link) && "3px solid #F44336",
+                        padding: "12.5px",
+                      }}
+                    >
+                      {sub.name}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </>
+  );
+};
