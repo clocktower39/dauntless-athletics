@@ -160,7 +160,7 @@ const schedule = [
     activities: [
       {
         activity: "Beginning/Intermediate Tumbling",
-        time: "9:30-10:00 AM",
+        time: "9:30-10:30 AM",
         color: "#d72933",
       },
       {
