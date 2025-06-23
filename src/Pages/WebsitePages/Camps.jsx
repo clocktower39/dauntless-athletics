@@ -132,41 +132,6 @@ export default function Camps() {
               </Typography>
             </li>
           </ul>
-          <Box sx={classes.PeakPerformanceCamp}>
-            <Grid container justifyContent="center">
-              <Typography
-                sx={{ ...classes.PeakPerformanceCampText, padding: "15px" }}
-                variant="h4"
-                textAlign="center"
-              >
-                Peak Performance Camp
-              </Typography>
-              <Typography sx={{ ...classes.PeakPerformanceCampText }} variant="h5" textAlign="center">
-                Hosted at Sun Devil Fitness Complex
-              </Typography>
-              <Typography sx={{ ...classes.PeakPerformanceCampText }} variant="body1" textAlign="center">
-                Event Date: June 20th & 21st
-              </Typography>
-              <Typography
-                sx={{ ...classes.PeakPerformanceCampText, fontSize: "1em" }}
-                variant="subtitle1"
-                textAlign="center"
-              >
-                <a href="https://sites.google.com/view/peakperformancecampqanda/home">FAQs</a>
-              </Typography>
-              <Typography
-                sx={{ ...classes.PeakPerformanceCampText, fontSize: "1em" }}
-                variant="subtitle1"
-                textAlign="center"
-              >
-                See More Information and Enroll{" "}
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSe1V-5ncRhGBZgratsZabDwtlg93Tt1u4yPfpor6JnR9GjImA/viewform?pli=1">
-                  Here
-                </a>
-                !
-              </Typography>
-            </Grid>
-          </Box>
           <Grid container justifyContent="center">
             {camps.map((camp, index) => (
               <CampComponent key={`${camp.title}-${index}`} camp={camp} index={index} />
