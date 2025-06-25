@@ -97,7 +97,7 @@ export default function Camps() {
               padding: "25px 0",
             }}
           >
-            We are offering classes that are first come, first serve. Please see the specific
+            We are offering camps that are first come, first serve. Please see the specific
             guidelines below.{" "}
             <Typography variant="caption">(Please note the guidelines may change):</Typography>
           </Typography>
@@ -121,7 +121,7 @@ export default function Camps() {
               <Typography
                 sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
               >
-                Make ups are not allowed to be used for these classes.
+                Make ups are not allowed to be used for these camps.
               </Typography>
             </li>
             <li>
