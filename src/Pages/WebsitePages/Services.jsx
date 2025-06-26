@@ -49,7 +49,9 @@ export default function Services() {
               </Typography>
             </Grid>
             <Grid container size={4} justifyContent="flex-end" alignItems="center">
-              <MiscellaneousServicesIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
+              <MiscellaneousServicesIcon
+                sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em" }}
+              />
             </Grid>
           </Grid>
         </Container>
@@ -58,7 +60,7 @@ export default function Services() {
       <Box sx={{ backgroundColor: "#000" }}>
         <Container maxWidth="lg">
           <Grid container>
-            <Grid container  size={{ xs: 12, md: 6, }} >
+            <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
                   color: "#fff",
@@ -128,7 +130,7 @@ export default function Services() {
               </Box>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 6, }} >
+            <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
                   color: "#fff",
@@ -209,8 +211,11 @@ export default function Services() {
                       padding: "15px",
                     }}
                   >
-                    We will contract with your gym or school to provide single or re-occuring
-                    clinics.
+                    We contract with schools, gyms, and programs to provide tumbling and stunting
+                    instruction — either on-site at your gym, school, or practice facility, or
+                    in-house at our own training center. Whether you need a one-time session, or
+                    ongoing support, our experienced instructors work alongside your staff to help
+                    athletes improve their technique, form, and confidence.
                   </Typography>
                 </Grid>
                 <Grid container size={12} justifyContent="center" sx={{ padding: "25px" }}>
@@ -255,7 +260,7 @@ export default function Services() {
           <Grid container spacing={2} justifyContent="space-around" sx={{ paddingBottom: "75px" }}>
             <Grid
               container
-              size={{ xs: 12, sm: 6, md: 4, }}
+              size={{ xs: 12, sm: 6, md: 4 }}
               sx={{ color: "#fff" }}
               direction="column"
               alignItems="center"
@@ -279,7 +284,7 @@ export default function Services() {
             </Grid>
             <Grid
               container
-              size={{ xs: 12, sm: 6, md: 4, }}
+              size={{ xs: 12, sm: 6, md: 4 }}
               sx={{ color: "#fff" }}
               direction="column"
               alignItems="center"
