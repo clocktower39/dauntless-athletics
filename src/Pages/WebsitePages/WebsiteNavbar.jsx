@@ -81,7 +81,9 @@ export default function WebsiteNavbar() {
   const hasAnnouncement = true;
 
   const announcementMessage = `We will be closed for all classes from
-  ${dayjs.utc(new Date("2025-06-29")).format("dddd, MMMM Do")} through ${dayjs.utc(new Date("2025-07-06")).format("dddd, MMMM Do")} .
+  ${dayjs.utc(new Date("2025-06-29")).format("dddd, MMMM Do")} through ${dayjs
+    .utc(new Date("2025-07-06"))
+    .format("dddd, MMMM Do")} .
   Happy 4th of July!`;
 
   const announcementKey = `announcementDismissed_${btoa(announcementMessage)}`;
@@ -118,13 +120,12 @@ export default function WebsiteNavbar() {
 
   useEffect(() => {
     const update = () => {
-      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+      setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
     };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
-
 
   const isActive = (path) => {
     if (!path) return false;
@@ -290,7 +291,16 @@ export default function WebsiteNavbar() {
             <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
               {navItems.map((item) => {
                 if (item.submenu) {
-                  return <SubMenuItem key={item.name} item={item} isActive={isActive} isTouchDevice={isTouchDevice} />
+                  return (
+                    <SubMenuItem
+                      key={item.name}
+                      item={item}
+                      isActive={isActive}
+                      isTouchDevice={isTouchDevice}
+                      hasAnnouncement={hasAnnouncement}
+                      dismissed={dismissed}
+                    />
+                  );
                 }
 
                 return (
@@ -312,7 +322,6 @@ export default function WebsiteNavbar() {
                   </Button>
                 );
               })}
-
             </Stack>
           ) : (
             <IconButton
@@ -376,33 +385,33 @@ export default function WebsiteNavbar() {
             </MenuItem>
           );
 
-          const subItems = item.submenu?.map((sub) => (
-            <MenuItem
-              key={`${item.name}-${sub.name}`}
-              onClick={handleMenuClose}
-              component={Link}
-              to={sub.link}
-              sx={{
-                ...classes.MenuItem,
-                paddingLeft: "32px", // Indent for subitems
-                color: isActive(sub.link) ? "#FFF" : sub.textColor || "rgb(153, 169, 181)",
-                backgroundColor: isActive(sub.link) ? "#181828" : "inherit",
-                borderLeft: isActive(sub.link) && "3px solid #F44336",
-              }}
-            >
-              {sub.name}
-            </MenuItem>
-          )) || [];
+          const subItems =
+            item.submenu?.map((sub) => (
+              <MenuItem
+                key={`${item.name}-${sub.name}`}
+                onClick={handleMenuClose}
+                component={Link}
+                to={sub.link}
+                sx={{
+                  ...classes.MenuItem,
+                  paddingLeft: "32px", // Indent for subitems
+                  color: isActive(sub.link) ? "#FFF" : sub.textColor || "rgb(153, 169, 181)",
+                  backgroundColor: isActive(sub.link) ? "#181828" : "inherit",
+                  borderLeft: isActive(sub.link) && "3px solid #F44336",
+                }}
+              >
+                {sub.name}
+              </MenuItem>
+            )) || [];
 
           return [baseItem, ...subItems];
         })}
-
       </Menu>
     </AppBar>
   );
 }
 
-const SubMenuItem = ({ item, isActive, isTouchDevice }) => {
+const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed, }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
   const closeTimer = useRef(null);
@@ -433,7 +442,6 @@ const SubMenuItem = ({ item, isActive, isTouchDevice }) => {
       }
     }
   };
-
 
   return (
     <>
@@ -481,6 +489,11 @@ const SubMenuItem = ({ item, isActive, isTouchDevice }) => {
                       key={sub.name}
                       component={Link}
                       to={sub.link}
+                      scroll={(el) => {
+                        const yOffset = (hasAnnouncement && !dismissed) ? -100 : 0; // scroll 100px more (move element down) 
+                        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({ top: y, behavior: "smooth" });
+                      }}
                       onClick={() => setOpen(false)}
                       sx={{
                         color: isActive(sub.link) ? "#FFF" : sub.textColor || "rgb(153, 169, 181)",
