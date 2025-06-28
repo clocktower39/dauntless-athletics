@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { camps, dauntlessClasses, pricingOptions } from "../../states";
 import { Box, Button, Container, Divider, Grid, Typography } from "@mui/material";
@@ -8,7 +8,8 @@ import CampComponent from "../../Components/CampComponent";
 import PricingCard from "../../Components/PricingCard";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
-import DauntlessAthleticsTumblingCampsImg from '../../assets/Dauntless-Athletics-Tumbling-Camps.jpg';
+import DauntlessAthleticsTumblingCampsImg from "../../assets/Dauntless-Athletics-Tumbling-Camps.jpg";
+import useHashOnView from "../../Hooks/useHashOnView";
 
 const classes = {
   MainImgGrid: {
@@ -53,6 +54,8 @@ const classes = {
 };
 
 export default function Home() {
+  const homeRef = useHashOnView("home");
+
   useEffect(() => {
     // eslint-disable-next-line
   }, []);
@@ -85,6 +88,8 @@ export default function Home() {
                     <Divider sx={{ bgcolor: "white", marginBottom: "1.1em" }} />
                   </Grid>
                   <Typography
+                    id="home"
+                    ref={homeRef}
                     variant="h4"
                     textAlign="center"
                     sx={{
