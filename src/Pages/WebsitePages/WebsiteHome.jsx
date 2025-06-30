@@ -56,6 +56,7 @@ const classes = {
 export default function Home() {
   const homeRef = useHashOnView("home");
   const classesRef = useHashOnView("dauntless-classes-section");
+  const tuitionRef = useHashOnView("#tuition-section");
 
   useEffect(() => {
     // eslint-disable-next-line
@@ -64,14 +65,14 @@ export default function Home() {
   return (
     <>
       <WebsiteNavbar />
-        <ReactPlayer
-          url="https://youtu.be/PZJ2sG63q3c"
-          width="100%"
-          height="100vh"
-          muted
-          loop
-          playing
-        />
+      <ReactPlayer
+        url="https://youtu.be/PZJ2sG63q3c"
+        width="100%"
+        height="100vh"
+        muted
+        loop
+        playing
+      />
       <Grid>
         <Container maxWidth="false" sx={{ backgroundColor: "black" }}>
           <Container
@@ -88,7 +89,9 @@ export default function Home() {
                   <Grid size={12}>
                     <Divider sx={{ bgcolor: "white", marginBottom: "1.1em" }} />
                   </Grid>
-                  <Typography id="home" ref={homeRef}
+                  <Typography
+                    id="home"
+                    ref={homeRef}
                     variant="h4"
                     textAlign="center"
                     sx={{
@@ -321,22 +324,24 @@ export default function Home() {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container id="tuition-section" sx={{ paddingTop: "200px" }}>
+              <Grid container sx={{ paddingTop: "200px" }}>
                 <Grid container size={12} justifyContent="center">
-                  <Typography
-                    variant="h3"
-                    textAlign="center"
-                    sx={{
-                      fontFamily: "Montserrat",
-                      textTransform: "uppercase",
-                      padding: "75px 0",
-                    }}
-                  >
-                    TUITION{" "}
-                    <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
-                      RATES
+                  <Box id="tuition-section" ref={tuitionRef}>
+                    <Typography
+                      variant="h3"
+                      textAlign="center"
+                      sx={{
+                        fontFamily: "Montserrat",
+                        textTransform: "uppercase",
+                        padding: "75px 0",
+                      }}
+                    >
+                      TUITION{" "}
+                      <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+                        RATES
+                      </Typography>
                     </Typography>
-                  </Typography>
+                  </Box>
                 </Grid>
                 <Grid container justifyContent="center">
                   <Grid container size={12} justifyContent="center">
