@@ -2,6 +2,11 @@ import React, { useEffect, useRef } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { camps, dauntlessClasses, pricingOptions } from "../../states";
 import { Box, Button, Container, Divider, Grid, Typography } from "@mui/material";
+import {
+  Email as EmailIcon,
+  LocationOnOutlined as LocationOnOutlinedIcon,
+  Phone as PhoneIcon,
+} from "@mui/icons-material";
 import WebsiteNavbar from "./WebsiteNavbar";
 import ReactPlayer from "react-player";
 import CampComponent from "../../Components/CampComponent";
@@ -83,53 +88,87 @@ export default function Home() {
               padding: "25px 0px",
             }}
           >
-          <Grid container justifyContent="center">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
-              width="100%"
-              height="450"
-              frameborder="0"
-              style={{ border: 0 }}
-              allowfullscreen=""
-              aria-hidden="false"
-              tabindex="0"
-            ></iframe>
-          </Grid>
-            <Grid container>
-              <Grid container>
-                <Grid container justifyContent="center" size={12}>
-                  <Grid size={12}>
-                    <Divider sx={{ bgcolor: "white", marginBottom: "1.1em" }} />
-                  </Grid>
-                  <Typography
-                    id="home"
-                    ref={homeRef}
-                    variant="h4"
-                    textAlign="center"
-                    sx={{
-                      fontFamily: "montserrat",
-                      textTransform: "uppercase",
-                      paddingBottom: "1.4em",
-                    }}
-                  >
-                    9 Years{" "}
-                    <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
-                      Going Strong
-                    </Typography>
-                  </Typography>
-                </Grid>
-                <Grid>
-                  <Typography sx={{ fontFamily: "Source Sans Pro" }}>
-                    As we approach 9 years of being open we would like to take the time to thank
-                    each and everyone of you for being a part of our journey the last 9 years! We
-                    appreciate all the love and support you have shown us these past years.
-                  </Typography>
-                  <br />
+            <Grid container justifyContent="center" >
+              <Grid size={12}>
+                <Divider sx={{ bgcolor: "white", marginBottom: "1.1em" }} />
+              </Grid>
+              <Typography
+                id="home"
+                ref={homeRef}
+                variant="h4"
+                textAlign="center"
+                sx={{
+                  fontFamily: "montserrat",
+                  textTransform: "uppercase",
+                  paddingBottom: "1.4em",
+                }}
+              >
+                9 Years{" "}
+                <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+                  Going Strong
+                </Typography>
+              </Typography>
 
-                  <Typography sx={{ fontFamily: "source sans pro" }}>
-                    We are excited for the journey of year 9 and can’t wait to see the improvements
-                    and goals being achieved by every athlete here!
-                  </Typography>
+              <Grid container justifyContent="center" size={12} spacing={2} >
+                <Grid container justifyContent="center" size={{ xs: 12, md: 6}}>
+                  <Grid size={12} sx={{ fontFamily: "source sans pro" }}>
+                    <Grid>
+                      <Typography sx={{ fontFamily: "Source Sans Pro" }}>
+                        As we approach 9 years of being open we would like to take the time to thank
+                        each and everyone of you for being a part of our journey the last 9 years!
+                        We appreciate all the love and support you have shown us these past years.
+                      </Typography>
+                      <br />
+
+                      <Typography sx={{ fontFamily: "source sans pro" }}>
+                        We are excited for the journey of year 9 and can’t wait to see the
+                        improvements and goals being achieved by every athlete here!
+                      </Typography>
+                    </Grid>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontFamily: "inherit", fontSize: "16px" }}
+                    ></Typography>
+                  </Grid>
+                  <Grid size={12} sx={{ fontFamily: "source sans pro" }}>
+                    {/* Phone Number */}
+                    <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                      <a
+                        href="tel:+14802143908"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <PhoneIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
+                        Phone: (480) 214-3908
+                      </a>
+                    </Typography>
+
+                    {/* Email Address */}
+                    <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                      <a
+                        href="mailto:info@dauntlessathletics.com"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <EmailIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
+                        Email: info@dauntlessathletics.com
+                      </a>
+                    </Typography>
+                    <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                      <LocationOnOutlinedIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
+                      Address: 1501 E. Baseline Rd., Building 5, Suite 106, Gilbert, AZ 85233
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid container justifyContent="center" size={{ xs: 12, md: 6}}>
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
+                    width="100%"
+                    height="450"
+                    frameborder="0"
+                    style={{ border: 0 }}
+                    allowfullscreen=""
+                    aria-hidden="false"
+                    tabindex="0"
+                  ></iframe>
                 </Grid>
               </Grid>
 
