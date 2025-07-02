@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   Box,
   Button,
@@ -101,10 +101,10 @@ function PricingCard(props) {
         <Box sx={{ margin: '-25px 0 15px 0'}}>
           {optionalTextList.map((message, index, thisList) => {
             return (
-              <>
+              <Fragment key={index}>
                 <Typography color="rgb(95, 114, 127)" sx={{ padding: '10px 0', }}>{message}</Typography>
                 {index !== thisList.length - 1 && <Divider />}
-              </>
+              </Fragment>
             );
           })}
         </Box>
