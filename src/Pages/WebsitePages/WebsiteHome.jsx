@@ -375,7 +375,7 @@ export default function Home() {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container sx={{ paddingTop: "200px" }}>
+              <Grid container >
                 <Grid container size={12} justifyContent="center">
                   <Box id="tuition-section" ref={tuitionRef}>
                     <Typography
@@ -384,7 +384,7 @@ export default function Home() {
                       sx={{
                         fontFamily: "Montserrat",
                         textTransform: "uppercase",
-                        padding: "75px 0",
+                        padding: "200px 0 50px 0",
                       }}
                     >
                       TUITION{" "}
