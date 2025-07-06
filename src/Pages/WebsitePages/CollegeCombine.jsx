@@ -116,7 +116,7 @@ export default function CollegeCombine() {
                 }}
               >
                 <ReactPlayer
-                  url="https://www.youtube.com/shorts/taGzf--q0Hc?feature=share"
+                  src="https://www.youtube.com/shorts/taGzf--q0Hc?feature=share"
                   width="100%"
                   height="80vh"
                   muted

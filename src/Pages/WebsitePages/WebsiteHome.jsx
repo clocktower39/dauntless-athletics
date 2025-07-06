@@ -268,7 +268,7 @@ export default function Home() {
                 </Grid>
                 <Grid container size={12} justifyContent="center">
                   <ReactPlayer
-                    url="https://youtu.be/Q6D9xUJm7jI"
+                    src="https://youtu.be/Q6D9xUJm7jI"
                     width="100%"
                     height="80vh"
                     muted
