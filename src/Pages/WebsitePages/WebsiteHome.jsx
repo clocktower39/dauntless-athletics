@@ -88,7 +88,7 @@ export default function Home() {
               padding: "25px 0px",
             }}
           >
-            <Grid container justifyContent="center" >
+            <Grid container justifyContent="center">
               <Grid size={12}>
                 <Divider sx={{ bgcolor: "white", marginBottom: "1.1em" }} />
               </Grid>
@@ -109,8 +109,8 @@ export default function Home() {
                 </Typography>
               </Typography>
 
-              <Grid container justifyContent="center" size={12} spacing={2} >
-                <Grid container justifyContent="center" size={{ xs: 12, md: 6}}>
+              <Grid container justifyContent="center" size={12} spacing={2}>
+                <Grid container justifyContent="center" size={{ xs: 12, md: 6 }} spacing={4}>
                   <Grid size={12} sx={{ fontFamily: "source sans pro" }}>
                     <Grid>
                       <Typography sx={{ fontFamily: "Source Sans Pro" }}>
@@ -130,35 +130,43 @@ export default function Home() {
                       sx={{ fontFamily: "inherit", fontSize: "16px" }}
                     ></Typography>
                   </Grid>
-                  <Grid size={12} sx={{ fontFamily: "source sans pro" }}>
+                  <Grid container size={12} direction="column" sx={{ fontFamily: "source sans pro", padding: '20px 0', }} spacing={2} >
                     {/* Phone Number */}
-                    <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
-                      <a
-                        href="tel:+14802143908"
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        <PhoneIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
-                        Phone: (480) 214-3908
-                      </a>
-                    </Typography>
+                    <Grid>
+                      <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                        <a
+                          href="tel:+14802143908"
+                          style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                          <PhoneIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
+                          Phone: (480) 214-3908
+                        </a>
+                      </Typography>
+                    </Grid>
 
                     {/* Email Address */}
-                    <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
-                      <a
-                        href="mailto:info@dauntlessathletics.com"
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        <EmailIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
-                        Email: info@dauntlessathletics.com
-                      </a>
-                    </Typography>
-                    <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
-                      <LocationOnOutlinedIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
-                      Address: 1501 E. Baseline Rd., Building 5, Suite 106, Gilbert, AZ 85233
-                    </Typography>
+                    <Grid>
+                      <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                        <a
+                          href="mailto:info@dauntlessathletics.com"
+                          style={{ textDecoration: "none", color: "inherit" }}
+                        >
+                          <EmailIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
+                          Email: info@dauntlessathletics.com
+                        </a>
+                      </Typography>
+                    </Grid>
+
+                    {/* Business Address */}
+                    <Grid>
+                      <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                        <LocationOnOutlinedIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
+                        Address: 1501 E. Baseline Rd., Building 5, Suite 106, Gilbert, AZ 85233
+                      </Typography>
+                    </Grid>
                   </Grid>
                 </Grid>
-                <Grid container justifyContent="center" size={{ xs: 12, md: 6}}>
+                <Grid container justifyContent="center" size={{ xs: 12, md: 6 }}>
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
                     width="100%"
@@ -375,7 +383,7 @@ export default function Home() {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid container >
+              <Grid container>
                 <Grid container size={12} justifyContent="center">
                   <Box id="tuition-section" ref={tuitionRef}>
                     <Typography
