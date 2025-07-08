@@ -78,13 +78,13 @@ export default function WebsiteNavbar() {
   const toolbarRef = useRef(null);
   const location = useLocation();
 
-  const hasAnnouncement = true;
+  const hasAnnouncement = false;
 
-  const announcementMessage = `We will be closed for all classes from
-  ${dayjs.utc(new Date("2025-06-29")).format("dddd, MMMM Do")} through ${dayjs
-    .utc(new Date("2025-07-06"))
+  const announcementMessage = `We will be closed for all classes on
+  ${dayjs
+    .utc(new Date("2025-09-01"))
     .format("dddd, MMMM Do")} .
-  Happy 4th of July!`;
+  Have a great Labor Day!`;
 
   const announcementKey = `announcementDismissed_${btoa(announcementMessage)}`;
   const [dismissed, setDismissed] = useState(() => {
