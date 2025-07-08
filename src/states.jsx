@@ -174,6 +174,28 @@ export const camps = [
     buttonText: "Register For Camp",
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/28",
   },
+  {
+    icon: <CampaignIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    title: "Dauntless Tumbling Camp at Hawaii All Stars - Tucson: Level 1-2",
+    color: "#065E99",
+    date: dayjs.utc(new Date("2025-07-11")),
+    time: "10:00 - 11:30 am",
+    place: "Hawaii All Stars Tucson",
+    cost: 60,
+    buttonText: "Register For Camp",
+    link: "https://portal.iclasspro.com/dauntlessathletics/enroll/select-students?typeId=30&next=camps&nextTitle=Level%201-2%20Tumbling%20at%20Hawaii%20All%20Star%20Tucson%2010-11:3-%20am&pluralTitle=level%201-2%20Tumbling%20At%20Hawaii%20%20all%20star&sortBy=",
+  },
+  {
+    icon: <CampaignIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    title: "Dauntless Tumbling Camp at Hawaii All Stars - Tucson: Level 3+",
+    color: "#065E99",
+    date: dayjs.utc(new Date("2025-07-11")),
+    time: "11:30 - 1:00 pm",
+    place: "Hawaii All Stars Tucson",
+    cost: 60,
+    buttonText: "Register For Camp",
+    link: "https://portal.iclasspro.com/dauntlessathletics/enroll/select-students?typeId=32&next=camps&nextTitle=Level%203%20and%20up%20at%20Hawaii%20All%20Star%20Tucson&pluralTitle=Level%203%20and%20up%20Tumbling%20At%20Hawaii%20%20All%20StarTucson&sortBy=",
+  },
 ];
 
 export const dauntlessClasses = [
