@@ -35,17 +35,6 @@ const classes = {
     fontSize: "16px",
     padding: "7.5px 0",
   },
-  saveTheDate: {
-    // backgroundColor: "#F44336",
-    padding: "7.5px",
-  },
-  saveTheDateText: {
-    color: "#FFF",
-    width: "100%",
-    fontFamily: "montserrat",
-    textTransform: "uppercase",
-    padding: '3px',
-  },
 };
 
 export default function CollegeCombine() {
@@ -69,39 +58,6 @@ export default function CollegeCombine() {
         </Container>
       </Box>
       <Divider />
-      <Box sx={classes.saveTheDate}>
-        <Grid container size={12}>
-          <Typography
-            sx={{ ...classes.saveTheDateText, padding: "15px" }}
-            variant="h4"
-            textAlign="center"
-          >
-            4th Annual Dauntless College Combine
-          </Typography>
-          <Grid container size={12} justifyContent="center" >
-            <img src="https://pictures.ce.eleyo.com/1000010/large/17448283619191158.png" />
-          </Grid>
-          <Typography sx={{ ...classes.saveTheDateText }} variant="h5" textAlign="center">
-            Hosted at Chandler High Payne Gym
-          </Typography>
-          <Typography sx={{ ...classes.saveTheDateText }} variant="body1" textAlign="center">
-            Event Date: July 19, 2025
-          </Typography>
-          <Typography sx={{ ...classes.saveTheDateText }} variant="body1" textAlign="center">
-            Athlete Check in: 2:00 PM
-          </Typography>
-          <Typography sx={{ ...classes.saveTheDateText }} variant="body1" textAlign="center">
-            Combine: 2:30 - 6:30 PM
-          </Typography>
-          <Typography sx={{ ...classes.saveTheDateText, fontSize: "1em" }} variant="subtitle1" textAlign="center">
-            See More Information and Enroll{" "}
-            <a href="https://cusd80.ce.eleyo.com/course/4043/cct-25-26/chs-dauntless-college-combine">
-              Here
-            </a>
-            !
-          </Typography>
-        </Grid>
-      </Box>
 
       <Box sx={{ backgroundColor: "#000" }}>
         <Container maxWidth="lg">
