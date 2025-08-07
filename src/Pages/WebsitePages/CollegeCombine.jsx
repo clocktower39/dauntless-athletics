@@ -150,58 +150,6 @@ export default function CollegeCombine() {
                   </Button>
                 </Grid>
               </Box>
-              <Box
-                sx={{
-                  color: "#fff",
-                  border: "3px solid rgb(36, 36, 36)",
-                  margin: "35px",
-                  padding: "35px",
-                }}
-              >
-                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
-                  <Typography
-                    textAlign="center"
-                    sx={{
-                      fontFamily: "montserrat",
-                      fontSize: "24px",
-                      padding: "15px",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    <GavelIcon sx={{ fontSize: "inherit" }} /> TUMBLING CONTRACTING SERVICES
-                  </Typography>
-                  <Typography
-                    textAlign="center"
-                    sx={{
-                      fontFamily: "source sans pro",
-                      fontSize: "16px",
-                      lineHeight: "25px",
-                      padding: "15px",
-                    }}
-                  >
-                    We will contract with your gym or school to provide single or re-occuring
-                    clinics.
-                  </Typography>
-                </Grid>
-                <Grid container size={12} justifyContent="center" sx={{ padding: "25px" }}>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      color: "rgb(221, 153, 51)",
-                      borderColor: "rgb(221, 153, 51)",
-                      "&:hover": {
-                        color: "#fff",
-                        backgroundColor: "rgb(221, 51, 51)",
-                        borderColor: "rgb(221, 51, 51)",
-                      },
-                    }}
-                    component={Link}
-                    to={"/contact-us/#"}
-                  >
-                    <KeyboardArrowRightIcon /> Contact Us
-                  </Button>
-                </Grid>
-              </Box>
             </Grid>
           </Grid>
         </Container>
