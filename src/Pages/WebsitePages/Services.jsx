@@ -2,7 +2,6 @@ import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { HashLink as Link } from "react-router-hash-link";
 import { Button, Box, Container, Paper, Grid, Typography } from "@mui/material";
-import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
 import {
   Policy as PolicyIcon,
@@ -305,7 +304,6 @@ export default function Services() {
           </Grid>
         </Container>
 
-        <CaptivateMinds />
         <Typography
           textAlign="center"
           variant="h2"
