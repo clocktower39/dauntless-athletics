@@ -116,12 +116,22 @@ export default function Staff() {
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
-      displayName: "Avis Ebron",
-      positionTitle: "Stunting & Tumbling Coach",
+        displayName: "Avis Ebron",
+        positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
       displayName: "Leo Borjas",
+      positionTitle: "Stunting & Tumbling Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Mia Gomez",
+      positionTitle: "Stunting Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
+      displayName: "Dawson Blair",
       positionTitle: "Stunting Coach",
       picture: "/images/staff/Pending_Picture.jpg",
     },
