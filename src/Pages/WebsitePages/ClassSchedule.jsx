@@ -2,6 +2,15 @@ import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
+import {
+  ScheduleComponent,
+  Day,
+  Week,
+  WorkWeek,
+  Month,
+  Agenda,
+  Inject,
+} from "@syncfusion/ej2-react-schedule";
 import Footer from "../../Components/Footer";
 
 const classes = {
@@ -25,27 +34,27 @@ const schedule = [
       {
         activity: "Flexibility",
         time: "4:00-5:00 PM",
-        color: "#00bcd4",
+        color: "#14b62c",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: "#d72933",
+        color: "#0D6EFD",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: "#d72933",
+        color: "#0D6EFD",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
-        color: "#d72933",
+        color: "#0D6EFD",
       },
       {
         activity: "Open Gym (*High School & College)",
         time: "8:30-10:30 PM",
-        color: "#a3ff25",
+        color: "#7d7d7d",
       },
     ],
   },
@@ -53,37 +62,39 @@ const schedule = [
     day: "Tuesday",
     activities: [
       {
-        activity: "Beginning/Intermediate Tumbling",
-        time: "4:00-5:00 PM",
-        color: "#d72933",
-      },
-      {
         activity: "Flexibility",
         time: "4:00-5:00 PM",
-        color: "#00bcd4",
+        color: "#14b62c",
+      },
+      {
+        activity: "Beginning/Intermediate Tumbling",
+        time: "4:00-5:00 PM",
+        color: "#0D6EFD",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: "#d72933",
-      },
-      {
-        activity: "Stunting/Flier Class",
-        time: "5:00-6:00 PM",
+        color: "#0D6EFD",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
-        color: "#d72933",
-      },
-      {
-        activity: "Stunting/Flier Class",
-        time: "6:00-7:00 PM",
+        color: "#0D6EFD",
       },
       {
         activity: "Twisters Class",
         time: "7:00-8:30 PM",
-        color: "#ffc776",
+        color: "#5636f4",
+      },
+      {
+        activity: "Stunting/Flier Class",
+        time: "5:00-6:00 PM",
+        color: "#F44336",
+      },
+      {
+        activity: "Stunting/Flier Class",
+        time: "6:00-7:00 PM",
+        color: "#F44336",
       },
     ],
   },
@@ -93,17 +104,17 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: "#d72933",
+        color: "#0D6EFD",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: "#d72933",
+        color: "#0D6EFD",
       },
       {
         activity: "Twisters Class",
         time: "6:00-7:30 PM",
-        color: "#ffc776",
+        color: "#5636f4",
       },
     ],
   },
@@ -111,37 +122,39 @@ const schedule = [
     day: "Thursday",
     activities: [
       {
-        activity: "Beginning/Intermediate Tumbling",
-        time: "4:00-5:00 PM",
-        color: "#d72933",
-      },
-      {
         activity: "Strength",
         time: "4:00-5:00 PM",
-        color: "#00bcd4",
+        color: "#f48b36",
+      },
+      {
+        activity: "Beginning/Intermediate Tumbling",
+        time: "4:00-5:00 PM",
+        color: "#0D6EFD",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "5:00-6:00 PM",
-        color: "#d72933",
-      },
-      {
-        activity: "Stunting/Flier Class",
-        time: "5:30-6:30 PM",
+        color: "#0D6EFD",
       },
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "6:00-7:00 PM",
-        color: "#d72933",
-      },
-      {
-        activity: "Stunting/Flier Class",
-        time: "6:30-7:30 PM",
+        color: "#0D6EFD",
       },
       {
         activity: "Twisters Class",
         time: "7:00-8:30 PM",
-        color: "#ffc776",
+        color: "#5636f4",
+      },
+      {
+        activity: "Stunting/Flier Class",
+        time: "5:30-6:30 PM",
+        color: "#F44336",
+      },
+      {
+        activity: "Stunting/Flier Class",
+        time: "6:30-7:30 PM",
+        color: "#F44336",
       },
     ],
   },
@@ -151,7 +164,7 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "4:00-5:00 PM",
-        color: "#d72933",
+        color: "#0D6EFD",
       },
     ],
   },
@@ -161,7 +174,12 @@ const schedule = [
       {
         activity: "Beginning/Intermediate Tumbling",
         time: "9:30-10:30 AM",
-        color: "#d72933",
+        color: "#0D6EFD",
+      },
+      {
+        activity: "Intermediate Tumbling",
+        time: "10:30-12:00 PM",
+        color: "#0D6EFD",
       },
       {
         activity: "Jump Class",
@@ -169,21 +187,19 @@ const schedule = [
         color: "#00bcd4",
       },
       {
-        activity: "Intermediate Tumbling",
-        time: "10:30-12:00 PM",
-        color: "#d72933",
-      },
-      {
         activity: "Stunting/Flier Class",
         time: "11:30-12:30 PM",
+        color: "#F44336",
       },
       {
         activity: "Stunting/Flier Class",
         time: "12:30-1:30 PM",
+        color: "#F44336",
       },
       {
         activity: "Stunting/Flier Class",
         time: "1:30-2:30 PM",
+        color: "#F44336",
       },
     ],
   },
@@ -197,6 +213,135 @@ const holidaySchedule = [
   "Oct 31st",
   "Nov 26th – Nov 30th",
   "Dec 24th – Jan 4th",
+];
+
+const data = [
+  {
+    Subject: "Beginning/Intermediate Tumbling",
+    StartTime: new Date(2025, 7, 4, 16, 0),
+    EndTime: new Date(2025, 7, 4, 17, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1",
+    color: "#0D6EFD",
+  },
+  {
+    Subject: "Beginning/Intermediate Tumbling",
+    StartTime: new Date(2025, 7, 4, 17, 0),
+    EndTime: new Date(2025, 7, 4, 18, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;INTERVAL=1",
+    color: "#0D6EFD",
+  },
+  {
+    Subject: "Beginning/Intermediate Tumbling",
+    StartTime: new Date(2025, 7, 4, 18, 0),
+    EndTime: new Date(2025, 7, 4, 19, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,TH;INTERVAL=1",
+    color: "#0D6EFD",
+  },
+  {
+    Subject: "Flexibility",
+    StartTime: new Date(2025, 7, 4, 16, 0),
+    EndTime: new Date(2025, 7, 4, 17, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU;INTERVAL=1",
+    color: "#14b62c",
+  },
+  {
+    Subject: "Strength",
+    StartTime: new Date(2025, 7, 7, 16, 0),
+    EndTime: new Date(2025, 7, 7, 17, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
+    color: "#f48b36",
+  },
+  {
+    Subject: "Open Gym",
+    StartTime: new Date(2025, 7, 4, 20, 30),
+    EndTime: new Date(2025, 7, 4, 22, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO;INTERVAL=1",
+    color: "#7d7d7d",
+  },
+  {
+    Subject: "Stunting/Flier Class",
+    StartTime: new Date(2025, 7, 5, 17, 0),
+    EndTime: new Date(2025, 7, 5, 18, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU;INTERVAL=1",
+    color: "#F44336",
+  },
+  {
+    Subject: "Stunting/Flier Class",
+    StartTime: new Date(2025, 7, 5, 18, 0),
+    EndTime: new Date(2025, 7, 5, 19, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU;INTERVAL=1",
+    color: "#F44336",
+  },
+  {
+    Subject: "Stunting/Flier Class",
+    StartTime: new Date(2025, 7, 7, 17, 30),
+    EndTime: new Date(2025, 7, 7, 18, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
+    color: "#F44336",
+  },
+  {
+    Subject: "Stunting/Flier Class",
+    StartTime: new Date(2025, 7, 7, 18, 30),
+    EndTime: new Date(2025, 7, 7, 19, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
+    color: "#F44336",
+  },
+  {
+    Subject: "Stunting/Flier Class",
+    StartTime: new Date(2025, 7, 9, 11, 30),
+    EndTime: new Date(2025, 7, 9, 12, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
+    color: "#F44336",
+  },
+  {
+    Subject: "Stunting/Flier Class",
+    StartTime: new Date(2025, 7, 9, 12, 30),
+    EndTime: new Date(2025, 7, 9, 13, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
+    color: "#F44336",
+  },
+  {
+    Subject: "Stunting/Flier Class",
+    StartTime: new Date(2025, 7, 9, 13, 30),
+    EndTime: new Date(2025, 7, 9, 14, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
+    color: "#F44336",
+  },
+  {
+    Subject: "Twisters Class",
+    StartTime: new Date(2025, 7, 5, 19, 0),
+    EndTime: new Date(2025, 7, 5, 20, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1",
+    color: "#5636f4",
+  },
+  {
+    Subject: "Twisters Class",
+    StartTime: new Date(2025, 7, 6, 18, 0),
+    EndTime: new Date(2025, 7, 6, 19, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=WE;INTERVAL=1",
+    color: "#5636f4",
+  },
+  {
+    Subject: "Beginning/Intermediate Tumbling",
+    StartTime: new Date(2025, 7, 9, 9, 30),
+    EndTime: new Date(2025, 7, 9, 10, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
+    color: "#0D6EFD",
+  },
+  {
+    Subject: "Intermediate Tumbling",
+    StartTime: new Date(2025, 7, 9, 10, 30),
+    EndTime: new Date(2025, 7, 9, 12, 0),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
+    color: "#0D6EFD",
+  },
+  {
+    Subject: "Jumps Class",
+    StartTime: new Date(2025, 7, 9, 10, 30),
+    EndTime: new Date(2025, 7, 9, 11, 30),
+    RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
+    color: "#f48b36",
+  },
 ];
 
 export default function ClassSchedule() {
@@ -235,10 +380,10 @@ export default function ClassSchedule() {
       </Grid>
     );
   };
-  
+
   const HolidayClosure = ({ range }) => {
     return (
-      <Grid container size={12} sx={{ padding: "5px 25px", color: '#FFF' }}>
+      <Grid container size={12} sx={{ padding: "5px 25px", color: "#FFF" }}>
         <Grid container size={8}>
           {range}:
         </Grid>
@@ -261,7 +406,7 @@ export default function ClassSchedule() {
               </Typography>
             </Grid>
             <Grid container size={4} justifyContent="flex-end" alignItems="center">
-              <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em", }} />
+              <ScheduleIcon sx={{ fontSize: "5em", maxHeight: "5em", maxWidth: "5em" }} />
             </Grid>
           </Grid>
         </Container>
@@ -269,10 +414,10 @@ export default function ClassSchedule() {
       <Box sx={{ backgroundColor: "#000", padding: "50px 0" }}>
         <Container maxWidth="lg">
           <Grid container justifyContent="center" alignItems="center">
-            <Grid size={{ xs: 1, sm: 2, md: 4, }} >
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
-            <Grid size={{ xs: 10, sm: 8, md: 4, }} >
+            <Grid size={{ xs: 10, sm: 8, md: 4 }}>
               <Typography
                 color="#ffffff"
                 variant="h6"
@@ -282,20 +427,40 @@ export default function ClassSchedule() {
                 Current Class Schedule
               </Typography>
             </Grid>
-            <Grid size={{ xs: 1, sm: 2, md: 4, }} >
+            <Grid size={{ xs: 1, sm: 2, md: 4 }}>
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
           </Grid>
+          <ScheduleComponent
+            selectedDate={new Date()}
+            startHour="09:00"
+            endHour="22:30"
+            workDays={[1, 2, 3, 4, 5, 6]}
+            currentView="WorkWeek"
+            allowAdding={false}
+            allowEditing={false}
+            allowDeleting={false}
+            eventSettings={{
+              dataSource: data,
+            }}
+            eventRendered={({ element, data }) => {
+              if (data.color) {
+                element.style.backgroundColor = data.color;
+              }
+            }}
+          >
+            <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
+          </ScheduleComponent>
 
           {schedule.map((day) => (
             <DaySchedule day={day.day} activities={day.activities} />
           ))}
 
           <Grid container justifyContent="center" alignItems="center">
-            <Grid size={{ xs: 2, sm: 3, md: 4, }} >
+            <Grid size={{ xs: 2, sm: 3, md: 4 }}>
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
-            <Grid size={{ xs: 8, sm: 6, md: 4, }} >
+            <Grid size={{ xs: 8, sm: 6, md: 4 }}>
               <Typography
                 color="#ffffff"
                 variant="h6"
@@ -305,12 +470,14 @@ export default function ClassSchedule() {
                 Holiday Schedule
               </Typography>
             </Grid>
-            <Grid size={{ xs: 2, sm: 3, md: 4, }} >
+            <Grid size={{ xs: 2, sm: 3, md: 4 }}>
               <Divider sx={{ bgcolor: "#f4524d" }} />
             </Grid>
           </Grid>
-          
-          {holidaySchedule.map(range => <HolidayClosure range={range} />)}
+
+          {holidaySchedule.map((range) => (
+            <HolidayClosure range={range} />
+          ))}
 
           <Grid size={12} sx={{ padding: "25px" }}>
             <Divider sx={{ bgcolor: "#eee", marginBottom: "1.1em" }} />
