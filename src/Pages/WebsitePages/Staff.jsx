@@ -36,14 +36,14 @@ export default function Staff() {
       picture: "/images/staff/Oatha-Council-Dauntless-Athletics-2022.jpg",
     },
     {
-      displayName: "Adrienne Traynor",
+      displayName: "Jon Kearns",
       positionTitle: "Stunting & Tumbling Coach",
-      picture: "/images/staff/Adrienne-Traynor-Dauntless-Athletics-2022.jpg",
+      picture: "/images/staff/Jon-Kearns-Dauntless-Athletics-2024.jpg",
     },
     {
-      displayName: "Elias Espinosa",
+      displayName: "Leo Borjas",
       positionTitle: "Stunting & Tumbling Coach",
-      picture: "/images/staff/elias-espinosa-dauntless-athletics-2023.jpg",
+      picture: "/images/staff/Pending_Picture.jpg",
     },
     {
       displayName: "Carlos Solis",
@@ -51,9 +51,9 @@ export default function Staff() {
       picture: "/images/staff/Carlos-Solis-Dauntless-Athletics-2022.jpg",
     },
     {
-      displayName: "Jon Kearns",
+      displayName: "Elias Espinosa",
       positionTitle: "Stunting & Tumbling Coach",
-      picture: "/images/staff/Jon-Kearns-Dauntless-Athletics-2024.jpg",
+      picture: "/images/staff/elias-espinosa-dauntless-athletics-2023.jpg",
     },
     {
       displayName: "Matt Kearns",
@@ -118,11 +118,6 @@ export default function Staff() {
     {
         displayName: "Avis Ebron",
         positionTitle: "Stunting & Tumbling Coach",
-      picture: "/images/staff/Pending_Picture.jpg",
-    },
-    {
-      displayName: "Leo Borjas",
-      positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
