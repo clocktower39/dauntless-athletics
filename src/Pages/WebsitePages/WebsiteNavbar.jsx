@@ -172,7 +172,7 @@ export default function WebsiteNavbar() {
   ];
 
   return (
-    <AppBar position="sticky">
+    <AppBar position="sticky" sx={{ zIndex: '1000'}}>
       <Divider sx={classes.TopDivider} />
       {hasAnnouncement && !dismissed && (
         <>

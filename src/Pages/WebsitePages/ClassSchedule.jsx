@@ -437,9 +437,6 @@ export default function ClassSchedule() {
             endHour="22:30"
             workDays={[1, 2, 3, 4, 5, 6]}
             currentView="WorkWeek"
-            allowAdding={false}
-            allowEditing={false}
-            allowDeleting={false}
             eventSettings={{
               dataSource: data,
             }}
@@ -448,6 +445,7 @@ export default function ClassSchedule() {
                 element.style.backgroundColor = data.color;
               }
             }}
+            readonly
           >
             <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
           </ScheduleComponent>
