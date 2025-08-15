@@ -11,7 +11,10 @@ import {
   Agenda,
   Inject,
 } from "@syncfusion/ej2-react-schedule";
+import { registerLicense } from "@syncfusion/ej2-base";
 import Footer from "../../Components/Footer";
+
+registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
 const classes = {
   mainImgBox: {
