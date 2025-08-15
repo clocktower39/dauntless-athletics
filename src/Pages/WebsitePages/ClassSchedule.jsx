@@ -394,6 +394,19 @@ export default function ClassSchedule() {
     );
   };
 
+  const onPopupOpen = (args) => {
+    if (args.type === 'QuickInfo' && args.element) {
+      // Try both common class names Syncfusion uses across versions
+      const selectors = [
+        '.e-event-edit', '.e-event-delete',
+        '.e-edit', '.e-delete' // fallback aliases
+      ];
+      selectors.forEach(sel => {
+        args.element.querySelectorAll(sel).forEach(el => el.remove());
+      });
+    }
+  };
+
   return (
     <>
       <WebsiteNavbar />
@@ -445,6 +458,7 @@ export default function ClassSchedule() {
                 element.style.backgroundColor = data.color;
               }
             }}
+            popupOpen={onPopupOpen}
             readonly
           >
             <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
