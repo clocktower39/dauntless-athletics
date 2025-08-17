@@ -19,3 +19,32 @@ html, body, #root {
     src: url('./fonts/source-sans-pro.regular.ttf') format('truetype');
     /* ... additional font-face properties */
   }
+
+  /* Default (desktop): no override */
+.e-schedule.responsive-week .e-content-wrap {
+  overflow-x: hidden;
+  white-space: normal;
+}
+
+/* Mobile-only styles: horizontal scroll, 3-day view style */
+@media (max-width: 768px) {
+  .e-schedule.responsive-week .e-content-wrap {
+    overflow-x: auto !important;
+    overflow-y: hidden;
+    white-space: nowrap;
+    display: block;
+  }
+
+  .e-schedule.responsive-week .e-work-cells,
+  .e-schedule.responsive-week .e-day-wrapper,
+  .e-schedule.responsive-week .e-header-cells,
+  .e-schedule.responsive-week .e-appointment-wrapper {
+    min-width: 300px;
+    display: inline-block;
+    box-sizing: border-box;
+  }
+
+  .e-schedule.responsive-week .e-appointment {
+    white-space: normal;
+  }
+}
