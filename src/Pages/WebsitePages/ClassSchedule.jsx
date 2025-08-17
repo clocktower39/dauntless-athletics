@@ -40,24 +40,24 @@ const schedule = [
         color: "#14b62c",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "4:00-5:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "5:00-6:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "6:00-7:00 PM",
         color: "#0D6EFD",
       },
       {
         activity: "Open Gym (*High School & College)",
         time: "8:30-10:30 PM",
-        color: "#7d7d7d",
+        color: "#5636f4",
       },
     ],
   },
@@ -70,24 +70,24 @@ const schedule = [
         color: "#14b62c",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "4:00-5:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "5:00-6:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "6:00-7:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Twisters Class",
+        activity: "Tumbling - Twisters Class",
         time: "7:00-8:30 PM",
-        color: "#5636f4",
+        color: "#7d7d7d",
       },
       {
         activity: "Stunting/Flier Class",
@@ -105,19 +105,19 @@ const schedule = [
     day: "Wednesday",
     activities: [
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "4:00-5:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "5:00-6:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Twisters Class",
+        activity: "Tumbling - Twisters Class",
         time: "6:00-7:30 PM",
-        color: "#5636f4",
+        color: "#7d7d7d",
       },
     ],
   },
@@ -130,24 +130,24 @@ const schedule = [
         color: "#f48b36",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "4:00-5:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "5:00-6:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "6:00-7:00 PM",
         color: "#0D6EFD",
       },
       {
-        activity: "Twisters Class",
+        activity: "Tumbling - Twisters Class",
         time: "7:00-8:30 PM",
-        color: "#5636f4",
+        color: "#7d7d7d",
       },
       {
         activity: "Stunting/Flier Class",
@@ -165,7 +165,7 @@ const schedule = [
     day: "Friday",
     activities: [
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "4:00-5:00 PM",
         color: "#0D6EFD",
       },
@@ -175,7 +175,7 @@ const schedule = [
     day: "Saturday",
     activities: [
       {
-        activity: "Beginning/Intermediate Tumbling",
+        activity: "Tumbling - Beginning/Intermediate",
         time: "9:30-10:30 AM",
         color: "#0D6EFD",
       },
@@ -220,21 +220,21 @@ const holidaySchedule = [
 
 const data = [
   {
-    Subject: "Beginning/Intermediate Tumbling",
+    Subject: "Tumbling - Beginning/Intermediate",
     StartTime: new Date(2025, 7, 4, 16, 0),
     EndTime: new Date(2025, 7, 4, 17, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1",
     color: "#0D6EFD",
   },
   {
-    Subject: "Beginning/Intermediate Tumbling",
+    Subject: "Tumbling - Beginning/Intermediate",
     StartTime: new Date(2025, 7, 4, 17, 0),
     EndTime: new Date(2025, 7, 4, 18, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;INTERVAL=1",
     color: "#0D6EFD",
   },
   {
-    Subject: "Beginning/Intermediate Tumbling",
+    Subject: "Tumbling - Beginning/Intermediate",
     StartTime: new Date(2025, 7, 4, 18, 0),
     EndTime: new Date(2025, 7, 4, 19, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,TH;INTERVAL=1",
@@ -255,11 +255,11 @@ const data = [
     color: "#f48b36",
   },
   {
-    Subject: "Open Gym",
+    Subject: "Open Gym (*High School & College)",
     StartTime: new Date(2025, 7, 4, 20, 30),
     EndTime: new Date(2025, 7, 4, 22, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO;INTERVAL=1",
-    color: "#7d7d7d",
+    color: "#5636f4",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -311,28 +311,28 @@ const data = [
     color: "#F44336",
   },
   {
-    Subject: "Twisters Class",
+    Subject: "Tumbling - Twisters Class",
     StartTime: new Date(2025, 7, 5, 19, 0),
     EndTime: new Date(2025, 7, 5, 20, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1",
-    color: "#5636f4",
+    color: "#7d7d7d",
   },
   {
-    Subject: "Twisters Class",
+    Subject: "Tumbling - Twisters Class",
     StartTime: new Date(2025, 7, 6, 18, 0),
     EndTime: new Date(2025, 7, 6, 19, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=WE;INTERVAL=1",
-    color: "#5636f4",
+    color: "#7d7d7d",
   },
   {
-    Subject: "Beginning/Intermediate Tumbling",
+    Subject: "Tumbling - Beginning/Intermediate",
     StartTime: new Date(2025, 7, 9, 9, 30),
     EndTime: new Date(2025, 7, 9, 10, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#0D6EFD",
   },
   {
-    Subject: "Intermediate Tumbling",
+    Subject: "Tumbling - Intermediate",
     StartTime: new Date(2025, 7, 9, 10, 30),
     EndTime: new Date(2025, 7, 9, 12, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
@@ -453,6 +453,7 @@ export default function ClassSchedule() {
             endHour="22:30"
             workDays={[1, 2, 3, 4, 5, 6]}
             currentView="WorkWeek"
+            cssClass="responsive-week"
             eventSettings={{
               dataSource: data,
             }}
