@@ -225,6 +225,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 17, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1",
     color: "#0D6EFD",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -232,6 +233,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 18, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;INTERVAL=1",
     color: "#0D6EFD",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -239,6 +241,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 19, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,TH;INTERVAL=1",
     color: "#0D6EFD",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
   },
   {
     Subject: "Flexibility",
@@ -246,6 +249,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 17, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU;INTERVAL=1",
     color: "#14b62c",
+    description: "Open to all levels, this class focuses on improving overall flexibility, range of motion, and body control to support safe and effective skill progression."
   },
   {
     Subject: "Strength",
@@ -253,6 +257,7 @@ const data = [
     EndTime: new Date(2025, 7, 7, 17, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
     color: "#f48b36",
+    description: "A conditioning class built to improve core, upper body, and lower body strength for tumbling, stunting, and overall athletic performance. All levels welcome—exercises are scaled to individual ability.",
   },
   {
     Subject: "Open Gym (*High School & College)",
@@ -260,6 +265,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 22, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO;INTERVAL=1",
     color: "#5636f4",
+    description: "Must have an online account and signed off waiver\n\nIf you're under 18, your parent/guardian must make the account with their name THEN add you as the athlete under their account.",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -267,6 +273,7 @@ const data = [
     EndTime: new Date(2025, 7, 5, 18, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU;INTERVAL=1",
     color: "#F44336",
+    description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -274,6 +281,7 @@ const data = [
     EndTime: new Date(2025, 7, 5, 19, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU;INTERVAL=1",
     color: "#F44336",
+    description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -281,6 +289,7 @@ const data = [
     EndTime: new Date(2025, 7, 7, 18, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
     color: "#F44336",
+    description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -288,6 +297,7 @@ const data = [
     EndTime: new Date(2025, 7, 7, 19, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
     color: "#F44336",
+    description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -295,6 +305,7 @@ const data = [
     EndTime: new Date(2025, 7, 9, 12, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#F44336",
+    description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -302,6 +313,7 @@ const data = [
     EndTime: new Date(2025, 7, 9, 13, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#F44336",
+    description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
   },
   {
     Subject: "Stunting/Flier Class",
@@ -309,6 +321,7 @@ const data = [
     EndTime: new Date(2025, 7, 9, 14, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#F44336",
+    description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
   },
   {
     Subject: "Tumbling - Twisters Class",
@@ -316,6 +329,7 @@ const data = [
     EndTime: new Date(2025, 7, 5, 20, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1",
     color: "#7d7d7d",
+    description: "For advanced tumblers with a consistent layout. This class focuses on twisting skills such as fulls and beyond."
   },
   {
     Subject: "Tumbling - Twisters Class",
@@ -323,6 +337,7 @@ const data = [
     EndTime: new Date(2025, 7, 6, 19, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=WE;INTERVAL=1",
     color: "#7d7d7d",
+    description: "For advanced tumblers with a consistent layout. This class focuses on twisting skills such as fulls and beyond."
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -330,6 +345,7 @@ const data = [
     EndTime: new Date(2025, 7, 9, 10, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#0D6EFD",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
   },
   {
     Subject: "Tumbling - Intermediate",
@@ -337,6 +353,7 @@ const data = [
     EndTime: new Date(2025, 7, 9, 12, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#0D6EFD",
+    description: "Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
   },
   {
     Subject: "Jumps Class",
@@ -344,6 +361,7 @@ const data = [
     EndTime: new Date(2025, 7, 9, 11, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#f48b36",
+    description: "Designed for athletes of all levels to develop power, height, technique, and control in their jumps. Drills are tailored to help each athlete progress at their own pace.",
   },
 ];
 
@@ -456,8 +474,21 @@ export default function ClassSchedule() {
             cssClass="responsive-week"
             eventSettings={{
               dataSource: data,
+              fields: {
+                description: { name: "description" },
+                iClassProLink: { name: "iClassProLink" },
+              },
             }}
             eventRendered={({ element, data }) => {
+              // const iClassProLink = data.iClassProLink;
+              // if (iClassProLink) {
+              //   const iClassProLinkEl = document.createElement("div");
+              //   iClassProLinkEl.style.fontSize = "12px";
+              //   iClassProLinkEl.style.opacity = "0.7";
+              //   iClassProLinkEl.textContent = iClassProLink;
+              //   element.appendChild(iClassProLinkEl);
+              // }
+              
               if (data.color) {
                 element.style.backgroundColor = data.color;
               }
