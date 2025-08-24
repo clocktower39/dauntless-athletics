@@ -225,7 +225,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 17, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1",
     color: "#0D6EFD",
-    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspringc is required for intermediate-level.",
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -233,7 +233,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 18, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;INTERVAL=1",
     color: "#0D6EFD",
-    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required for intermediate-level.",
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -241,7 +241,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 19, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,TH;INTERVAL=1",
     color: "#0D6EFD",
-    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required for intermediate-level.",
   },
   {
     Subject: "Flexibility",
@@ -345,7 +345,7 @@ const data = [
     EndTime: new Date(2025, 7, 9, 10, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#0D6EFD",
-    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required for intermediate-level.",
   },
   {
     Subject: "Tumbling - Intermediate",
