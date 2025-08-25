@@ -226,6 +226,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1",
     color: "#0D6EFD",
     description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspringc is required for intermediate-level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=11&programs=59",
+      innerText: "Register for a Beginning/Intermediate class",
+    }
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -234,6 +238,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH;INTERVAL=1",
     color: "#0D6EFD",
     description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required for intermediate-level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=11&programs=59",
+      innerText: "Register for a Beginning/Intermediate class",
+    }
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -242,6 +250,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,TH;INTERVAL=1",
     color: "#0D6EFD",
     description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required for intermediate-level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=11&programs=59",
+      innerText: "Register for a Beginning/Intermediate class",
+    }
   },
   {
     Subject: "Flexibility",
@@ -249,7 +261,11 @@ const data = [
     EndTime: new Date(2025, 7, 4, 17, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU;INTERVAL=1",
     color: "#14b62c",
-    description: "Open to all levels, this class focuses on improving overall flexibility, range of motion, and body control to support safe and effective skill progression."
+    description: "Open to all levels, this class focuses on improving overall flexibility, range of motion, and body control to support safe and effective skill progression.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=67",
+      innerText: "Register for a strength class",
+    }
   },
   {
     Subject: "Strength",
@@ -258,6 +274,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
     color: "#f48b36",
     description: "A conditioning class built to improve core, upper body, and lower body strength for tumbling, stunting, and overall athletic performance. All levels welcome—exercises are scaled to individual ability.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=63",
+      innerText: "Register for a strength class",
+    }
   },
   {
     Subject: "Open Gym (*High School & College)",
@@ -278,6 +298,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU;INTERVAL=1",
     color: "#F44336",
     description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=71",
+      innerText: "Register for a stunting class",
+    }
   },
   {
     Subject: "Stunting/Flier Class",
@@ -286,6 +310,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU;INTERVAL=1",
     color: "#F44336",
     description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=71",
+      innerText: "Register for a stunting class",
+    }
   },
   {
     Subject: "Stunting/Flier Class",
@@ -294,6 +322,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
     color: "#F44336",
     description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=71",
+      innerText: "Register for a stunting class",
+    }
   },
   {
     Subject: "Stunting/Flier Class",
@@ -302,6 +334,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TH;INTERVAL=1",
     color: "#F44336",
     description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=71",
+      innerText: "Register for a stunting class",
+    }
   },
   {
     Subject: "Stunting/Flier Class",
@@ -310,6 +346,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#F44336",
     description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=71",
+      innerText: "Register for a stunting class",
+    }
   },
   {
     Subject: "Stunting/Flier Class",
@@ -318,6 +358,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#F44336",
     description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=71",
+      innerText: "Register for a stunting class",
+    }
   },
   {
     Subject: "Stunting/Flier Class",
@@ -326,6 +370,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#F44336",
     description: "This class provides athletes the opportunity to work on stunting technique, timing, and confidence. Flyers and bases of all levels are welcome, with instruction tailored to each athlete’s current skill level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=71",
+      innerText: "Register for a stunting class",
+    }
   },
   {
     Subject: "Tumbling - Twisters Class",
@@ -333,7 +381,11 @@ const data = [
     EndTime: new Date(2025, 7, 5, 20, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=TU,TH;INTERVAL=1",
     color: "#7d7d7d",
-    description: "For advanced tumblers with a consistent layout. This class focuses on twisting skills such as fulls and beyond."
+    description: "For advanced tumblers with a consistent layout. This class focuses on twisting skills such as fulls and beyond.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=15&programs=59",
+      innerText: "Register for a twisters class",
+    }
   },
   {
     Subject: "Tumbling - Twisters Class",
@@ -341,7 +393,11 @@ const data = [
     EndTime: new Date(2025, 7, 6, 19, 30),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=WE;INTERVAL=1",
     color: "#7d7d7d",
-    description: "For advanced tumblers with a consistent layout. This class focuses on twisting skills such as fulls and beyond."
+    description: "For advanced tumblers with a consistent layout. This class focuses on twisting skills such as fulls and beyond.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=15&programs=59",
+      innerText: "Register for a twisters class",
+    }
   },
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -350,6 +406,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#0D6EFD",
     description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required for intermediate-level.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=11&programs=59&days=7",
+      innerText: "Register for this class",
+    }
   },
   {
     Subject: "Tumbling - Intermediate",
@@ -358,6 +418,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#0D6EFD",
     description: "Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required to attend.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=7&programs=59&days=7",
+      innerText: "Register for this class",
+    }
   },
   {
     Subject: "Jumps Class",
@@ -366,6 +430,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=SA;INTERVAL=1",
     color: "#f48b36",
     description: "Designed for athletes of all levels to develop power, height, technique, and control in their jumps. Drills are tailored to help each athlete progress at their own pace.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/classes?programs=91",
+      innerText: "Register for a jumps class",
+    }
   },
 ];
 
