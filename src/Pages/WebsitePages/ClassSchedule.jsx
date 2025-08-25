@@ -266,6 +266,10 @@ const data = [
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO;INTERVAL=1",
     color: "#5636f4",
     description: "Must have an online account and signed off waiver\n\nIf you're under 18, your parent/guardian must make the account with their name THEN add you as the athlete under their account.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/create-account-01-verify-email",
+      innerText: "Create an Account",
+    }
   },
   {
     Subject: "Stunting/Flier Class",
@@ -416,6 +420,10 @@ export default function ClassSchedule() {
   };
 
   const onPopupOpen = (args) => {
+
+    if (args.type === 'Editor') {
+      args.cancel = true;
+    }
     if (args.type === 'QuickInfo' && args.element) {
       // Try both common class names Syncfusion uses across versions
       const selectors = [
@@ -425,6 +433,25 @@ export default function ClassSchedule() {
       selectors.forEach(sel => {
         args.element.querySelectorAll(sel).forEach(el => el.remove());
       });
+    }
+    // Inject external link into description area
+    if (args.data?.link) {
+      const descriptionContainer = args.element.querySelector('.e-description-details');
+      if (descriptionContainer && !descriptionContainer.querySelector('.external-class-link')) {
+        const linkEl = document.createElement('a');
+        linkEl.href = args.data.link.href;
+        linkEl.innerText = args.data.link.innerText;
+        linkEl.target = '_blank';
+        linkEl.rel = 'noopener noreferrer';
+        linkEl.className = 'external-class-link'; // prevent duplicates
+        linkEl.style.display = 'block';
+        linkEl.style.marginTop = '6px';
+        linkEl.style.color = '#0D6EFD';
+        linkEl.style.fontSize = '13px';
+        linkEl.style.textDecoration = 'underline';
+
+        descriptionContainer.appendChild(linkEl);
+      }
     }
   };
 
@@ -476,7 +503,7 @@ export default function ClassSchedule() {
               dataSource: data,
               fields: {
                 description: { name: "description" },
-                iClassProLink: { name: "iClassProLink" },
+                link: { name: "link" },
               },
             }}
             eventRendered={({ element, data }) => {
@@ -488,7 +515,7 @@ export default function ClassSchedule() {
               //   iClassProLinkEl.textContent = iClassProLink;
               //   element.appendChild(iClassProLinkEl);
               // }
-              
+
               if (data.color) {
                 element.style.backgroundColor = data.color;
               }
