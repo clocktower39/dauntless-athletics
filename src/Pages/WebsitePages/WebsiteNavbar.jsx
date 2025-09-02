@@ -78,13 +78,13 @@ export default function WebsiteNavbar() {
   const toolbarRef = useRef(null);
   const location = useLocation();
 
-  const hasAnnouncement = true;
+  const hasAnnouncement = false;
 
-  const announcementMessage = `We will be closed for all classes on
+  const announcementMessage = `We are closed for all classes on
   ${dayjs
-    .utc(new Date("2025-09-01"))
+    .utc(new Date("2025-10-31"))
     .format("dddd, MMMM Do")} .
-  Have a great Labor Day!`;
+  Happy Halloween!`;
 
   const announcementKey = `announcementDismissed_${btoa(announcementMessage)}`;
   const [dismissed, setDismissed] = useState(() => {
