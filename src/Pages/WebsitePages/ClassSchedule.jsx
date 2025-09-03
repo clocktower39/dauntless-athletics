@@ -225,7 +225,7 @@ const data = [
     EndTime: new Date(2025, 7, 4, 17, 0),
     RecurrenceRule: "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;INTERVAL=1",
     color: "#0D6EFD",
-    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspringc is required for intermediate-level.",
+    description: "Beginning: Designed for athletes developing foundational tumbling skills, with a focus on technique and progression through back handsprings.\n\nIntermediate: Intended for athletes working on back handspring series and advancing to back tucks and layouts. A solid standing and running back handspring is required for intermediate-level.",
     link: {
       href: "https://portal.iclasspro.com/dauntlessathletics/classes?levels=11&programs=59",
       innerText: "Register for a Beginning/Intermediate class",
