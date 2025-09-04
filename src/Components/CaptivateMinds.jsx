@@ -4,7 +4,7 @@ import Logo470x377 from "../assets/Dauntless-Athletics-Logo-470x377.png";
 
 export default function CaptivateMinds() {
   return (
-    <Box sx={{ backgroundColor: "#FFD848", padding: "50px 0" }}>
+    <Box sx={{ backgroundColor: "#F44336", padding: "50px 0" }}>
       <Grid container justifyContent="center" alignItems="center">
         <Grid container justifyContent="center" alignItems="center">
           <img
