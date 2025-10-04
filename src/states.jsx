@@ -329,7 +329,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: { day: 55, week: 150 },
     buttonText: "Register For Camp",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/28",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/26",
   },
   {
     icon: <EmojiEventsIcon sx={{ ...classes.DauntlessCampIcon }} />,
@@ -343,7 +343,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: { day: 55, week: 150 },
     buttonText: "Register For Camp",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/28",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/26",
   },
   {
     icon: <EmojiEventsIcon sx={{ ...classes.DauntlessCampIcon }} />,
@@ -354,10 +354,10 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 150,
     buttonText: "Register For Clinic",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/34",
   },
   {
-    icon: <EmojiEventsIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    icon: <img src="/images/camps/silhouette_skeleton_toetouch.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     title: "October Tumbling Camp",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-10-19")),
@@ -368,7 +368,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
   },
   {
-    icon: <AirlineStopsIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    icon: <img src="/images/camps/silhouette_backhandspring.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
     title: "Focused Tumbling Clinic Back Handspring",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-10-25")),
@@ -379,7 +379,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
   },
   {
-    icon: <StarsIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    icon: <img src="/images/camps/silhouette_back_tuck.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     title: "Focused Tumbling Clinic Back Tucks and Up",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-10-25")),
@@ -390,7 +390,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
   },
   {
-    icon: <SportsGymnasticsIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    icon: <img src="/images/camps/silhouette_aerial_cartwheel.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     title: "Focused Tumbling Clinic Aerial",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-10-25")),
@@ -409,7 +409,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 50,
     buttonText: "Register For Camp",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/36",
   },
   {
     icon: <img src="/images/camps/group_stunting.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
@@ -420,7 +420,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 30,
     buttonText: "Register For Camp",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/35",
   },
 ];
 
