@@ -346,7 +346,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/26",
   },
   {
-    icon: <EmojiEventsIcon sx={{ ...classes.DauntlessCampIcon }} />,
+    icon: <img src="/images/camps/silhouette_coed_stunt.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     title: "Fearless Flight Crew Clinic",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-10-12")),
@@ -357,7 +357,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/34",
   },
   {
-    icon: <img src="/images/camps/silhouette_skeleton_toetouch.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    icon: <img src="/images/camps/silhouette_skeleton_toe_touch.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     title: "October Tumbling Camp",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-10-19")),
@@ -401,7 +401,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
   },
   {
-    icon: <img src="/images/camps/silhouette-of-father-and-daughter-joyful-dance-vector.jpg" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    icon: <img src="/images/camps/silhouette_daddy_daughter_clinic.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     title: "Daddy Daughter Clinic",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-10-26")),
@@ -412,7 +412,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/36",
   },
   {
-    icon: <img src="/images/camps/group_stunting.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    icon: <img src="/images/camps/silhouette_group_stunting.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     title: "All Girl High School Stunt Clinic (must bring entire stunt group)",
     color: "#065E99",
     date: dayjs.utc(new Date("2025-11-02")),
