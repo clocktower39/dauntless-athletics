@@ -21,22 +21,33 @@ export default function CampComponent({ camp, index }) {
     hasDatePast(camp) && (
       <Grid size={{ xs: 12, sm: 6, md: 4, }} sx={{ margin: "50px 0" }}>
         <Grid container justifyContent="center">
-          <Box
-            sx={{
-              backgroundColor: "#5F6574",
-              borderRadius: "50%",
-            }}
-          >
+          {camp.icon ? (
             <Box
               sx={{
-                backgroundColor: camp.color || "#000",
+                backgroundColor: "#5F6574",
                 borderRadius: "50%",
+              }}
+            >
+              <Box
+                sx={{
+                  backgroundColor: camp.color || "#000",
+                  borderRadius: "50%",
+                  margin: "5px",
+                }}
+              >
+                {camp?.icon}
+              </Box>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                height: '100%',
                 margin: "5px",
               }}
             >
-              {camp?.icon}
+              {camp?.poster}
             </Box>
-          </Box>
+          )}
         </Grid>
         <Grid container justifyContent="center">
           <Typography
@@ -53,8 +64,8 @@ export default function CampComponent({ camp, index }) {
             <strong>Date:</strong>{" "}
             {camp.date.start
               ? `${camp.date.start.format("dddd, MMMM Do")} - ${camp.date.end.format(
-                  "dddd, MMMM Do"
-                )}`
+                "dddd, MMMM Do"
+              )}`
               : camp.date.format("dddd, MMMM Do")}
           </Typography>
         </Grid>
