@@ -27,11 +27,6 @@ const classes = {
     width: "160px",
     scale: 0.8,
   },
-  DauntlessCampPoster: {
-    height: "100%",
-    width: "160px",
-    scale: 0.8,
-  },
 };
 
 export const camps = [
@@ -428,7 +423,7 @@ export const camps = [
     link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/35",
   },
   {
-    poster: <img src="/images/camps/adult_clinic.png" style={{ ...classes.DauntlessCampPoster, borderRadius: '15%', }} />,
+    poster: "/images/camps/adult_clinic.png",
     title: "Adult Clinic\nAges 19 & up",
     color: "#f01313",
     date: dayjs.utc(new Date("2025-11-09")),
@@ -436,7 +431,7 @@ export const camps = [
     place: "Dauntless Athletics",
     cost: 15,
     buttonText: "Register For Camp",
-    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/35",
+    link: "https://app.iclasspro.com/portal/dauntlessathletics/camps/11",
   },
 ];
 

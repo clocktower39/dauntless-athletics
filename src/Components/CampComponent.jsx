@@ -1,11 +1,12 @@
-import React from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Button, Dialog, DialogContent, Grid, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
 export default function CampComponent({ camp, index }) {
   const today = dayjs.utc().add(-31, "hours").startOf("day");
+  const [zoomImage, setZoomImage] = useState(false);
 
   const hasDatePast = (camp) => {
     if (camp.date?.start) {
@@ -44,8 +45,9 @@ export default function CampComponent({ camp, index }) {
                 height: '100%',
                 margin: "5px",
               }}
+              onClick={() => setZoomImage(true)}
             >
-              {camp?.poster}
+              <img src={camp?.poster} style={{ height: "100%", width: "250px", borderRadius: '5%', }} />
             </Box>
           )}
         </Grid>
@@ -97,6 +99,43 @@ export default function CampComponent({ camp, index }) {
             {camp.buttonText}
           </Button>
         </Grid>
+
+        {/* Fullscreen Dialog */}
+        <Dialog
+          open={zoomImage}
+          onClose={() => setZoomImage(false)}
+          maxWidth="xl"
+          PaperProps={{
+            sx: {
+              backgroundColor: "rgba(0,0,0,0.9)",
+              boxShadow: "none",
+              overflow: "hidden",
+            },
+          }}
+        >
+          <DialogContent
+            sx={{
+              p: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+              cursor: "zoom-out",
+            }}
+            onClick={() => setZoomImage(false)}
+          >
+          <Box
+            component="img"
+            src={camp.poster}
+            sx={{
+              maxWidth: "95vw",
+              maxHeight: "95vh",
+              borderRadius: 2,
+              boxShadow: 5,
+            }}
+          />
+          </DialogContent>
+        </Dialog>
       </Grid>
     )
   );
