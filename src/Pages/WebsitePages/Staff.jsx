@@ -126,11 +126,6 @@ export default function Staff() {
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
-      displayName: "Dawson Blair",
-      positionTitle: "Stunting Coach",
-      picture: "/images/staff/Pending_Picture.jpg",
-    },
-    {
       displayName: "Reece DeCorte",
       positionTitle: "Stunting & Tumbling Coach",
       picture: "/images/staff/Pending_Picture.jpg",
