@@ -13,6 +13,7 @@ import {
 } from "@syncfusion/ej2-react-schedule";
 import { registerLicense } from "@syncfusion/ej2-base";
 import Footer from "../../Components/Footer";
+import { camps } from "../../states";
 
 registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
@@ -435,6 +436,7 @@ const data = [
       innerText: "Register for a jumps class",
     }
   },
+  ...camps,
 ];
 
 export default function ClassSchedule() {
