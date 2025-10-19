@@ -9,13 +9,7 @@ export default function CampComponent({ camp, index }) {
   const [zoomImage, setZoomImage] = useState(false);
 
   const hasDatePast = (camp) => {
-    if (camp.date?.start) {
-      // Multi-day event: Hide if the end date is before today
-      return camp.date.end.isAfter(today, "day");
-    } else {
-      // Single-day event: Hide if the date is before today
-      return camp.date.isAfter(today, "day");
-    }
+      return dayjs(camp.EndTime).isAfter(today, "day");
   };
 
   return (
@@ -58,22 +52,17 @@ export default function CampComponent({ camp, index }) {
             textAlign="center"
             sx={{ fontFamily: "montserrat", padding: "15px 0", maxWidth: "250px" }}
           >
-            {camp.title}
+            {camp.Subject}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
           <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
-            <strong>Date:</strong>{" "}
-            {camp.date.start
-              ? `${camp.date.start.format("dddd, MMMM Do")} - ${camp.date.end.format(
-                "dddd, MMMM Do"
-              )}`
-              : camp.date.format("dddd, MMMM Do")}
+            <strong>Date:</strong>{" "}{dayjs(camp.StartTime).format("dddd, MMMM Do")}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
           <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
-            <strong>Time:</strong> {camp.time}
+            <strong>Time:</strong> {dayjs(camp.StartTime).format("h:mm")} - {dayjs(camp.EndTime).format("h:mm a")}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
@@ -94,9 +83,9 @@ export default function CampComponent({ camp, index }) {
           <Button
             variant="contained"
             sx={{ backgroundColor: "rgb(58, 58, 58)", margin: "25px 0", borderRadius: "25px" }}
-            href={camp.link}
+            href={camp.link.href}
           >
-            {camp.buttonText}
+            {camp.link.innerText}
           </Button>
         </Grid>
 
@@ -124,16 +113,16 @@ export default function CampComponent({ camp, index }) {
             }}
             onClick={() => setZoomImage(false)}
           >
-          <Box
-            component="img"
-            src={camp.poster}
-            sx={{
-              maxWidth: "95vw",
-              maxHeight: "95vh",
-              borderRadius: 2,
-              boxShadow: 5,
-            }}
-          />
+            <Box
+              component="img"
+              src={camp.poster}
+              sx={{
+                maxWidth: "95vw",
+                maxHeight: "95vh",
+                borderRadius: 2,
+                boxShadow: 5,
+              }}
+            />
           </DialogContent>
         </Dialog>
       </Grid>
