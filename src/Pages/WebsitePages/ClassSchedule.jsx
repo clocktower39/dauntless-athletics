@@ -567,7 +567,7 @@ export default function ClassSchedule() {
             startHour="09:00"
             endHour="22:30"
             workDays={[1, 2, 3, 4, 5, 6]}
-            currentView="WorkWeek"
+            currentView="Week"
             cssClass="responsive-week"
             eventSettings={{
               dataSource: data,
@@ -577,15 +577,6 @@ export default function ClassSchedule() {
               },
             }}
             eventRendered={({ element, data }) => {
-              // const iClassProLink = data.iClassProLink;
-              // if (iClassProLink) {
-              //   const iClassProLinkEl = document.createElement("div");
-              //   iClassProLinkEl.style.fontSize = "12px";
-              //   iClassProLinkEl.style.opacity = "0.7";
-              //   iClassProLinkEl.textContent = iClassProLink;
-              //   element.appendChild(iClassProLinkEl);
-              // }
-
               if (data.color) {
                 element.style.backgroundColor = data.color;
               }
