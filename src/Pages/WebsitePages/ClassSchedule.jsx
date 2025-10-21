@@ -219,6 +219,18 @@ const holidaySchedule = [
   "Dec 24th – Jan 4th",
 ];
 
+const holidayScheduleEvents = [
+  {
+    Id: 900001,
+    Subject: 'Closed',
+    StartTime: new Date(2025, 9, 31, 0, 0),
+    EndTime:   new Date(2025, 10, 1, 0, 0),
+    IsAllDay: true,
+    IsBlock: true,
+    zIndex: 1,
+  }
+];
+
 const data = [
   {
     Subject: "Tumbling - Beginning/Intermediate",
@@ -437,6 +449,7 @@ const data = [
     }
   },
   ...camps,
+  ...holidayScheduleEvents,
 ];
 
 export default function ClassSchedule() {
@@ -579,6 +592,9 @@ export default function ClassSchedule() {
             eventRendered={({ element, data }) => {
               if (data.color) {
                 element.style.backgroundColor = data.color;
+              }
+              if (data.zIndex) {
+                element.style.zIndex = data.zIndex;
               }
             }}
             popupOpen={onPopupOpen}
