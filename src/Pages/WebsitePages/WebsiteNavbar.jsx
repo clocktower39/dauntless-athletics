@@ -78,7 +78,7 @@ export default function WebsiteNavbar() {
   const toolbarRef = useRef(null);
   const location = useLocation();
 
-  const hasAnnouncement = false;
+  const hasAnnouncement = true;
 
   const announcementMessage = `We are closed for all classes on
   ${dayjs
