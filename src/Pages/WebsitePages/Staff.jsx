@@ -146,7 +146,7 @@ export default function Staff() {
     const [loaded, setLoaded] = useState(false);
 
     return (
-      <Grid container size={{ xs: 12, md: 6, lg: 4 }} justifyContent="center">
+      <Grid container size={{ xs: 6, sm: 4, md: 3, }} justifyContent="center">
         <Box
           sx={
             loaded
@@ -182,9 +182,7 @@ export default function Staff() {
             src={employee.picture}
             alt="Employee Image"
             style={{
-              minWidth: "100%",
-              maxWidth: "362px",
-              maxHeight: "100%",
+              width: '100%',
               borderRadius: "4px",
               display: loaded ? "block" : "none",
             }}
@@ -212,7 +210,7 @@ export default function Staff() {
           <Typography
             sx={{
               position: "absolute",
-              bottom: 65,
+              bottom: 45,
               left: "50%",
               transform: "translate(-50%, 50%)",
               zIndex: 2,
@@ -228,7 +226,7 @@ export default function Staff() {
           </Typography>
           <Box
             sx={{
-              height: "120px",
+              height: "7em",
               width: "100%",
               backgroundColor: "#FF1B22",
               position: "absolute",
