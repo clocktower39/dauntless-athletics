@@ -1,5 +1,4 @@
 import {
-  Star as StarsIcon,
   SportsGymnastics as SportsGymnasticsIcon,
   FitnessCenter as FitnessCenterIcon,
   SportsKabaddi as SportsKabaddiIcon,
@@ -7,8 +6,6 @@ import {
   CropFree as CropFreeIcon,
   Storm as StormIcon,
   School as SchoolIcon,
-  Campaign as CampaignIcon,
-  EmojiEvents as EmojiEventsIcon,
 } from "@mui/icons-material";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -126,6 +123,90 @@ export const camps = [
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/11",
       innerText: "Register For Camp",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_backhandspring.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
+    Subject: "Focused Tumbling Clinic Back Handspring",
+    StartTime: new Date(2025, 10, 15, 14, 30),
+    EndTime: new Date(2025, 10, 15, 15, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 25,
+    description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_back_tuck.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Focused Tumbling Clinic Back Tucks and Up",
+    StartTime: new Date(2025, 10, 15, 15, 30),
+    EndTime: new Date(2025, 10, 15, 16, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 25,
+    description: 'Tumbling camp for those who need to get a back tuck and above. Requirement of a back handspring without a spot. This will cover from the intermediate level to the most advanced levels.',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_aerial_cartwheel.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Focused Tumbling Clinic Aerial",
+    StartTime: new Date(2025, 10, 15, 16, 30),
+    EndTime: new Date(2025, 10, 15, 17, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 25,
+    description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_backhandspring.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
+    Subject: "Focused Tumbling Clinic Back Handspring",
+    StartTime: new Date(2025, 11, 6, 14, 30),
+    EndTime: new Date(2025, 11, 6, 15, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 25,
+    description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_back_tuck.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Focused Tumbling Clinic Back Tucks and Up",
+    StartTime: new Date(2025, 11, 6, 15, 30),
+    EndTime: new Date(2025, 11, 6, 16, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 25,
+    description: 'Tumbling camp for those who need to get a back tuck and above. Requirement of a back handspring without a spot. This will cover from the intermediate level to the most advanced levels.',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_aerial_cartwheel.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Focused Tumbling Clinic Aerial",
+    StartTime: new Date(2025, 11, 6, 16, 30),
+    EndTime: new Date(2025, 11, 6, 17, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 25,
+    description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
     },
   },
 ];
