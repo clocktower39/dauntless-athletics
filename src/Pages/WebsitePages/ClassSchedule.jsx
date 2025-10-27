@@ -221,14 +221,68 @@ const holidaySchedule = [
 
 const holidayScheduleEvents = [
   {
-    Id: 900001,
+    Id: 20250418,
+    Subject: 'Closed',
+    StartTime: new Date(2025, 3, 18, 0, 0),
+    EndTime:   new Date(2025, 3, 21, 0, 0),
+    IsAllDay: true,
+    IsBlock: true,
+    zIndex: 1,
+  },
+  {
+    Id: 20250526,
+    Subject: 'Closed',
+    StartTime: new Date(2025, 4, 26, 0, 0),
+    EndTime:   new Date(2025, 4, 27, 0, 0),
+    IsAllDay: true,
+    IsBlock: true,
+    zIndex: 1,
+  },
+  {
+    Id: 20251031,
+    Subject: 'Closed',
+    StartTime: new Date(2025, 5, 29, 0, 0),
+    EndTime:   new Date(2025, 6, 7, 0, 0),
+    IsAllDay: true,
+    IsBlock: true,
+    zIndex: 1,
+  },
+  {
+    Id: 20251031,
     Subject: 'Closed',
     StartTime: new Date(2025, 9, 31, 0, 0),
     EndTime:   new Date(2025, 10, 1, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
-  }
+  },
+  {
+    Id: 20251031,
+    Subject: 'Closed',
+    StartTime: new Date(2025, 9, 31, 0, 0),
+    EndTime:   new Date(2025, 10, 1, 0, 0),
+    IsAllDay: true,
+    IsBlock: true,
+    zIndex: 1,
+  },
+  {
+    Id: 20251126,
+    Subject: 'Closed',
+    StartTime: new Date(2025, 10, 26, 0, 0),
+    EndTime:   new Date(2025, 11, 1, 0, 0),
+    IsAllDay: true,
+    IsBlock: true,
+    zIndex: 1,
+  },
+  {
+    Id: 20251224,
+    Subject: 'Closed',
+    StartTime: new Date(2025, 11, 24, 0, 0),
+    EndTime:   new Date(2026, 0, 5, 0, 0),
+    IsAllDay: true,
+    IsBlock: true,
+    zIndex: 1,
+  },
 ];
 
 const data = [
