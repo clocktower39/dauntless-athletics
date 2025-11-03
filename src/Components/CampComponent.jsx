@@ -9,7 +9,7 @@ export default function CampComponent({ camp, index }) {
   const [zoomImage, setZoomImage] = useState(false);
 
   const hasDatePast = (camp) => {
-      return dayjs(camp.EndTime).isAfter(today, "day");
+      return dayjs(camp.EndTime).utc().isAfter(today, "day");
   };
 
   return (
