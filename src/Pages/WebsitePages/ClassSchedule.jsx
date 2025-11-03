@@ -14,6 +14,7 @@ import {
 import { registerLicense } from "@syncfusion/ej2-base";
 import Footer from "../../Components/Footer";
 import { camps } from "../../states";
+import dayjs from "dayjs";
 
 registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
@@ -219,7 +220,7 @@ const holidaySchedule = [
   "Dec 24th – Jan 4th",
 ];
 
-const holidayScheduleEvents = [
+export const holidayScheduleEvents = [
   {
     Id: 20250418,
     Subject: 'Closed',
@@ -273,6 +274,15 @@ const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
+    description: `We are closed for all classes 
+  from ${dayjs
+      .utc(new Date("2025-11-26"))
+      .format("dddd, MMMM Do")}
+      through ${dayjs
+      .utc(new Date("2025-11-30"))
+      .format("dddd, MMMM Do")}.
+  Happy Thanksgiving!`,
+
   },
   {
     Id: 20251224,
@@ -282,6 +292,14 @@ const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
+    description: `We are closed for all classes 
+  from ${dayjs
+      .utc(new Date("2025-12-24"))
+      .format("dddd, MMMM Do")}
+      through ${dayjs
+      .utc(new Date("2025-1-4"))
+      .format("dddd, MMMM Do")}.
+  Happy Holidays!`,
   },
 ];
 

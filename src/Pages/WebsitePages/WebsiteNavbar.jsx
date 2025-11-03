@@ -29,6 +29,7 @@ import {
   Instagram,
   YouTube,
 } from "@mui/icons-material";
+import { holidayScheduleEvents } from "./ClassSchedule";
 import useWindowWidth from "../../Hooks/WindowWidth";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 import dayjs from "dayjs";
@@ -78,18 +79,28 @@ export default function WebsiteNavbar() {
   const toolbarRef = useRef(null);
   const location = useLocation();
 
-  const hasAnnouncement = false;
+  const getNextHoliday = (events) => {
+    const today = dayjs();
+    const upcoming = events.filter((e) => dayjs(e.EndTime).isAfter(today, "day"));
 
-  const announcementMessage = `We are closed for all classes 
-  from ${dayjs
-      .utc(new Date("2025-11-26"))
-      .format("dddd, MMMM Do")}
-      through ${dayjs
-      .utc(new Date("2025-11-30"))
-      .format("dddd, MMMM Do")}.
-  Happy Thanksgiving!`;
+    if (upcoming.length === 0) return null;
+    upcoming.sort((a, b) => dayjs(a.StartTime).diff(dayjs(b.StartTime)));
+    return upcoming[0];
+  };
 
-  const announcementKey = `announcementDismissed_${btoa(announcementMessage)}`;
+  const nextHoliday = getNextHoliday(holidayScheduleEvents);
+
+  const today = dayjs();
+  const daysUntilHoliday = nextHoliday
+    ? dayjs(nextHoliday.StartTime).diff(today, "day")
+    : Infinity;
+
+  const hasAnnouncement = nextHoliday && daysUntilHoliday <= 10;
+  const announcementMessage = nextHoliday && nextHoliday.description;
+
+  const announcementKey = nextHoliday
+    ? `announcementDismissed_${btoa(announcementMessage)}`
+    : null;
   const [dismissed, setDismissed] = useState(() => {
     return localStorage.getItem(announcementKey) === "true";
   });
@@ -175,7 +186,7 @@ export default function WebsiteNavbar() {
   ];
 
   return (
-    <AppBar position="sticky" sx={{ zIndex: '1000'}}>
+    <AppBar position="sticky" sx={{ zIndex: '1000' }}>
       <Divider sx={classes.TopDivider} />
       {hasAnnouncement && !dismissed && (
         <>
