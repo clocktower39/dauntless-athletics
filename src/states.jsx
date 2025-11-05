@@ -209,6 +209,20 @@ export const camps = [
       innerText: "Register For Clinic",
     },
   },
+  {
+    icon: <img src="/images/camps/silhouette_coed_stunt.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Fearless Flight Clinic",
+    StartTime: new Date(2025, 11, 14, 13, 0),
+    EndTime: new Date(2025, 11, 14, 14, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 150,
+    description: 'Fearless Flight Crew Camp at Dauntless if for those who wish to experience a high-flying elite level of coaching and elite level flying. All athletes who wish to participate in this camp must have skill that are at least an intermediate Co-ed level (skills must have are full ups, full arounds, TikToks, and high to high TikToks, if have more than these skills all the better)',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/34",
+      innerText: "Register For Clinic",
+    },
+  },
 ];
 
 export const dauntlessClasses = [
