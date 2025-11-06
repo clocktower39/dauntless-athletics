@@ -210,7 +210,7 @@ export const camps = [
     },
   },
   {
-    icon: <img src="/images/camps/silhouette_coed_stunt.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    video: "/videos/fearless_flight_clinic.mp4",
     Subject: "Fearless Flight Clinic",
     StartTime: new Date(2025, 11, 14, 13, 0),
     EndTime: new Date(2025, 11, 14, 14, 30),

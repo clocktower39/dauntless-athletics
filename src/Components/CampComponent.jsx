@@ -33,7 +33,7 @@ export default function CampComponent({ camp, index }) {
                 {camp?.icon}
               </Box>
             </Box>
-          ) : (
+          ) : camp.poster ? (
             <Box
               sx={{
                 height: '100%',
@@ -42,6 +42,16 @@ export default function CampComponent({ camp, index }) {
               onClick={() => setZoomImage(true)}
             >
               <img src={camp?.poster} style={{ height: "100%", width: "250px", borderRadius: '5%', }} />
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                height: '100%',
+                margin: "5px",
+              }}
+              onClick={() => setZoomImage(true)}
+            >
+              <video src={camp?.video} type="video/mp4" autoPlay muted loop style={{ height: "100%", width: "250px", borderRadius: '5%', }} />
             </Box>
           )}
         </Grid>
@@ -114,8 +124,9 @@ export default function CampComponent({ camp, index }) {
             onClick={() => setZoomImage(false)}
           >
             <Box
-              component="img"
-              src={camp.poster}
+              component={camp.poster ? "img" : "video"}
+              src={camp.poster ? camp.poster : camp.video}
+              autoPlay muted loop
               sx={{
                 maxWidth: "95vw",
                 maxHeight: "95vh",
