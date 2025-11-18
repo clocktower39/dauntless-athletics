@@ -131,6 +131,11 @@ export default function Staff() {
       picture: "/images/staff/Pending_Picture.jpg",
     },
     {
+      displayName: "Andrew Christian",
+      positionTitle: "Stunting & Tumbling Coach",
+      picture: "/images/staff/Pending_Picture.jpg",
+    },
+    {
       displayName: "Mia Franz",
       positionTitle: "Choreography",
       picture: "/images/staff/Mia-Franz-Dauntless-Athletics-2024.jpg",
