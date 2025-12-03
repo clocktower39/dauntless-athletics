@@ -9,7 +9,7 @@ export default function CampComponent({ camp, index }) {
   const [zoomImage, setZoomImage] = useState(false);
 
   const hasDatePast = (camp) => {
-      return dayjs(camp.EndTime).utc().isAfter(today, "day");
+    return dayjs(camp.EndTime).utc().isAfter(today, "day");
   };
 
   return (
@@ -51,7 +51,12 @@ export default function CampComponent({ camp, index }) {
               }}
               onClick={() => setZoomImage(true)}
             >
-              <video src={camp?.video} type="video/mp4" autoPlay muted loop style={{ height: "100%", width: "250px", borderRadius: '5%', }} />
+              <video
+                src={camp?.video}
+                type="video/mp4"
+                autoPlay muted loop playsInline webkit-playsinline="true"
+                style={{ height: "100%", width: "250px", borderRadius: '5%', }}
+              />
             </Box>
           )}
         </Grid>
@@ -126,7 +131,7 @@ export default function CampComponent({ camp, index }) {
             <Box
               component={camp.poster ? "img" : "video"}
               src={camp.poster ? camp.poster : camp.video}
-              autoPlay muted loop
+              autoPlay muted loop playsInline webkit-playsinline="true"
               sx={{
                 maxWidth: "95vw",
                 maxHeight: "95vh",
