@@ -39,11 +39,10 @@ const classes = {
 
 function OurProcess() {
     return (
-        <Box sx={{ backgroundColor: "#E9E9E9" }}>
+        <Box sx={{ backgroundColor: "#000000", background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, #f01313 50%, rgba(36, 36, 36, 1) 100%)', color: 'white', }}>
             <Container maxWidth="sm">
                 <Typography
                     textAlign="center"
-                    color="rgb(76, 88, 103)"
                     variant="h5"
                     sx={{ fontFamily: "montserrat", padding: "50px 0" }}
                 >
@@ -51,7 +50,6 @@ function OurProcess() {
                 </Typography>
                 <Typography
                     textAlign="center"
-                    color="#4c5867"
                     variant="h6"
                     sx={{ fontWeight: 200, fontFamily: "source sans pro", paddingBottom: "50px" }}
                 >
@@ -64,12 +62,12 @@ function OurProcess() {
                     <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
                         <Box>
                             <Box sx={classes.stepImgBox}>
-                                <img src="/images/components/OurProcess/Step-1-Evaluate.png" alt="Step 1" style={classes.stepImage} />
+                                <img src="/images/components/OurProcess/Step-1-Evaluate-dark.png" alt="Step 1" style={classes.stepImage} />
                                 <Typography sx={classes.stepOverlayText} variant="h4">
                                     Evaluate
                                 </Typography>
                             </Box>
-                            <Typography textAlign="center" color="rgb(95, 114, 127)">
+                            <Typography textAlign="center" >
                                 Evaluate the athlete to determine which skills to focus on and next steps.
                             </Typography>
                         </Box>
@@ -78,12 +76,12 @@ function OurProcess() {
                     <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
                         <Box>
                             <Box sx={classes.stepImgBox}>
-                                <img src="/images/components/OurProcess/Step-2-Breakdown.png" alt="Step 2" style={classes.stepImage} />
+                                <img src="/images/components/OurProcess/Step-2-Breakdown-dark.png" alt="Step 2" style={classes.stepImage} />
                                 <Typography sx={classes.stepOverlayText} variant="h4">
                                     Breakdown
                                 </Typography>
                             </Box>
-                            <Typography textAlign="center" color="rgb(95, 114, 127)">
+                            <Typography textAlign="center" >
                                 Perform a detailed breakdown and guidance of the skill.
                             </Typography>
                         </Box>
@@ -92,12 +90,12 @@ function OurProcess() {
                     <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
                         <Box>
                             <Box sx={classes.stepImgBox}>
-                                <img src="/images/components/OurProcess/Step-3-Spot-It.png" alt="Step 3" style={classes.stepImage} />
+                                <img src="/images/components/OurProcess/Step-3-Spot-It-dark.png" alt="Step 3" style={classes.stepImage} />
                                 <Typography sx={classes.stepOverlayText} variant="h4">
                                     Spot It
                                 </Typography>
                             </Box>
-                            <Typography textAlign="center" color="rgb(95, 114, 127)">
+                            <Typography textAlign="center" >
                                 Spot the skill being worked on to help provide control and correct movements.
                             </Typography>
                         </Box>
@@ -106,12 +104,12 @@ function OurProcess() {
                     <Grid container size={{ xs: 12, md: 3 }} justifyContent="center">
                         <Box>
                             <Box sx={classes.stepImgBox}>
-                                <img src="/images/components/OurProcess/Step-4-Get-It.png" alt="Step 4" style={classes.stepImage} />
+                                <img src="/images/components/OurProcess/Step-4-Get-It-dark.png" alt="Step 4" style={classes.stepImage} />
                                 <Typography sx={classes.stepOverlayText} variant="h4">
                                     Get It
                                 </Typography>
                             </Box>
-                            <Typography textAlign="center" color="rgb(95, 114, 127)">
+                            <Typography textAlign="center" >
                                 Get the skill minimizing the spot and correction needed.
                             </Typography>
                         </Box>
