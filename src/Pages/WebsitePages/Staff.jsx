@@ -169,7 +169,7 @@ export default function Staff() {
           {!loaded && (
             <Skeleton
               variant="rectangular"
-              height={577}
+              height={330}
               width="100%"
               animation=""
               sx={{
