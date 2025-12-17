@@ -230,7 +230,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 27, 13, 30),
     color: "#f01313",
     place: "Influence Gymnastics",
-    cost: 25,
+    cost: 50,
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -244,7 +244,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 27, 15, 0),
     color: "#f01313",
     place: "Influence Gymnastics",
-    cost: 25,
+    cost: 50,
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -258,7 +258,7 @@ export const camps = [
     EndTime: new Date(2026, 0, 3, 13, 30),
     color: "#14b62c",
     place: "Influence Gymnastics",
-    cost: 25,
+    cost: 50,
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -272,7 +272,7 @@ export const camps = [
     EndTime: new Date(2026, 0, 3, 15, 0),
     color: "#14b62c",
     place: "Influence Gymnastics",
-    cost: 25,
+    cost: 50,
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
