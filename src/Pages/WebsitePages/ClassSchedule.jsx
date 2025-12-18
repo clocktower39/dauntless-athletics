@@ -297,7 +297,7 @@ export const holidayScheduleEvents = [
       .utc(new Date("2025-12-24"))
       .format("dddd, MMMM Do")}
       through ${dayjs
-      .utc(new Date("2025-1-4"))
+      .utc(new Date("2026-01-04"))
       .format("dddd, MMMM Do")}.
   Happy Holidays!`,
   },
