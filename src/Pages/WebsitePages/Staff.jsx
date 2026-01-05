@@ -146,25 +146,22 @@ export default function Staff() {
     const [loaded, setLoaded] = useState(false);
 
     return (
-      <Grid container size={{ xs: 6, sm: 4, md: 3, }} justifyContent="center">
+      <Grid container size={{ xs: 6, sm: 4, md: 3 }} justifyContent="center">
         <Box
-          sx={
-            loaded
-              ? {
-                  position: "relative",
-                  display: "flex",
-                  justifyContent: "center",
-                }
-              : {
-                  position: "relative",
-                  display: "flex",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  width: "100%",
-                  maxWidth: "362px",
-                }
-          }
+          sx={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            maxWidth: "320px",
+            borderRadius: "18px",
+            overflow: "hidden",
+            border: "1px solid var(--color-border)",
+            boxShadow: "0 20px 40px rgba(0, 0, 0, 0.35)",
+            backgroundColor: "var(--color-surface-2)",
+          }}
         >
           {!loaded && (
             <Skeleton
@@ -173,7 +170,7 @@ export default function Staff() {
               width="100%"
               animation=""
               sx={{
-                bgcolor: "grey.900",
+                bgcolor: "var(--color-surface-3)",
               }}
             />
           )}
@@ -182,11 +179,18 @@ export default function Staff() {
             src={employee.picture}
             alt="Employee Image"
             style={{
-              width: '100%',
-              borderRadius: "4px",
+              width: "100%",
               display: loaded ? "block" : "none",
             }}
             onLoad={() => setLoaded(true)}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(180deg, rgba(10, 10, 14, 0) 35%, rgba(10, 10, 14, 0.85) 100%)",
+            }}
           />
           <Typography
             sx={{
@@ -197,11 +201,12 @@ export default function Staff() {
               zIndex: 2,
               textAlign: "center",
               width: "100%",
-              fontFamily: "montserrat",
+              fontFamily: "var(--font-display)",
               textTransform: "uppercase",
-              color: "#fff",
+              color: "var(--color-text)",
               fontSize: "19px",
               fontWeight: 600,
+              textShadow: "0 6px 18px rgba(0,0,0,0.6)",
             }}
             variant="h4"
           >
@@ -216,8 +221,8 @@ export default function Staff() {
               zIndex: 2,
               textAlign: "center",
               width: "100%",
-              fontFamily: "Source Sans Pro",
-              color: "#fff",
+              fontFamily: "var(--font-body)",
+              color: "var(--color-muted)",
               fontSize: "16px",
             }}
             variant="h4"
@@ -228,7 +233,8 @@ export default function Staff() {
             sx={{
               height: "7em",
               width: "100%",
-              backgroundColor: "#FF1B22",
+              background:
+                "linear-gradient(90deg, rgba(225, 29, 72, 0.6), rgba(10, 10, 14, 0.9))",
               position: "absolute",
               bottom: 0,
             }}
@@ -240,13 +246,13 @@ export default function Staff() {
   return (
     <>
       <WebsiteNavbar />
-      <Box sx={{ backgroundColor: "#000" }}>
+      <Box sx={{ backgroundColor: "transparent", padding: { xs: "30px 0", md: "50px 0" } }}>
         <Typography
           textAlign="center"
           variant="h2"
           sx={{
-            color: "#ffffff",
-            fontFamily: "montserrat",
+            color: "var(--color-text)",
+            fontFamily: "var(--font-display)",
             textTransform: "uppercase",
             fontSize: {
               xs: "2em",
@@ -262,13 +268,22 @@ export default function Staff() {
         >
           Meet Our Staff
         </Typography>
-        <Container maxWidth="lg" sx={{ padding: "25px 0" }}>
-          <Divider sx={{ backgroundColor: "#53c7d6", width: "25%", margin: "auto" }} />
+        <Container
+          maxWidth="lg"
+          sx={{
+            padding: "25px 0",
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "28px",
+            boxShadow: "0 28px 50px rgba(0,0,0,0.45)",
+          }}
+        >
+          <Divider sx={{ backgroundColor: "var(--color-accent)", width: "25%", margin: "auto" }} />
           <Typography
             variant="body1"
             sx={{
-              color: "#FFF",
-              fontFamily: "source sans pro",
+              color: "var(--color-muted)",
+              fontFamily: "var(--font-body)",
               fontSize: "16px",
               padding: "25px",
             }}
@@ -283,8 +298,8 @@ export default function Staff() {
           <Typography
             sx={{
               fontSize: "36px",
-              color: "#FFF",
-              fontFamily: "montserrat",
+              color: "var(--color-text)",
+              fontFamily: "var(--font-display)",
               textTransform: "uppercase",
               padding: "25px",
             }}

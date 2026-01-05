@@ -14,18 +14,28 @@ export default function CampComponent({ camp, index }) {
 
   return (
     hasDatePast(camp) && (
-      <Grid size={{ xs: 12, sm: 6, md: 4, }} sx={{ margin: "50px 0" }}>
+      <Grid
+        size={{ xs: 12, sm: 6, md: 4 }}
+        sx={{
+          margin: "50px 0",
+          backgroundColor: "var(--color-surface-2)",
+          border: "1px solid var(--color-border)",
+          borderRadius: "20px",
+          padding: "24px",
+          boxShadow: "0 24px 40px rgba(0, 0, 0, 0.35)",
+        }}
+      >
         <Grid container justifyContent="center">
           {camp.icon ? (
             <Box
               sx={{
-                backgroundColor: "#5F6574",
+                backgroundColor: "rgba(255, 255, 255, 0.08)",
                 borderRadius: "50%",
               }}
             >
               <Box
                 sx={{
-                  backgroundColor: camp.color || "#000",
+                  backgroundColor: camp.color || "var(--color-accent)",
                   borderRadius: "50%",
                   margin: "5px",
                 }}
@@ -36,17 +46,26 @@ export default function CampComponent({ camp, index }) {
           ) : camp.poster ? (
             <Box
               sx={{
-                height: '100%',
+                height: "100%",
                 margin: "5px",
               }}
               onClick={() => setZoomImage(true)}
             >
-              <img src={camp?.poster} style={{ height: "100%", width: "250px", borderRadius: '5%', }} />
+              <img
+                src={camp?.poster}
+                alt={camp.Subject}
+                style={{
+                  height: "100%",
+                  width: "250px",
+                  borderRadius: "16px",
+                  boxShadow: "0 18px 30px rgba(0,0,0,0.35)",
+                }}
+              />
             </Box>
           ) : (
             <Box
               sx={{
-                height: '100%',
+                height: "100%",
                 margin: "5px",
               }}
               onClick={() => setZoomImage(true)}
@@ -55,38 +74,43 @@ export default function CampComponent({ camp, index }) {
                 src={camp?.video}
                 type="video/mp4"
                 autoPlay muted loop playsInline webkit-playsinline="true"
-                style={{ height: "100%", width: "250px", borderRadius: '5%', }}
+                style={{
+                  height: "100%",
+                  width: "250px",
+                  borderRadius: "16px",
+                  boxShadow: "0 18px 30px rgba(0,0,0,0.35)",
+                }}
               />
             </Box>
           )}
         </Grid>
         <Grid container justifyContent="center">
           <Typography
-            color={camp.color || "#FFF"}
+            color={camp.color || "var(--color-text)"}
             variant="h5"
             textAlign="center"
-            sx={{ fontFamily: "montserrat", padding: "15px 0", maxWidth: "250px" }}
+            sx={{ padding: "15px 0", maxWidth: "250px" }}
           >
             {camp.Subject}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
-          <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
+          <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
             <strong>Date:</strong>{" "}{dayjs(camp.StartTime).format("dddd, MMMM Do")}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
-          <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
+          <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
             <strong>Time:</strong> {dayjs(camp.StartTime).format("h:mm")} - {dayjs(camp.EndTime).format("h:mm a")}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
-          <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
+          <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
             <strong>Place:</strong> {camp.place}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
-          <Typography textAlign="center" sx={{ fontFamily: "source sans pro" }}>
+          <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
             <strong>Cost:</strong>{" "}
             {camp.cost.week
               ? `$${camp.cost.day} per day OR $${camp.cost.week} a week`
@@ -97,7 +121,15 @@ export default function CampComponent({ camp, index }) {
         <Grid container justifyContent="center">
           <Button
             variant="contained"
-            sx={{ backgroundColor: "rgb(58, 58, 58)", margin: "25px 0", borderRadius: "25px" }}
+            sx={{
+              backgroundColor: "var(--color-accent)",
+              margin: "25px 0 10px",
+              borderRadius: "999px",
+              padding: "10px 24px",
+              "&:hover": {
+                backgroundColor: "var(--color-accent-2)",
+              },
+            }}
             href={camp.link.href}
           >
             {camp.link.innerText}

@@ -1,20 +1,42 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Lobster+Two&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Cabin|Cabin+Condensed|Cabin+Sketch&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Amatic+SC|Anton|Bebas+Neue|Crushed|Gruppo|Marcellus+SC|Six+Caps|Special+Elite|Staatliches&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
 
-* {
-  margin: 0;
-  font-family: Roboto, sans-serif;
+:root {
+  --font-body: "Space Grotesk", sans-serif;
+  --font-display: "Bebas Neue", sans-serif;
+  --color-bg: #0a0a0e;
+  --color-surface: #12131a;
+  --color-surface-2: #171a24;
+  --color-surface-3: #1f2431;
+  --color-accent: #e11d48;
+  --color-accent-2: #ff3b30;
+  --color-text: #f8fafc;
+  --color-muted: #9aa3b2;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-glow: rgba(225, 29, 72, 0.35);
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(225, 29, 72, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 0%, rgba(255, 59, 48, 0.18), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.04), transparent 50%),
+    var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  font-family: inherit;
 }
 
 code {
@@ -34,4 +56,28 @@ input[type=number] {
 
 svg {
   max-height: 160px;
+}
+
+a {
+  color: inherit;
+}
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+.MuiTypography-h1,
+.MuiTypography-h2,
+.MuiTypography-h3,
+.MuiTypography-h4 {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+.MuiTypography-h5,
+.MuiTypography-h6 {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
 }

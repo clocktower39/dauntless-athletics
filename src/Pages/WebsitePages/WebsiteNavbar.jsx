@@ -36,15 +36,17 @@ import dayjs from "dayjs";
 
 const classes = {
   TopDivider: {
-    backgroundColor: "#F44336",
-    borderBottomWidth: 5,
+    background: "linear-gradient(90deg, transparent, var(--color-accent), transparent)",
+    height: "3px",
   },
   BottomDivider: {
-    backgroundColor: "#494c64",
+    backgroundColor: "var(--color-border)",
     borderBottomWidth: 1,
   },
   Toolbar: {
-    backgroundColor: "#0C0D0D",
+    backgroundColor: "rgba(10, 10, 14, 0.9)",
+    backdropFilter: "blur(12px)",
+    color: "var(--color-text)",
   },
   ToolbarContent: {
     display: "flex",
@@ -54,7 +56,7 @@ const classes = {
   },
   ToolbarButtonHover: {
     "&:hover": {
-      backgroundColor: "rgb(244, 67, 54)",
+      backgroundColor: "rgba(225, 29, 72, 0.18)",
     },
   },
   ToolbarIcon: {
@@ -63,12 +65,13 @@ const classes = {
     maxHeight: "1.5rem",
   },
   MenuPaper: {
-    backgroundColor: "rgb(33, 35, 49)",
-    border: "1px solid rgb(73, 76, 100)",
+    backgroundColor: "var(--color-surface)",
+    border: "1px solid var(--color-border)",
+    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
   },
   MenuItem: {
-    color: "rgb(153, 169, 181)",
-    borderBottom: "1px solid rgb(73, 76, 100)",
+    color: "var(--color-muted)",
+    borderBottom: "1px solid var(--color-border)",
     padding: "12.5px",
   },
 };
@@ -186,7 +189,7 @@ export default function WebsiteNavbar() {
   ];
 
   return (
-    <AppBar position="sticky" sx={{ zIndex: '1000' }}>
+    <AppBar position="sticky" sx={{ zIndex: 1000, backgroundColor: "transparent", boxShadow: "none" }}>
       <Divider sx={classes.TopDivider} />
       {hasAnnouncement && !dismissed && (
         <>
@@ -195,9 +198,9 @@ export default function WebsiteNavbar() {
               <Grid container size={11} justifyContent="center">
                 <Typography
                   sx={{
-                    fontFamily: "montserrat",
+                    fontFamily: "var(--font-display)",
                     fontSize: "16px",
-                    color: "#ff0000",
+                    color: "var(--color-accent)",
                     textAlign: "center",
                     padding: "7.5px 0px",
                     whiteSpace: "pre-line",
@@ -208,7 +211,7 @@ export default function WebsiteNavbar() {
               </Grid>
               <Grid container size={1} alignItems="center" justifyContent="center">
                 <IconButton onClick={handleDismiss}>
-                  <CloseIcon sx={{ color: "#FFF" }} />
+                  <CloseIcon sx={{ color: "var(--color-text)" }} />
                 </IconButton>
               </Grid>
             </Grid>
@@ -228,7 +231,7 @@ export default function WebsiteNavbar() {
             </IconButton>
           </Box>
         )}
-        <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end" }}>
+        <Box sx={{ ...classes.ToolbarContent, justifyContent: "flex-end", gap: "6px" }}>
           <IconButton
             color="inherit"
             sx={{ ...classes.ToolbarButtonHover }}
@@ -258,9 +261,11 @@ export default function WebsiteNavbar() {
             size="small"
             sx={{
               fontSize: ".7em",
-              backgroundColor: "rgb(153, 169, 181)",
+              backgroundColor: "rgba(255, 255, 255, 0.12)",
+              border: "1px solid var(--color-border)",
               margin: "0 5px",
               textTransform: "none",
+              color: "var(--color-text)",
               ...classes.ToolbarButtonHover,
             }}
             component={Link}
@@ -273,11 +278,12 @@ export default function WebsiteNavbar() {
             size="small"
             sx={{
               fontSize: ".7em",
-              backgroundColor: "rgb(153, 169, 181)",
+              backgroundColor: "var(--color-accent)",
               margin: "0 2.5px",
               textTransform: "none",
               whiteSpace: "nowrap",
               minWidth: "100px",
+              color: "var(--color-text)",
               ...classes.ToolbarButtonHover,
             }}
             component={Link}
@@ -288,7 +294,7 @@ export default function WebsiteNavbar() {
         </Box>
       </Toolbar>
       <Divider sx={classes.BottomDivider} />
-      <Toolbar ref={toolbarRef} sx={classes.Toolbar}>
+      <Toolbar ref={toolbarRef} sx={{ ...classes.Toolbar, borderBottom: "1px solid var(--color-border)" }}>
         <Box sx={{ ...classes.ToolbarContent }}>
           <IconButton
             component={Link}
@@ -322,10 +328,16 @@ export default function WebsiteNavbar() {
                     key={item.name}
                     sx={{
                       textTransform: "none",
-                      color: item.textColor || "#fff",
-                      backgroundColor: "#000",
+                      color: item.textColor || "var(--color-text)",
+                      backgroundColor: "rgba(255, 255, 255, 0.06)",
+                      border: "1px solid var(--color-border)",
+                      borderRadius: "999px",
                       fontSize: { xs: "9px", md: "13px" },
-                      border: isActive(item.link) ? "2px solid #FFF" : "none",
+                      borderColor: isActive(item.link) ? "var(--color-accent)" : "var(--color-border)",
+                      boxShadow: isActive(item.link) ? "0 0 18px var(--color-glow)" : "none",
+                      "&:hover": {
+                        backgroundColor: "rgba(225, 29, 72, 0.18)",
+                      },
                     }}
                     component={Link}
                     to={item.link}
@@ -390,9 +402,9 @@ export default function WebsiteNavbar() {
               to={item.link}
               sx={{
                 ...classes.MenuItem,
-                color: isActive(item.link) ? "#FFF" : item.textColor || "rgb(153, 169, 181)",
-                backgroundColor: isActive(item.link) ? "#181828" : "inherit",
-                borderLeft: isActive(item.link) && "3px solid #F44336",
+                color: isActive(item.link) ? "var(--color-text)" : item.textColor || "var(--color-muted)",
+                backgroundColor: isActive(item.link) ? "var(--color-surface-2)" : "inherit",
+                borderLeft: isActive(item.link) && "3px solid var(--color-accent)",
               }}
             >
               {item.name}
@@ -409,9 +421,9 @@ export default function WebsiteNavbar() {
                 sx={{
                   ...classes.MenuItem,
                   paddingLeft: "32px", // Indent for subitems
-                  color: isActive(sub.link) ? "#FFF" : sub.textColor || "rgb(153, 169, 181)",
-                  backgroundColor: isActive(sub.link) ? "#181828" : "inherit",
-                  borderLeft: isActive(sub.link) && "3px solid #F44336",
+                  color: isActive(sub.link) ? "var(--color-text)" : sub.textColor || "var(--color-muted)",
+                  backgroundColor: isActive(sub.link) ? "var(--color-surface-2)" : "inherit",
+                  borderLeft: isActive(sub.link) && "3px solid var(--color-accent)",
                 }}
               >
                 {sub.name}
@@ -468,10 +480,16 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
         ref={anchorRef}
         sx={{
           textTransform: "none",
-          color: item.textColor || "#fff",
-          backgroundColor: "#000",
+          color: item.textColor || "var(--color-text)",
+          backgroundColor: "rgba(255, 255, 255, 0.06)",
+          border: "1px solid var(--color-border)",
+          borderRadius: "999px",
           fontSize: { xs: "9px", md: "13px" },
-          border: isActive(item.link) ? "2px solid #FFF" : "none",
+          borderColor: isActive(item.link) ? "var(--color-accent)" : "var(--color-border)",
+          boxShadow: isActive(item.link) ? "0 0 18px var(--color-glow)" : "none",
+          "&:hover": {
+            backgroundColor: "rgba(225, 29, 72, 0.18)",
+          },
         }}
         variant="contained"
         size="small"
@@ -492,8 +510,9 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
               onMouseEnter={!isTouchDevice ? cancelClose : undefined}
               onMouseLeave={!isTouchDevice ? handleClose : undefined}
               sx={{
-                backgroundColor: "rgb(33, 35, 49)",
-                border: "1px solid rgb(73, 76, 100)",
+                backgroundColor: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+                boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
               }}
             >
               <ClickAwayListener onClickAway={() => setOpen(false)}>
@@ -510,10 +529,10 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
                       }}
                       onClick={() => setOpen(false)}
                       sx={{
-                        color: isActive(sub.link) ? "#FFF" : sub.textColor || "rgb(153, 169, 181)",
-                        backgroundColor: isActive(sub.link) ? "#181828" : "inherit",
-                        borderBottom: "1px solid rgb(73, 76, 100)",
-                        borderLeft: isActive(sub.link) && "3px solid #F44336",
+                        color: isActive(sub.link) ? "var(--color-text)" : sub.textColor || "var(--color-muted)",
+                        backgroundColor: isActive(sub.link) ? "var(--color-surface-2)" : "inherit",
+                        borderBottom: "1px solid var(--color-border)",
+                        borderLeft: isActive(sub.link) && "3px solid var(--color-accent)",
                         padding: "12.5px",
                       }}
                     >

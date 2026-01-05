@@ -20,12 +20,12 @@ registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
 const classes = {
   mainImgBox: {
-    backgroundColor: `#F44336`,
-    padding: "7.5px",
+    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    padding: "18px 0",
   },
   overlayText: {
     width: "100%",
-    fontFamily: "montserrat",
+    fontFamily: "var(--font-display)",
     fontSize: "2.2em",
     fontWeight: 500,
     textTransform: "uppercase",
@@ -528,7 +528,7 @@ export default function ClassSchedule() {
   const DaySchedule = ({ day, activities }) => {
     const ActivityDetails = ({ activity, time, color = "#FFF" }) => {
       return (
-        <Grid container size={12} sx={{ padding: "5px 25px", color: color }}>
+        <Grid container size={12} sx={{ padding: "5px 25px", color }}>
           <Grid container size={8}>
             {activity}:
           </Grid>
@@ -540,30 +540,41 @@ export default function ClassSchedule() {
     };
 
     return (
-      <Grid container size={12} sx={{ color: "white", padding: "15px 0" }}>
-        <Grid container size={12}>
-          <Typography
-            variant="h4"
-            sx={{
-              fontFamily: "montserrat",
-              textTransform: "uppercase",
-              fontSize: "2em",
-              padding: "25px 15px",
-            }}
-          >
-            {day}
-          </Typography>
+      <Box
+        sx={{
+          backgroundColor: "var(--color-surface-2)",
+          border: "1px solid var(--color-border)",
+          borderRadius: "20px",
+          padding: "10px 0",
+          margin: "20px 0",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
+        }}
+      >
+        <Grid container size={12} sx={{ color: "var(--color-text)", padding: "15px 0" }}>
+          <Grid container size={12}>
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: "var(--font-display)",
+                textTransform: "uppercase",
+                fontSize: "2em",
+                padding: "25px 15px 10px",
+              }}
+            >
+              {day}
+            </Typography>
+          </Grid>
+          {activities.map((a) => (
+            <ActivityDetails activity={a.activity} time={a.time} color={a.color} />
+          ))}
         </Grid>
-        {activities.map((a) => (
-          <ActivityDetails activity={a.activity} time={a.time} color={a.color} />
-        ))}
-      </Grid>
+      </Box>
     );
   };
 
   const HolidayClosure = ({ range }) => {
     return (
-      <Grid container size={12} sx={{ padding: "5px 25px", color: "#FFF" }}>
+      <Grid container size={12} sx={{ padding: "5px 25px", color: "var(--color-muted)" }}>
         <Grid container size={8}>
           {range}:
         </Grid>
@@ -601,7 +612,7 @@ export default function ClassSchedule() {
         linkEl.className = 'external-class-link'; // prevent duplicates
         linkEl.style.display = 'block';
         linkEl.style.marginTop = '6px';
-        linkEl.style.color = '#0D6EFD';
+        linkEl.style.color = 'var(--color-accent)';
         linkEl.style.fontSize = '13px';
         linkEl.style.textDecoration = 'underline';
 
@@ -627,24 +638,33 @@ export default function ClassSchedule() {
           </Grid>
         </Container>
       </Box>
-      <Box sx={{ backgroundColor: "#000", padding: "50px 0" }}>
-        <Container maxWidth="lg">
+      <Box sx={{ backgroundColor: "transparent", padding: "50px 0" }}>
+        <Container
+          maxWidth="lg"
+          sx={{
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "28px",
+            padding: { xs: "20px", md: "32px" },
+            boxShadow: "0 28px 50px rgba(0,0,0,0.45)",
+          }}
+        >
           <Grid container justifyContent="center" alignItems="center">
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
-              <Divider sx={{ bgcolor: "#f4524d" }} />
+              <Divider sx={{ bgcolor: "var(--color-accent)" }} />
             </Grid>
             <Grid size={{ xs: 10, sm: 8, md: 4 }}>
               <Typography
-                color="#ffffff"
+                color="var(--color-text)"
                 variant="h6"
                 textAlign="center"
-                sx={{ textTransform: "uppercase", fontFamily: "montserrat" }}
+                sx={{ textTransform: "uppercase", fontFamily: "var(--font-display)" }}
               >
                 Current Class Schedule
               </Typography>
             </Grid>
             <Grid size={{ xs: 1, sm: 2, md: 4 }}>
-              <Divider sx={{ bgcolor: "#f4524d" }} />
+              <Divider sx={{ bgcolor: "var(--color-accent)" }} />
             </Grid>
           </Grid>
           <ScheduleComponent
@@ -681,31 +701,41 @@ export default function ClassSchedule() {
 
           <Grid container justifyContent="center" alignItems="center">
             <Grid size={{ xs: 2, sm: 3, md: 4 }}>
-              <Divider sx={{ bgcolor: "#f4524d" }} />
+              <Divider sx={{ bgcolor: "var(--color-accent)" }} />
             </Grid>
             <Grid size={{ xs: 8, sm: 6, md: 4 }}>
               <Typography
-                color="#ffffff"
+                color="var(--color-text)"
                 variant="h6"
                 textAlign="center"
-                sx={{ textTransform: "uppercase", fontFamily: "montserrat" }}
+                sx={{ textTransform: "uppercase", fontFamily: "var(--font-display)" }}
               >
                 Holiday Schedule
               </Typography>
             </Grid>
             <Grid size={{ xs: 2, sm: 3, md: 4 }}>
-              <Divider sx={{ bgcolor: "#f4524d" }} />
+              <Divider sx={{ bgcolor: "var(--color-accent)" }} />
             </Grid>
           </Grid>
 
-          {holidaySchedule.map((range) => (
-            <HolidayClosure range={range} />
-          ))}
+          <Box
+            sx={{
+              backgroundColor: "var(--color-surface-2)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "20px",
+              padding: "10px 0",
+              margin: "20px 0",
+            }}
+          >
+            {holidaySchedule.map((range) => (
+              <HolidayClosure range={range} />
+            ))}
+          </Box>
 
           <Grid size={12} sx={{ padding: "25px" }}>
-            <Divider sx={{ bgcolor: "#eee", marginBottom: "1.1em" }} />
+            <Divider sx={{ bgcolor: "var(--color-border)", marginBottom: "1.1em" }} />
           </Grid>
-          <Typography sx={{ color: "#FFF", fontFamily: "Source Sans Pro", padding: "25px" }}>
+          <Typography sx={{ color: "var(--color-muted)", fontFamily: "var(--font-body)", padding: "25px" }}>
             We require a written 30 day notice in order to drop enrollments. Students will need to
             bring water bottles to class. If your child has been sick. We ask that they please not
             attend class that week. We want to keep everyone safe and healthy!

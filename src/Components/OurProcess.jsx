@@ -3,7 +3,6 @@ import { Box, Container, Grid, Typography } from "@mui/material";
 const classes = {
     overlayText: {
         width: "100%",
-        fontFamily: "montserrat",
         fontSize: "2.2em",
         fontWeight: 500,
         textTransform: "uppercase",
@@ -31,7 +30,6 @@ const classes = {
         zIndex: 2,
         textAlign: "center",
         width: "100%",
-        fontFamily: "montserrat",
         fontSize: "1.5em",
         textTransform: "uppercase",
     },
@@ -39,19 +37,25 @@ const classes = {
 
 function OurProcess() {
     return (
-        <Box sx={{ backgroundColor: "#000000", background: 'linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, #f01313 50%, rgba(36, 36, 36, 1) 100%)', color: 'white', }}>
+        <Box
+            sx={{
+                background:
+                    "linear-gradient(180deg, rgba(10, 10, 14, 1) 0%, rgba(225, 29, 72, 0.7) 45%, rgba(18, 19, 26, 1) 100%)",
+                color: "white",
+            }}
+        >
             <Container maxWidth="sm">
                 <Typography
                     textAlign="center"
                     variant="h5"
-                    sx={{ fontFamily: "montserrat", padding: "50px 0" }}
+                    sx={{ padding: "50px 0" }}
                 >
                     Our Process
                 </Typography>
                 <Typography
                     textAlign="center"
                     variant="h6"
-                    sx={{ fontWeight: 200, fontFamily: "source sans pro", paddingBottom: "50px" }}
+                    sx={{ fontWeight: 200, paddingBottom: "50px", color: "rgba(255,255,255,0.85)" }}
                 >
                     Our process incorporates 4 key steps starting from establishing which skills need to be
                     worked on, providing body control, and then getting the skill.

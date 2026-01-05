@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { camps, dauntlessClasses, pricingOptions } from "../../states";
-import { Box, Button, Container, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import {
   Email as EmailIcon,
   LocationOnOutlined as LocationOnOutlinedIcon,
@@ -27,7 +27,7 @@ const classes = {
   WhyChooseUs: {
     h2: {
       main: {
-        fontFamily: "montserrat",
+        fontFamily: "var(--font-display)",
         fontSize: {
           xs: "3em",
           sm: "4.4em",
@@ -38,7 +38,7 @@ const classes = {
     },
     h4: {
       main: {
-        fontFamily: "montserrat",
+        fontFamily: "var(--font-display)",
         textTransform: "uppercase",
         fontWeight: 200,
         fontSize: {
@@ -50,7 +50,7 @@ const classes = {
         padding: "15px 0",
       },
       span: {
-        color: "#ff0000",
+        color: "var(--color-accent)",
         fontFamily: "inherit",
         fontWeight: "300",
       },
@@ -70,27 +70,154 @@ export default function Home() {
   return (
     <>
       <WebsiteNavbar />
-      <ReactPlayer
-        src="https://youtu.be/PZJ2sG63q3c"
-        width="100%"
-        height="100vh"
-        muted
-        loop
-        playing
-      />
+      <Box
+        sx={{
+          position: "relative",
+          minHeight: { xs: "70vh", md: "85vh" },
+          overflow: "hidden",
+          backgroundColor: "var(--color-bg)",
+        }}
+      >
+        <ReactPlayer
+          src="https://youtu.be/PZJ2sG63q3c"
+          width="100%"
+          height="100%"
+          muted
+          loop
+          playing
+          style={{ position: "absolute", inset: 0 }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(120deg, rgba(10, 10, 14, 0.88) 10%, rgba(10, 10, 14, 0.65) 55%, rgba(225, 29, 72, 0.25) 100%)",
+          }}
+        />
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 10, md: 16 } }}>
+          <Grid container spacing={4} alignItems="center">
+            <Grid size={{ xs: 12, md: 7 }}>
+              <Typography
+                variant="h2"
+                className="fade-up"
+                sx={{
+                  textTransform: "uppercase",
+                  fontSize: { xs: "3rem", md: "4.8rem" },
+                  lineHeight: 0.95,
+                }}
+              >
+                Dauntless Athletics
+              </Typography>
+              <Typography
+                className="fade-up"
+                sx={{
+                  mt: 2,
+                  maxWidth: "520px",
+                  color: "var(--color-muted)",
+                  fontSize: { xs: "1rem", md: "1.15rem" },
+                }}
+              >
+                Elite tumbling, cheer, and strength training built for athletes who want to level up
+                fast.
+              </Typography>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                spacing={2}
+                sx={{ mt: 4 }}
+                className="fade-up"
+              >
+                <Button
+                  variant="contained"
+                  component={Link}
+                  to="/class-schedule/#"
+                  sx={{
+                    backgroundColor: "var(--color-accent)",
+                    color: "var(--color-text)",
+                    px: 3,
+                    py: 1.2,
+                    borderRadius: "999px",
+                    boxShadow: "0 18px 30px rgba(225, 29, 72, 0.35)",
+                    "&:hover": {
+                      backgroundColor: "var(--color-accent-2)",
+                    },
+                  }}
+                >
+                  View Schedule
+                </Button>
+                <Button
+                  variant="outlined"
+                  component={Link}
+                  to="/contact-us/#"
+                  sx={{
+                    color: "var(--color-text)",
+                    borderColor: "var(--color-border)",
+                    px: 3,
+                    py: 1.2,
+                    borderRadius: "999px",
+                    "&:hover": {
+                      borderColor: "var(--color-accent)",
+                      backgroundColor: "rgba(225, 29, 72, 0.12)",
+                    },
+                  }}
+                >
+                  Book a Visit
+                </Button>
+              </Stack>
+            </Grid>
+            <Grid size={{ xs: 12, md: 5 }}>
+              <Box
+                className="fade-up"
+                sx={{
+                  backgroundColor: "rgba(18, 19, 26, 0.78)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "24px",
+                  p: 3,
+                  boxShadow: "0 24px 40px rgba(0, 0, 0, 0.4)",
+                }}
+              >
+                <Typography variant="h5" sx={{ textTransform: "uppercase" }}>
+                  9 Years Going Strong
+                </Typography>
+                <Typography sx={{ mt: 1, color: "var(--color-muted)" }}>
+                  We appreciate the love and support you have shown us these past years and are
+                  excited for year 9.
+                </Typography>
+                <Stack spacing={1.2} sx={{ mt: 2, color: "var(--color-text)" }}>
+                  <Typography sx={{ fontSize: "0.95rem" }}>
+                    <PhoneIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                    (480) 214-3908
+                  </Typography>
+                  <Typography sx={{ fontSize: "0.95rem" }}>
+                    <EmailIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                    info@dauntlessathletics.com
+                  </Typography>
+                  <Typography sx={{ fontSize: "0.95rem" }}>
+                    <LocationOnOutlinedIcon sx={{ verticalAlign: "middle", mr: 1 }} />
+                    Gilbert, AZ
+                  </Typography>
+                </Stack>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
       <Grid>
-        <Container maxWidth="false" sx={{ backgroundColor: "black" }}>
+        <Container maxWidth={false} sx={{ backgroundColor: "transparent", py: { xs: 4, md: 6 } }}>
           <Container
             maxWidth="lg"
             sx={{
-              backgroundColor: "black",
-              color: "white",
-              padding: "25px 0px",
+              backgroundColor: "var(--color-surface)",
+              color: "var(--color-text)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "32px",
+              padding: { xs: "24px", md: "40px" },
+              boxShadow: "0 30px 60px rgba(0, 0, 0, 0.35)",
             }}
           >
             <Grid container justifyContent="center">
               <Grid size={12}>
-                <Divider sx={{ bgcolor: "white", marginBottom: "1.1em" }} />
+                <Divider sx={{ bgcolor: "var(--color-border)", marginBottom: "1.1em" }} />
               </Grid>
               <Typography
                 id="home"
@@ -98,42 +225,41 @@ export default function Home() {
                 variant="h4"
                 textAlign="center"
                 sx={{
-                  fontFamily: "montserrat",
                   textTransform: "uppercase",
                   paddingBottom: "1.4em",
                 }}
               >
                 9 Years{" "}
-                <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+                <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                   Going Strong
                 </Typography>
               </Typography>
 
               <Grid container justifyContent="center" size={12} spacing={2}>
                 <Grid container justifyContent="center" size={{ xs: 12, md: 6 }} spacing={4}>
-                  <Grid size={12} sx={{ fontFamily: "source sans pro" }}>
+                  <Grid size={12}>
                     <Grid>
-                      <Typography sx={{ fontFamily: "Source Sans Pro" }}>
+                      <Typography sx={{ color: "var(--color-muted)" }}>
                         As we approach 9 years of being open we would like to take the time to thank
                         each and everyone of you for being a part of our journey the last 9 years!
                         We appreciate all the love and support you have shown us these past years.
                       </Typography>
                       <br />
 
-                      <Typography sx={{ fontFamily: "source sans pro" }}>
+                      <Typography sx={{ color: "var(--color-muted)" }}>
                         We are excited for the journey of year 9 and can’t wait to see the
                         improvements and goals being achieved by every athlete here!
                       </Typography>
                     </Grid>
                     <Typography
                       variant="body1"
-                      sx={{ fontFamily: "inherit", fontSize: "16px" }}
+                      sx={{ fontSize: "16px" }}
                     ></Typography>
                   </Grid>
-                  <Grid container size={12} direction="column" sx={{ fontFamily: "source sans pro", padding: '20px 0', }} spacing={2} >
+                  <Grid container size={12} direction="column" sx={{ padding: "20px 0" }} spacing={2}>
                     {/* Phone Number */}
                     <Grid>
-                      <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                      <Typography variant="body1" sx={{ fontSize: "16px" }}>
                         <a
                           href="tel:+14802143908"
                           style={{ textDecoration: "none", color: "inherit" }}
@@ -146,7 +272,7 @@ export default function Home() {
 
                     {/* Email Address */}
                     <Grid>
-                      <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                      <Typography variant="body1" sx={{ fontSize: "16px" }}>
                         <a
                           href="mailto:info@dauntlessathletics.com"
                           style={{ textDecoration: "none", color: "inherit" }}
@@ -159,7 +285,7 @@ export default function Home() {
 
                     {/* Business Address */}
                     <Grid>
-                      <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+                      <Typography variant="body1" sx={{ fontSize: "16px" }}>
                         <LocationOnOutlinedIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
                         Address: 1501 E. Baseline Rd., Building 5, Suite 106, Gilbert, AZ 85233
                       </Typography>
@@ -172,7 +298,7 @@ export default function Home() {
                     width="100%"
                     height="450"
                     frameBorder="0"
-                    style={{ border: 0 }}
+                    style={{ border: 0, borderRadius: "16px", boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
                     allowFullScreen=""
                     aria-hidden="false"
                     tabIndex="0"
@@ -183,15 +309,15 @@ export default function Home() {
               <Grid container>
                 <Grid container justifyContent="center" size={12}>
                   <Grid size={12}>
-                    <Divider sx={{ bgcolor: "white", margin: "1.1em 0" }} />
+                    <Divider sx={{ bgcolor: "var(--color-border)", margin: "1.1em 0" }} />
                   </Grid>
                   <Typography
                     variant="h3"
                     textAlign="center"
-                    sx={{ fontFamily: "Montserrat", textTransform: "uppercase" }}
+                    sx={{ textTransform: "uppercase" }}
                   >
                     Upcoming{" "}
-                    <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+                    <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                       Camps
                     </Typography>
                   </Typography>
@@ -199,7 +325,7 @@ export default function Home() {
                 <Grid container size={12} justifyContent="center" sx={{ paddingBottom: "3em" }}>
                   <Typography
                     sx={{
-                      fontFamily: "source sans pro",
+                      color: "var(--color-muted)",
                       padding: "3em 0 1.5em 0",
                     }}
                   >
@@ -230,20 +356,19 @@ export default function Home() {
                       variant="h3"
                       textAlign="center"
                       sx={{
-                        fontFamily: "Montserrat",
                         textTransform: "uppercase",
                         padding: "200px 0 50px 0",
                       }}
                     >
                       Our{" "}
-                      <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+                      <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                         Classes
                       </Typography>
                     </Typography>
                   </Box>
                 </Grid>
                 <Grid container size={12} justifyContent="center">
-                  <Typography textAlign="center">
+                  <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
                     We will captivate the minds of your children and teach them skills they thought
                     they could never learn!
                   </Typography>
@@ -264,7 +389,10 @@ export default function Home() {
                         >
                           {c.title}
                         </Typography>
-                        <Typography variant="body1" sx={{ color: "#A0A0A0", padding: "15px 0px" }}>
+                        <Typography
+                          variant="body1"
+                          sx={{ color: "var(--color-muted)", padding: "15px 0px" }}
+                        >
                           {c.description}
                         </Typography>
                       </Grid>
@@ -275,29 +403,39 @@ export default function Home() {
                   ))}
                 </Grid>
                 <Grid container size={12} justifyContent="center">
-                  <ReactPlayer
-                    src="https://youtu.be/Q6D9xUJm7jI"
-                    width="100%"
-                    height="80vh"
-                    muted
-                    loop
-                    playing
-                  />
+                  <Box
+                    sx={{
+                      width: "100%",
+                      borderRadius: "24px",
+                      overflow: "hidden",
+                      border: "1px solid var(--color-border)",
+                      boxShadow: "0 30px 50px rgba(0, 0, 0, 0.45)",
+                    }}
+                  >
+                    <ReactPlayer
+                      src="https://youtu.be/Q6D9xUJm7jI"
+                      width="100%"
+                      height="80vh"
+                      muted
+                      loop
+                      playing
+                    />
+                  </Box>
                 </Grid>
               </Grid>
 
               <Grid container size={12}>
                 <Grid size={12}>
-                  <Divider sx={{ bgcolor: "white", margin: "1.1em 0" }} />
+                  <Divider sx={{ bgcolor: "var(--color-border)", margin: "1.1em 0" }} />
                 </Grid>
                 <Grid container size={12} justifyContent="center" sx={{ margin: "75px" }}>
                   <Typography
                     variant="h3"
                     textAlign="center"
-                    sx={{ fontFamily: "Montserrat", textTransform: "uppercase" }}
+                    sx={{ textTransform: "uppercase" }}
                   >
                     Why{" "}
-                    <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+                    <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                       Choose Us
                     </Typography>
                   </Typography>
@@ -308,7 +446,11 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12, md: 4 }}
-                  sx={{ backgroundColor: "#707070", padding: "50px" }}
+                  sx={{
+                    backgroundColor: "var(--color-surface-2)",
+                    padding: "50px",
+                    border: "1px solid var(--color-border)",
+                  }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     01.
@@ -323,7 +465,11 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12, md: 4 }}
-                  sx={{ backgroundColor: "#3a3a3a", padding: "50px" }}
+                  sx={{
+                    backgroundColor: "var(--color-surface-3)",
+                    padding: "50px",
+                    border: "1px solid var(--color-border)",
+                  }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     02.
@@ -342,7 +488,11 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12, md: 4 }}
-                  sx={{ backgroundColor: "#161A1D", padding: "50px" }}
+                  sx={{
+                    backgroundColor: "var(--color-surface)",
+                    padding: "50px",
+                    border: "1px solid var(--color-border)",
+                  }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     03.
@@ -357,7 +507,11 @@ export default function Home() {
                 <Grid
                   container
                   size={{ xs: 12 }}
-                  sx={{ backgroundColor: "#0B090A", padding: "50px" }}
+                  sx={{
+                    backgroundColor: "var(--color-surface-2)",
+                    padding: "50px",
+                    border: "1px solid var(--color-border)",
+                  }}
                 >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     04.
@@ -370,7 +524,15 @@ export default function Home() {
                     taught by ex-college and worlds cheerleader athletes
                   </Typography>
                 </Grid>
-                <Grid container size={12} sx={{ backgroundColor: "0D0509", padding: "50px" }}>
+                <Grid
+                  container
+                  size={12}
+                  sx={{
+                    backgroundColor: "var(--color-surface-3)",
+                    padding: "50px",
+                    border: "1px solid var(--color-border)",
+                  }}
+                >
                   <Typography variant="h2" sx={{ ...classes.WhyChooseUs.h2.main }}>
                     05.
                   </Typography>
@@ -390,13 +552,12 @@ export default function Home() {
                       variant="h3"
                       textAlign="center"
                       sx={{
-                        fontFamily: "Montserrat",
                         textTransform: "uppercase",
                         padding: "200px 0 50px 0",
                       }}
                     >
                       TUITION{" "}
-                      <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+                      <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                         RATES
                       </Typography>
                     </Typography>
@@ -408,8 +569,8 @@ export default function Home() {
                       textAlign="center"
                       variant="caption"
                       sx={{
-                        fontFamily: "Montserrat",
                         textTransform: "uppercase",
+                        color: "var(--color-muted)",
                         paddingBottom: "75px",
                       }}
                     >

@@ -7,17 +7,17 @@ import ImageWithSkeleton from "../../Components/ImageWithSkeleton"
 
 const classes = {
   mainImgBox: {
-    backgroundColor: `#F44336`,
-    padding: "7.5px",
+    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    padding: "18px 0",
   },
   overlayText: {
     width: "100%",
-    fontFamily: "montserrat",
+    fontFamily: "var(--font-display)",
     fontSize: "2.2em",
     fontWeight: 500,
     textTransform: "uppercase",
   },
-};``
+};
 
 export default function Facility() {
   return (
@@ -39,55 +39,89 @@ export default function Facility() {
       </Box>
       <Box
         sx={{
-          backgroundColor: "#000",
-          fontFamily: "source sans pro",
+          backgroundColor: "transparent",
+          fontFamily: "var(--font-body)",
           fontSize: "24px",
-          color: "rgb(207,46,46)",
+          color: "var(--color-text)",
+          padding: { xs: "30px 0", md: "50px 0" },
         }}
       >
-        <Container maxWidth="lg">
+        <Container
+          maxWidth="lg"
+          sx={{
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "28px",
+            padding: { xs: "20px", md: "30px" },
+            boxShadow: "0 28px 50px rgba(0,0,0,0.45)",
+          }}
+        >
           <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_front_of_building.png'}
-            style={{ width: "calc(100% - 40px)", height: "auto", padding: "20px" }}
+            style={{
+              width: "100%",
+              height: "auto",
+              padding: "10px",
+              borderRadius: "20px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
+            }}
           />
-          <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
-          <Typography sx={{ padding: "25px" }}>
+          <Divider sx={{ backgroundColor: "var(--color-border)" }} />
+          <Typography sx={{ padding: "20px", color: "var(--color-muted)" }}>
             We are located at 1501 East Baseline Road Bldg 5, Suite #106, Gilbert, AZ 85233.
           </Typography>
 
-          <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
+          <Divider sx={{ backgroundColor: "var(--color-border)" }} />
 
           <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_view_of_whole_gym-scaled.jpeg'}
-            style={{ width: "calc(100% - 40px)", height: "auto", padding: "20px" }}
+            style={{
+              width: "100%",
+              height: "auto",
+              padding: "10px",
+              borderRadius: "20px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
+            }}
           />
 
-          <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
+          <Divider sx={{ backgroundColor: "var(--color-border)" }} />
 
-          <Typography sx={{ padding: "25px" }}>
+          <Typography sx={{ padding: "20px", color: "var(--color-muted)" }}>
             Dauntless Athletics has plenty of space for tumbling, cheer stunts, conditioning, and
             more!
           </Typography>
 
-          <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
+          <Divider sx={{ backgroundColor: "var(--color-border)" }} />
 
           <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_front_view_gym-scaled.jpg'}
-            style={{ width: "calc(50% - 20px)", height: "auto", padding: "10px" }}
+            style={{
+              width: "calc(50% - 20px)",
+              height: "auto",
+              padding: "10px",
+              borderRadius: "20px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
+            }}
           />
           <ImageWithSkeleton
             src={'/images/facility/dauntless_athletics_side_view_gym-scaled.jpeg'}
-            style={{ width: "calc(50% - 20px)", height: "auto", padding: "10px" }}
+            style={{
+              width: "calc(50% - 20px)",
+              height: "auto",
+              padding: "10px",
+              borderRadius: "20px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.35)",
+            }}
           />
 
-          <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
+          <Divider sx={{ backgroundColor: "var(--color-border)" }} />
 
-          <Typography sx={{ padding: "25px" }}>
+          <Typography sx={{ padding: "20px", color: "var(--color-muted)" }}>
             Dauntless Athletics has a variety of different equipment that will help your child learn
             that difficult trick.
           </Typography>
 
-          <Divider sx={{ backgroundColor: "rgb(207,46,46)" }} />
+          <Divider sx={{ backgroundColor: "var(--color-border)" }} />
         </Container>
       </Box>
       <Footer />

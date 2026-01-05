@@ -19,19 +19,19 @@ import ReactPlayer from "react-player";
 
 const classes = {
   mainImgBox: {
-    backgroundColor: `#F44336`,
-    padding: "7.5px",
+    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    padding: "18px 0",
   },
   overlayText: {
     width: "100%",
-    fontFamily: "montserrat",
+    fontFamily: "var(--font-display)",
     fontSize: "2.2em",
     fontWeight: 500,
     textTransform: "uppercase",
   },
   policyAndProcedureDescriptionText: {
-    color: "#FFF",
-    fontFamily: "source sans pro",
+    color: "var(--color-text)",
+    fontFamily: "var(--font-body)",
     fontSize: "16px",
     padding: "7.5px 0",
   },
@@ -57,18 +57,30 @@ export default function CollegeCombine() {
           </Grid>
         </Container>
       </Box>
-      <Divider />
+      <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-      <Box sx={{ backgroundColor: "#000" }}>
-        <Container maxWidth="lg">
+      <Box sx={{ backgroundColor: "transparent", padding: { xs: "30px 0", md: "50px 0" } }}>
+        <Container
+          maxWidth="lg"
+          sx={{
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "28px",
+            padding: { xs: "20px", md: "32px" },
+            boxShadow: "0 28px 50px rgba(0,0,0,0.45)",
+          }}
+        >
           <Grid container>
             <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
-                  color: "#fff",
-                  border: "3px solid rgb(36, 36, 36)",
-                  margin: "35px 0",
+                  color: "var(--color-text)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "20px",
+                  margin: { xs: "20px 0", md: "35px 0" },
                   width: "100%",
+                  overflow: "hidden",
+                  boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
                 }}
               >
                 <ReactPlayer
@@ -84,17 +96,20 @@ export default function CollegeCombine() {
             <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
-                  color: "#fff",
-                  border: "3px solid rgb(36, 36, 36)",
-                  margin: "35px",
+                  color: "var(--color-text)",
+                  backgroundColor: "var(--color-surface-2)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "20px",
+                  margin: { xs: "20px 0", md: "35px" },
                   padding: "35px",
+                  boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
                 }}
               >
-                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
+                <Grid container size={12} justifyContent="center" sx={{ color: "var(--color-text)" }}>
                   <Typography
                     textAlign="center"
                     sx={{
-                      fontFamily: "montserrat",
+                      fontFamily: "var(--font-display)",
                       fontSize: "24px",
                       padding: "15px",
                       textTransform: "uppercase",
@@ -106,10 +121,11 @@ export default function CollegeCombine() {
                   <Typography
                     textAlign="center"
                     sx={{
-                      fontFamily: "source sans pro",
+                      fontFamily: "var(--font-body)",
                       fontSize: "16px",
                       lineHeight: "25px",
                       padding: "15px",
+                      color: "var(--color-muted)",
                     }}
                   >
                     Don’t miss out on a great opportunity to get recruited, meet, and show off your
@@ -119,10 +135,11 @@ export default function CollegeCombine() {
                   <Typography
                     textAlign="center"
                     sx={{
-                      fontFamily: "source sans pro",
+                      fontFamily: "var(--font-body)",
                       fontSize: "16px",
                       lineHeight: "25px",
                       padding: "15px",
+                      color: "var(--color-muted)",
                     }}
                   >
                     **After sign-up, you will receive an email with a google form that must be
@@ -133,12 +150,13 @@ export default function CollegeCombine() {
                   <Button
                     variant="outlined"
                     sx={{
-                      color: "rgb(221, 153, 51)",
-                      borderColor: "rgb(221, 153, 51)",
+                      color: "var(--color-text)",
+                      borderColor: "var(--color-border)",
+                      borderRadius: "999px",
                       "&:hover": {
-                        color: "#fff",
-                        backgroundColor: "rgb(221, 51, 51)",
-                        borderColor: "rgb(221, 51, 51)",
+                        color: "var(--color-text)",
+                        backgroundColor: "rgba(225, 29, 72, 0.12)",
+                        borderColor: "var(--color-accent)",
                       },
                     }}
                     component={Link}

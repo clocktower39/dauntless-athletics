@@ -13,12 +13,12 @@ import {
 
 const classes = {
   mainImgBox: {
-    backgroundColor: `#F44336`,
-    padding: "7.5px",
+    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    padding: "18px 0",
   },
   overlayText: {
     width: "100%",
-    fontFamily: "montserrat",
+    fontFamily: "var(--font-display)",
     fontSize: "2.2em",
     fontWeight: 500,
     textTransform: "uppercase",
@@ -26,19 +26,22 @@ const classes = {
   contactFormTextField: {
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "rgb(57, 64, 80)", // Outline color
+        borderColor: "var(--color-border)",
       },
       "&:hover fieldset": {
-        borderColor: "rgb(57, 64, 80)", // Outline color on hover
+        borderColor: "var(--color-accent)",
       },
       "&.Mui-focused fieldset": {
-        borderColor: "rgb(57, 64, 80)", // Outline color when focused
+        borderColor: "var(--color-accent)",
       },
-      backgroundColor: "rgb(24, 24, 40)", // Background color
-      color: "white", // Font color
+      backgroundColor: "var(--color-surface-2)",
+      color: "var(--color-text)",
     },
     "& .MuiInputLabel-root": {
-      color: "white", // Label color
+      color: "var(--color-muted)",
+    },
+    "& .MuiInputBase-input": {
+      color: "var(--color-text)",
     },
   },
 };
@@ -211,20 +214,39 @@ export default function Contact() {
       </Box>
       <Box
         sx={{
-          backgroundColor: "#000",
-          fontFamily: "source sans pro",
+          backgroundColor: "transparent",
+          fontFamily: "var(--font-body)",
           fontSize: "24px",
-          color: "#fff",
+          color: "var(--color-text)",
+          padding: { xs: "30px 0", md: "50px 0" },
         }}
       >
-        <Container maxWidth="lg">
-          <Grid container sx={{ padding: "25px 0" }}>
-            <Grid container size={{ xs: 12, md: 3 }}>
+        <Container
+          maxWidth="lg"
+          sx={{
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "28px",
+            padding: { xs: "24px", md: "36px" },
+            boxShadow: "0 28px 50px rgba(0,0,0,0.45)",
+          }}
+        >
+          <Grid container sx={{ padding: "25px 0" }} spacing={2}>
+            <Grid
+              container
+              size={{ xs: 12, md: 3 }}
+              sx={{
+                backgroundColor: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "20px",
+                padding: "20px",
+              }}
+            >
               <Grid container size={12} justifyContent="center">
-                <PhoneIcon sx={{ fontSize: "64px", padding: "25px 0" }} />
+                <PhoneIcon sx={{ fontSize: "64px", padding: "25px 0", color: "var(--color-accent)" }} />
               </Grid>
               <Grid container size={12} justifyContent="center">
-                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
+                <Typography textAlign="center" sx={{ fontFamily: "var(--font-display)", fontSize: "36px" }}>
                   CONTACT
                 </Typography>
               </Grid>
@@ -242,8 +264,9 @@ export default function Contact() {
                 <Grid container size={12} justifyContent="center">
                   <Typography
                     sx={{
-                      fontFamily: "source sans pro",
+                      fontFamily: "var(--font-body)",
                       fontSize: "16px",
+                      color: "var(--color-muted)",
                     }}
                   >
                     <a href="tel:4802143908">(480) 214-3908</a>
@@ -252,8 +275,9 @@ export default function Contact() {
                 <Grid container size={12} justifyContent="center">
                   <Typography
                     sx={{
-                      fontFamily: "source sans pro",
+                      fontFamily: "var(--font-body)",
                       fontSize: "16px",
+                      color: "var(--color-muted)",
                     }}
                   >
                     {" "}
@@ -263,14 +287,23 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3 }}>
+            <Grid
+              container
+              size={{ xs: 12, md: 3 }}
+              sx={{
+                backgroundColor: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "20px",
+                padding: "20px",
+              }}
+            >
               <Grid container size={12} justifyContent="center">
                 <EventAvailableOutlinedIcon
-                  sx={{ color: "rgb(76, 173, 201)", fontSize: "64px", padding: "25px 0" }}
+                  sx={{ color: "var(--color-accent)", fontSize: "64px", padding: "25px 0" }}
                 />
               </Grid>
               <Grid container size={12} justifyContent="center">
-                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
+                <Typography textAlign="center" sx={{ fontFamily: "var(--font-display)", fontSize: "36px" }}>
                   CLASS SCHEDULE
                 </Typography>
               </Grid>
@@ -284,8 +317,9 @@ export default function Contact() {
                   component={Link}
                   to={"/class-schedule/#"}
                   sx={{
-                    fontFamily: "source sans pro",
+                    fontFamily: "var(--font-body)",
                     fontSize: "16px",
+                    color: "var(--color-muted)",
                   }}
                 >
                   See Class Schedule
@@ -293,14 +327,23 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3 }}>
+            <Grid
+              container
+              size={{ xs: 12, md: 3 }}
+              sx={{
+                backgroundColor: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "20px",
+                padding: "20px",
+              }}
+            >
               <Grid container size={12} justifyContent="center">
                 <EventBusyOutlinedIcon
-                  sx={{ color: "rgb(117, 214, 156)", fontSize: "64px", padding: "25px 0" }}
+                  sx={{ color: "var(--color-accent)", fontSize: "64px", padding: "25px 0" }}
                 />
               </Grid>
               <Grid container size={12} justifyContent="center">
-                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
+                <Typography textAlign="center" sx={{ fontFamily: "var(--font-display)", fontSize: "36px" }}>
                   HOLIDAY SCHEDULE
                 </Typography>
               </Grid>
@@ -312,9 +355,10 @@ export default function Contact() {
               >
                 <ul
                   style={{
-                    fontFamily: "source sans pro",
+                    fontFamily: "var(--font-body)",
                     fontSize: "16px",
                     paddingLeft: "0", // Remove default padding of the ul
+                    color: "var(--color-muted)",
                   }}
                 >
                   <li
@@ -391,14 +435,23 @@ export default function Contact() {
               </Grid>
             </Grid>
 
-            <Grid container size={{ xs: 12, md: 3 }}>
+            <Grid
+              container
+              size={{ xs: 12, md: 3 }}
+              sx={{
+                backgroundColor: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "20px",
+                padding: "20px",
+              }}
+            >
               <Grid container size={12} justifyContent="center">
                 <LocationOnIcon
-                  sx={{ color: "rgb(244, 82, 77)", fontSize: "64px", padding: "25px 0" }}
+                  sx={{ color: "var(--color-accent)", fontSize: "64px", padding: "25px 0" }}
                 />
               </Grid>
               <Grid container size={12} justifyContent="center">
-                <Typography textAlign="center" sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
+                <Typography textAlign="center" sx={{ fontFamily: "var(--font-display)", fontSize: "36px" }}>
                   ADDRESS
                 </Typography>
               </Grid>
@@ -411,8 +464,9 @@ export default function Contact() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontFamily: "source sans pro",
+                    fontFamily: "var(--font-body)",
                     fontSize: "16px",
+                    color: "var(--color-muted)",
                   }}
                 >
                   1501 E. Baseline Rd., Building 5, Suite 106 Gilbert, AZ 85233
@@ -421,20 +475,30 @@ export default function Contact() {
             </Grid>
           </Grid>
           <Grid container justifyContent="center">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
-              width="100%"
-              height="450"
-              frameborder="0"
-              style={{ border: 0 }}
-              allowfullscreen=""
-              aria-hidden="false"
-              tabindex="0"
-            ></iframe>
+            <Box
+              sx={{
+                width: "100%",
+                borderRadius: "20px",
+                overflow: "hidden",
+                border: "1px solid var(--color-border)",
+                boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
+              }}
+            >
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
+                width="100%"
+                height="450"
+                frameBorder="0"
+                style={{ border: 0 }}
+                allowFullScreen
+                aria-hidden="false"
+                tabIndex="0"
+              ></iframe>
+            </Box>
           </Grid>
           <Grid container spacing={3} sx={{ padding: "25px 0" }}>
             <Grid container size={12}>
-              <Typography sx={{ fontFamily: "montserrat", fontSize: "36px" }}>
+              <Typography sx={{ fontFamily: "var(--font-display)", fontSize: "36px" }}>
                 CONTACT OUR TEAM
               </Typography>
             </Grid>
@@ -460,11 +524,17 @@ export default function Contact() {
                 onClick={handleContactSubmit}
                 disabled={loading}
                 sx={{
-                  backgroundColor: loading ? "grey.500" : "primary.main",
-                  color: "white",
+                  backgroundColor: loading ? "rgba(255,255,255,0.2)" : "var(--color-accent)",
+                  color: "var(--color-text)",
+                  borderRadius: "999px",
+                  padding: "10px 28px",
+                  boxShadow: "0 16px 26px rgba(225, 29, 72, 0.35)",
                   "&.Mui-disabled": {
-                    backgroundColor: "grey.700",
-                    color: "grey.300",
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    color: "var(--color-muted)",
+                  },
+                  "&:hover": {
+                    backgroundColor: "var(--color-accent-2)",
                   },
                 }}
               >
@@ -473,7 +543,7 @@ export default function Contact() {
             </Grid>
             {contactFormSubmissionStatus.error && (
               <Grid container size={12}>
-                <Typography sx={{ fontFamily: "montserrat", fontSize: "16px", color: "#ff0000" }}>
+                <Typography sx={{ fontFamily: "var(--font-display)", fontSize: "16px", color: "var(--color-accent)" }}>
                   {contactFormSubmissionStatus.errorMessage}
                 </Typography>
               </Grid>

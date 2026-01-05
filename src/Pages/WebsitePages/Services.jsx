@@ -17,19 +17,17 @@ import {
 
 const classes = {
   mainImgBox: {
-    backgroundColor: `#F44336`,
-    padding: "7.5px",
+    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    padding: "18px 0",
   },
   overlayText: {
     width: "100%",
-    fontFamily: "montserrat",
     fontSize: "2.2em",
     fontWeight: 500,
     textTransform: "uppercase",
   },
   policyAndProcedureDescriptionText: {
-    color: "#FFF",
-    fontFamily: "source sans pro",
+    color: "var(--color-text)",
     fontSize: "16px",
     padding: "7.5px 0",
   },
@@ -56,22 +54,24 @@ export default function Services() {
         </Container>
       </Box>
 
-      <Box sx={{ backgroundColor: "#000" }}>
+      <Box sx={{ backgroundColor: "transparent" }}>
         <Container maxWidth="lg">
           <Grid container>
             <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
-                  color: "#fff",
-                  border: "3px solid rgb(36, 36, 36)",
+                  color: "var(--color-text)",
+                  backgroundColor: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "20px",
                   margin: "35px",
                   padding: "35px",
+                  boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
                 }}
               >
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontFamily: "montserrat",
                     fontSize: "24px",
                     padding: "15px",
                   }}
@@ -81,10 +81,10 @@ export default function Services() {
                 <Typography
                   textAlign="center"
                   sx={{
-                    fontFamily: "source sans pro",
                     fontSize: "16px",
                     lineHeight: "25px",
                     padding: "15px",
+                    color: "var(--color-muted)",
                   }}
                 >
                   We will captivate the minds of your children and teach them skills they thought
@@ -92,11 +92,11 @@ export default function Services() {
                 </Typography>
                 <ul
                   style={{
-                    fontFamily: "source sans pro",
                     fontSize: "16px",
                     lineHeight: "30px",
                     padding: "15px",
                     marginLeft: "15%",
+                    color: "var(--color-muted)",
                   }}
                 >
                   <li>Private Lessons</li>
@@ -112,12 +112,13 @@ export default function Services() {
                   <Button
                     variant="outlined"
                     sx={{
-                      color: "rgb(221, 153, 51)",
-                      borderColor: "rgb(221, 153, 51)",
+                      color: "var(--color-text)",
+                      borderColor: "var(--color-border)",
+                      borderRadius: "999px",
                       "&:hover": {
-                        color: "#fff",
-                        backgroundColor: "rgb(221, 51, 51)",
-                        borderColor: "rgb(221, 51, 51)",
+                        color: "var(--color-text)",
+                        backgroundColor: "rgba(225, 29, 72, 0.12)",
+                        borderColor: "var(--color-accent)",
                       },
                     }}
                     component={Link}
@@ -132,17 +133,19 @@ export default function Services() {
             <Grid container size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
-                  color: "#fff",
-                  border: "3px solid rgb(36, 36, 36)",
+                  color: "var(--color-text)",
+                  backgroundColor: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "20px",
                   margin: "35px",
                   padding: "35px",
+                  boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
                 }}
               >
-                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
+                <Grid container size={12} justifyContent="center" sx={{ color: "var(--color-text)" }}>
                   <Typography
                     textAlign="center"
                     sx={{
-                      fontFamily: "montserrat",
                       fontSize: "24px",
                       padding: "15px",
                     }}
@@ -152,10 +155,10 @@ export default function Services() {
                   <Typography
                     textAlign="center"
                     sx={{
-                      fontFamily: "source sans pro",
                       fontSize: "16px",
                       lineHeight: "25px",
                       padding: "15px",
+                      color: "var(--color-muted)",
                     }}
                   >
                     Tumbling Camps and other events that will tune your skills and prepare you for
@@ -167,12 +170,13 @@ export default function Services() {
                   <Button
                     variant="outlined"
                     sx={{
-                      color: "rgb(221, 153, 51)",
-                      borderColor: "rgb(221, 153, 51)",
+                      color: "var(--color-text)",
+                      borderColor: "var(--color-border)",
+                      borderRadius: "999px",
                       "&:hover": {
-                        color: "#fff",
-                        backgroundColor: "rgb(221, 51, 51)",
-                        borderColor: "rgb(221, 51, 51)",
+                        color: "var(--color-text)",
+                        backgroundColor: "rgba(225, 29, 72, 0.12)",
+                        borderColor: "var(--color-accent)",
                       },
                     }}
                     component={Link}
@@ -184,17 +188,19 @@ export default function Services() {
               </Box>
               <Box
                 sx={{
-                  color: "#fff",
-                  border: "3px solid rgb(36, 36, 36)",
+                  color: "var(--color-text)",
+                  backgroundColor: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "20px",
                   margin: "35px",
                   padding: "35px",
+                  boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
                 }}
               >
-                <Grid container size={12} justifyContent="center" sx={{ color: "#fff" }}>
+                <Grid container size={12} justifyContent="center" sx={{ color: "var(--color-text)" }}>
                   <Typography
                     textAlign="center"
                     sx={{
-                      fontFamily: "montserrat",
                       fontSize: "24px",
                       padding: "15px",
                     }}
@@ -204,10 +210,10 @@ export default function Services() {
                   <Typography
                     textAlign="center"
                     sx={{
-                      fontFamily: "source sans pro",
                       fontSize: "16px",
                       lineHeight: "25px",
                       padding: "15px",
+                      color: "var(--color-muted)",
                     }}
                   >
                     We contract with schools, gyms, and programs to provide tumbling and stunting
@@ -221,12 +227,13 @@ export default function Services() {
                   <Button
                     variant="outlined"
                     sx={{
-                      color: "rgb(221, 153, 51)",
-                      borderColor: "rgb(221, 153, 51)",
+                      color: "var(--color-text)",
+                      borderColor: "var(--color-border)",
+                      borderRadius: "999px",
                       "&:hover": {
-                        color: "#fff",
-                        backgroundColor: "rgb(221, 51, 51)",
-                        borderColor: "rgb(221, 51, 51)",
+                        color: "var(--color-text)",
+                        backgroundColor: "rgba(225, 29, 72, 0.12)",
+                        borderColor: "var(--color-accent)",
                       },
                     }}
                     component={Link}
@@ -244,14 +251,13 @@ export default function Services() {
               variant="h3"
               textAlign="center"
               sx={{
-                color: "#fff",
-                fontFamily: "Montserrat",
+                color: "var(--color-text)",
                 textTransform: "uppercase",
                 padding: "50px 0",
               }}
             >
               Our{" "}
-              <Typography variant="span" sx={{ fontFamily: "Montserrat", fontWeight: 200 }}>
+              <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                 Services
               </Typography>
             </Typography>
@@ -260,18 +266,24 @@ export default function Services() {
             <Grid
               container
               size={{ xs: 12, sm: 6, md: 4 }}
-              sx={{ color: "#fff" }}
+              sx={{
+                color: "var(--color-text)",
+                backgroundColor: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "20px",
+                padding: "30px",
+              }}
               direction="column"
               alignItems="center"
             >
               <HubIcon sx={{ fontSize: "5em", padding: "10px", color: "#ffba43" }} />
               <Typography
                 textAlign="center"
-                sx={{ fontFamily: "montserrat", fontSize: "24px", padding: "15px" }}
+                sx={{ fontSize: "24px", padding: "15px" }}
               >
                 Gyms
               </Typography>
-              <Typography textAlign="center" sx={{ fontFamily: "source sans pro", color: "#FFF" }}>
+              <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
                 We visit gyms that are working to build a strong tumbling program and need help
                 coaching their recreational tumbling. Note we do NOT coach cheer teams. If your
                 cheer leaders take one of our recreational classes then we will help them improve
@@ -284,18 +296,24 @@ export default function Services() {
             <Grid
               container
               size={{ xs: 12, sm: 6, md: 4 }}
-              sx={{ color: "#fff" }}
+              sx={{
+                color: "var(--color-text)",
+                backgroundColor: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "20px",
+                padding: "30px",
+              }}
               direction="column"
               alignItems="center"
             >
               <SchoolIcon sx={{ fontSize: "5em", padding: "10px", color: "#bfd382" }} />
               <Typography
                 textAlign="center"
-                sx={{ fontFamily: "montserrat", fontSize: "24px", padding: "15px" }}
+                sx={{ fontSize: "24px", padding: "15px" }}
               >
                 High School/ Jr. High Tumbling
               </Typography>
-              <Typography textAlign="center" sx={{ fontFamily: "source sans pro", color: "#FFF" }}>
+              <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
                 We visit both High Schools and Jr. Highs to work with the athletes on their tumbling
                 skills. We make sure that they are able to perform and execute the skills that their
                 coach wants them to do in their routine with good form and position.
@@ -308,8 +326,7 @@ export default function Services() {
           textAlign="center"
           variant="h2"
           sx={{
-            color: "#FFF",
-            fontFamily: "montserrat",
+            color: "var(--color-text)",
             textTransform: "uppercase",
             fontSize: {
               xs: "1.5em",
@@ -317,8 +334,8 @@ export default function Services() {
               md: "3em",
             },
             padding: "1em 0",
-            display: "flex", // Ensures the icon and text are flex items
-            justifyContent: "center", // Centers the items horizontally
+            display: "flex",
+            justifyContent: "center",
             alignItems: "center",
           }}
         >

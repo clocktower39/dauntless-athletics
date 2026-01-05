@@ -13,7 +13,14 @@ import DauntlessAthleticsLogoDesktopCircleImg from '../assets/Dauntless-Athletic
 
 const TopFooter = () => {
   return (
-    <Grid container sx={{ backgroundColor: "#242424", padding: "75px" }}>
+    <Grid
+      container
+      sx={{
+        backgroundColor: "var(--color-surface)",
+        padding: { xs: "50px 24px", md: "80px" },
+        borderTop: "1px solid var(--color-border)",
+      }}
+    >
       <Grid
         container
         justifyContent="center"
@@ -31,9 +38,7 @@ const TopFooter = () => {
         <Grid size={12}>
           <Typography
             variant="h5"
-            color="white"
             sx={{
-              fontFamily: "montserrat",
               padding: "15px 0",
               textTransform: "uppercase",
               fontSize: "18px",
@@ -42,20 +47,20 @@ const TopFooter = () => {
             Dauntless Athletics
           </Typography>
         </Grid>
-        <Grid size={12} sx={{ color: "rgb(153, 169, 181)", fontFamily: "source sans pro" }}>
-          <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+        <Grid size={12} sx={{ color: "var(--color-muted)" }}>
+          <Typography variant="body1" sx={{ fontSize: "16px" }}>
             <LocationOnOutlinedIcon sx={{ fontFamily: "inherit", fontSize: "inherit" }} /> Address:
           </Typography>
-          <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+          <Typography variant="body1" sx={{ fontSize: "16px" }}>
             1501 E. Baseline Rd., Building 5, Suite 106, Gilbert, AZ 85233
           </Typography>
         </Grid>
         <Grid size={12}>
-          <Divider sx={{ bgcolor: "white", margin: "1.1em 0" }} />
+          <Divider sx={{ bgcolor: "var(--color-border)", margin: "1.1em 0" }} />
         </Grid>
-        <Grid size={12} sx={{ color: "rgb(153, 169, 181)", fontFamily: "source sans pro" }}>
+        <Grid size={12} sx={{ color: "var(--color-muted)" }}>
           {/* Phone Number */}
-          <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+          <Typography variant="body1" sx={{ fontSize: "16px" }}>
             <a href="tel:+14802143908" style={{ textDecoration: "none", color: "inherit" }}>
               <PhoneIcon sx={{ verticalAlign: "middle", mr: 0.5 }} />
               Phone: (480) 214-3908
@@ -63,7 +68,7 @@ const TopFooter = () => {
           </Typography>
 
           {/* Email Address */}
-          <Typography variant="body1" sx={{ fontFamily: "inherit", fontSize: "16px" }}>
+          <Typography variant="body1" sx={{ fontSize: "16px" }}>
             <a
               href="mailto:info@dauntlessathletics.com"
               style={{ textDecoration: "none", color: "inherit" }}
@@ -84,45 +89,77 @@ const BottomFooter = () => {
       container
       justifyContent="center"
       sx={{
-        backgroundColor: "#5C110C",
+        background:
+          "linear-gradient(120deg, rgba(18, 19, 26, 1), rgba(225, 29, 72, 0.45))",
         alignItems: "center",
-        padding: 2, // Add padding for visual separation
+        padding: 2,
+        borderTop: "1px solid var(--color-border)",
       }}
     >
       {/* Social Media Icons Row */}
       <Grid container size={12} justifyContent="center" sx={{ marginBottom: 2 }}>
-        <IconButton component={Link} to="https://www.facebook.com/dauntlessathletics" sx={{ color: "rgb(78, 100, 181)" }}>
+        <IconButton
+          component={Link}
+          to="https://www.facebook.com/dauntlessathletics"
+          sx={{
+            color: "var(--color-text)",
+            backgroundColor: "rgba(255, 255, 255, 0.08)",
+            margin: "0 6px",
+          }}
+        >
           <Facebook />
         </IconButton>
-        <IconButton component={Link} to="https://www.instagram.com/dauntless_athletics" sx={{ color: "rgb(154, 143, 98)" }}>
+        <IconButton
+          component={Link}
+          to="https://www.instagram.com/dauntless_athletics"
+          sx={{
+            color: "var(--color-text)",
+            backgroundColor: "rgba(255, 255, 255, 0.08)",
+            margin: "0 6px",
+          }}
+        >
           <Instagram />
         </IconButton>
-        <IconButton component={Link} to="https://www.youtube.com/channel/UCyH9jh0OGP1pV2T7jyfBb2g" sx={{ color: "rgb(200, 41, 41)" }}>
+        <IconButton
+          component={Link}
+          to="https://www.youtube.com/channel/UCyH9jh0OGP1pV2T7jyfBb2g"
+          sx={{
+            color: "var(--color-text)",
+            backgroundColor: "rgba(255, 255, 255, 0.08)",
+            margin: "0 6px",
+          }}
+        >
           <YouTube />
         </IconButton>
       </Grid>
 
       {/* Navigation Buttons Row */}
       <Grid>
-        <Button component={Link} to="/#" sx={{ color: "rgb(153, 169, 181)" }}>Home</Button>
+        <Button component={Link} to="/#" sx={{ color: "var(--color-text)" }}>Home</Button>
       </Grid>
       <Grid>
-        <Divider sx={{ bgcolor: "rgb(153, 169, 181)", height: "1em" }} orientation="vertical" />
+        <Divider sx={{ bgcolor: "var(--color-border)", height: "1em" }} orientation="vertical" />
       </Grid>
       <Grid>
-        <Button component={Link} to="/class-schedule/#" sx={{ color: "rgb(153, 169, 181)" }}>Class Schedule</Button>
+        <Button component={Link} to="/class-schedule/#" sx={{ color: "var(--color-text)" }}>
+          Class Schedule
+        </Button>
       </Grid>
       <Grid>
-        <Divider sx={{ bgcolor: "rgb(153, 169, 181)", height: "1em" }} orientation="vertical" />
+        <Divider sx={{ bgcolor: "var(--color-border)", height: "1em" }} orientation="vertical" />
       </Grid>
       <Grid>
-        <Button component={Link} to="/services/#" sx={{ color: "rgb(153, 169, 181)" }}>Services</Button>
+        <Button component={Link} to="/services/#" sx={{ color: "var(--color-text)" }}>
+          Services
+        </Button>
       </Grid>
       <Grid>
-        <Divider sx={{ bgcolor: "rgb(153, 169, 181)", height: "1em" }} orientation="vertical" />
+        <Divider sx={{ bgcolor: "var(--color-border)", height: "1em" }} orientation="vertical" />
       </Grid>
       <Grid>
-        <Button component={Link} to="/contact-us/#" sx={{ color: "rgb(153, 169, 181)" }}>Contact Us</Button>
+        <Button component={Link} to="/contact-us/#" sx={{ color: "var(--color-text)" }}>
+          Contact Us
+        </Button>
       </Grid>
 
       {/* Copyright Component */}
@@ -136,11 +173,11 @@ const BottomFooter = () => {
 const Copyright = () => {
   return (
     <Grid>
-      <Typography variant="body2" color="rgb(153, 169, 181)">
+      <Typography variant="body2" color="var(--color-muted)">
         {"© "}
         {new Date().getFullYear()} Dauntless Athletics
       </Typography>
-      <Typography variant="body2" color="rgb(153, 169, 181)" textAlign="center">
+      <Typography variant="body2" color="var(--color-muted)" textAlign="center">
         All Rights Reserved.
       </Typography>
     </Grid>

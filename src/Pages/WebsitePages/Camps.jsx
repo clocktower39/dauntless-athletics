@@ -9,12 +9,12 @@ import OurProcess from "../../Components/OurProcess";
 
 const classes = {
   mainImgBox: {
-    backgroundColor: `#F44336`,
-    padding: "7.5px",
+    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    padding: "18px 0",
   },
   overlayText: {
     width: "100%",
-    fontFamily: "montserrat",
+    fontFamily: "var(--font-display)",
     fontSize: "2.2em",
     fontWeight: 500,
     textTransform: "uppercase",
@@ -26,13 +26,13 @@ const classes = {
     maxHeight: "900px",
   },
   PeakPerformanceCamp: {
-    backgroundColor: "#3a3a3a",
+    backgroundColor: "var(--color-surface-2)",
     padding: "7.5px",
   },
   PeakPerformanceCampText: {
-    color: "#FFF",
+    color: "var(--color-text)",
     width: "100%",
-    fontFamily: "montserrat",
+    fontFamily: "var(--font-display)",
     textTransform: "uppercase",
     padding: "3px",
   },
@@ -63,11 +63,20 @@ export default function Camps() {
           style={classes.image}
         />
       </Box>
-      <Box sx={{ backgroundColor: "#000", color: "#FFF" }}>
-        <Container maxWidth="md">
+      <Box sx={{ backgroundColor: "transparent", color: "var(--color-text)", padding: { xs: "30px 0", md: "50px 0" } }}>
+        <Container
+          maxWidth="md"
+          sx={{
+            backgroundColor: "var(--color-surface)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "28px",
+            padding: { xs: "20px", md: "32px" },
+            boxShadow: "0 28px 50px rgba(0,0,0,0.45)",
+          }}
+        >
           <Typography
             sx={{
-              fontFamily: "montserrat",
+              fontFamily: "var(--font-display)",
               fontWeight: "600",
               textTransform: "uppercase",
               padding: "25px 0",
@@ -78,31 +87,31 @@ export default function Camps() {
             <Typography variant="caption">(Please note the guidelines may change):</Typography>
           </Typography>
 
-          <ul style={{ paddingBottom: "50px" }}>
+          <ul style={{ paddingBottom: "50px", color: "var(--color-muted)" }}>
             <li>
               <Typography
-                sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
+                sx={{ fontFamily: "var(--font-display)", textTransform: "uppercase", padding: "5px" }}
               >
                 Must pay with credit or debit card only! No bank drafts or checks.
               </Typography>
             </li>
             <li>
               <Typography
-                sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
+                sx={{ fontFamily: "var(--font-display)", textTransform: "uppercase", padding: "5px" }}
               >
                 There are no make ups or refunds for these camps.
               </Typography>
             </li>
             <li>
               <Typography
-                sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
+                sx={{ fontFamily: "var(--font-display)", textTransform: "uppercase", padding: "5px" }}
               >
                 Make ups are not allowed to be used for these camps.
               </Typography>
             </li>
             <li>
               <Typography
-                sx={{ fontFamily: "montserrat", textTransform: "uppercase", padding: "5px" }}
+                sx={{ fontFamily: "var(--font-display)", textTransform: "uppercase", padding: "5px" }}
               >
                 These camps will not affect your current enrollment.
               </Typography>
