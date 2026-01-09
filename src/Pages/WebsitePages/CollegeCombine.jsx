@@ -19,7 +19,8 @@ import ReactPlayer from "react-player";
 
 const classes = {
   mainImgBox: {
-    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    backgroundColor: "var(--color-surface)",
+    borderBottom: "1px solid var(--color-border)",
     padding: "18px 0",
   },
   overlayText: {
@@ -155,7 +156,7 @@ export default function CollegeCombine() {
                       borderRadius: "999px",
                       "&:hover": {
                         color: "var(--color-text)",
-                        backgroundColor: "rgba(225, 29, 72, 0.12)",
+                        backgroundColor: "rgba(215, 38, 56, 0.12)",
                         borderColor: "var(--color-accent)",
                       },
                     }}

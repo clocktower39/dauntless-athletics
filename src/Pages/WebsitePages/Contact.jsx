@@ -13,7 +13,8 @@ import {
 
 const classes = {
   mainImgBox: {
-    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    backgroundColor: "var(--color-surface)",
+    borderBottom: "1px solid var(--color-border)",
     padding: "18px 0",
   },
   overlayText: {
@@ -528,7 +529,7 @@ export default function Contact() {
                   color: "var(--color-text)",
                   borderRadius: "999px",
                   padding: "10px 28px",
-                  boxShadow: "0 16px 26px rgba(225, 29, 72, 0.35)",
+                  boxShadow: "0 16px 26px rgba(215, 38, 56, 0.35)",
                   "&.Mui-disabled": {
                     backgroundColor: "rgba(255,255,255,0.2)",
                     color: "var(--color-muted)",

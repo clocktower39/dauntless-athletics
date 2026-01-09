@@ -3,27 +3,23 @@
 :root {
   --font-body: "Space Grotesk", sans-serif;
   --font-display: "Bebas Neue", sans-serif;
-  --color-bg: #0a0a0e;
-  --color-surface: #12131a;
-  --color-surface-2: #171a24;
-  --color-surface-3: #1f2431;
-  --color-accent: #e11d48;
-  --color-accent-2: #ff3b30;
+  --color-bg: #0b0d10;
+  --color-surface: #13161c;
+  --color-surface-2: #1a1f27;
+  --color-surface-3: #202634;
+  --color-accent: #d72638;
+  --color-accent-2: #f04a4f;
   --color-text: #f8fafc;
-  --color-muted: #9aa3b2;
+  --color-muted: #aeb6c2;
   --color-border: rgba(255, 255, 255, 0.08);
-  --color-glow: rgba(225, 29, 72, 0.35);
+  --color-glow: rgba(215, 38, 56, 0.35);
 }
 
 body {
   margin: 0;
   font-family: var(--font-body);
   color: var(--color-text);
-  background:
-    radial-gradient(circle at 15% 10%, rgba(225, 29, 72, 0.18), transparent 45%),
-    radial-gradient(circle at 80% 0%, rgba(255, 59, 48, 0.18), transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.04), transparent 50%),
-    var(--color-bg);
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -39,8 +39,9 @@ function OurProcess() {
     return (
         <Box
             sx={{
-                background:
-                    "linear-gradient(180deg, rgba(10, 10, 14, 1) 0%, rgba(225, 29, 72, 0.7) 45%, rgba(18, 19, 26, 1) 100%)",
+                backgroundColor: "var(--color-surface-3)",
+                borderTop: "1px solid var(--color-border)",
+                borderBottom: "1px solid var(--color-border)",
                 color: "white",
             }}
         >

@@ -20,7 +20,8 @@ registerLicense(import.meta.env.VITE_SYNCFUSION_KEY);
 
 const classes = {
   mainImgBox: {
-    background: "linear-gradient(120deg, rgba(225, 29, 72, 0.9), rgba(10, 10, 14, 0.95))",
+    backgroundColor: "var(--color-surface)",
+    borderBottom: "1px solid var(--color-border)",
     padding: "18px 0",
   },
   overlayText: {

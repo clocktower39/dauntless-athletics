@@ -85,12 +85,11 @@ const TopFooter = () => {
 
 const BottomFooter = () => {
   return (
-    <Grid
+      <Grid
       container
       justifyContent="center"
       sx={{
-        background:
-          "linear-gradient(120deg, rgba(18, 19, 26, 1), rgba(225, 29, 72, 0.45))",
+        backgroundColor: "var(--color-surface-3)",
         alignItems: "center",
         padding: 2,
         borderTop: "1px solid var(--color-border)",

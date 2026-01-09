@@ -36,7 +36,7 @@ import dayjs from "dayjs";
 
 const classes = {
   TopDivider: {
-    background: "linear-gradient(90deg, transparent, var(--color-accent), transparent)",
+    backgroundColor: "var(--color-accent)",
     height: "3px",
   },
   BottomDivider: {
@@ -44,7 +44,7 @@ const classes = {
     borderBottomWidth: 1,
   },
   Toolbar: {
-    backgroundColor: "rgba(10, 10, 14, 0.9)",
+    backgroundColor: "rgba(11, 13, 16, 0.9)",
     backdropFilter: "blur(12px)",
     color: "var(--color-text)",
   },
@@ -56,7 +56,7 @@ const classes = {
   },
   ToolbarButtonHover: {
     "&:hover": {
-      backgroundColor: "rgba(225, 29, 72, 0.18)",
+      backgroundColor: "rgba(215, 38, 56, 0.18)",
     },
   },
   ToolbarIcon: {
@@ -336,7 +336,7 @@ export default function WebsiteNavbar() {
                       borderColor: isActive(item.link) ? "var(--color-accent)" : "var(--color-border)",
                       boxShadow: isActive(item.link) ? "0 0 18px var(--color-glow)" : "none",
                       "&:hover": {
-                        backgroundColor: "rgba(225, 29, 72, 0.18)",
+                        backgroundColor: "rgba(215, 38, 56, 0.18)",
                       },
                     }}
                     component={Link}
@@ -488,7 +488,7 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
           borderColor: isActive(item.link) ? "var(--color-accent)" : "var(--color-border)",
           boxShadow: isActive(item.link) ? "0 0 18px var(--color-glow)" : "none",
           "&:hover": {
-            backgroundColor: "rgba(225, 29, 72, 0.18)",
+            backgroundColor: "rgba(215, 38, 56, 0.18)",
           },
         }}
         variant="contained"

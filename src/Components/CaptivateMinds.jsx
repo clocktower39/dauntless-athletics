@@ -6,8 +6,9 @@ export default function CaptivateMinds() {
   return (
     <Box
       sx={{
-        background:
-          "linear-gradient(120deg, rgba(225, 29, 72, 0.95), rgba(10, 10, 14, 0.95))",
+        backgroundColor: "var(--color-surface-2)",
+        borderTop: "1px solid var(--color-border)",
+        borderBottom: "1px solid var(--color-border)",
         padding: { xs: "50px 0", md: "80px 0" },
       }}
     >

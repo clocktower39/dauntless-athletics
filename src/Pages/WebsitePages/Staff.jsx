@@ -189,7 +189,7 @@ export default function Staff() {
               position: "absolute",
               inset: 0,
               background:
-                "linear-gradient(180deg, rgba(10, 10, 14, 0) 35%, rgba(10, 10, 14, 0.85) 100%)",
+                "linear-gradient(180deg, rgba(11, 13, 16, 0) 35%, rgba(11, 13, 16, 0.85) 100%)",
             }}
           />
           <Typography
@@ -234,7 +234,7 @@ export default function Staff() {
               height: "7em",
               width: "100%",
               background:
-                "linear-gradient(90deg, rgba(225, 29, 72, 0.6), rgba(10, 10, 14, 0.9))",
+                "linear-gradient(90deg, rgba(215, 38, 56, 0.6), rgba(11, 13, 16, 0.9))",
               position: "absolute",
               bottom: 0,
             }}

@@ -6,11 +6,17 @@ import {
   Email as EmailIcon,
   LocationOnOutlined as LocationOnOutlinedIcon,
   Phone as PhoneIcon,
+  SportsGymnasticsOutlined as SportsGymnasticsOutlinedIcon,
+  EmojiEventsOutlined as EmojiEventsOutlinedIcon,
+  FitnessCenterOutlined as FitnessCenterOutlinedIcon,
+  SyncAltOutlined as SyncAltOutlinedIcon,
+  GroupsOutlined as GroupsOutlinedIcon,
+  AccessTimeOutlined as AccessTimeOutlinedIcon,
+  SchoolOutlined as SchoolOutlinedIcon,
 } from "@mui/icons-material";
 import WebsiteNavbar from "./WebsiteNavbar";
 import ReactPlayer from "react-player";
 import CampComponent from "../../Components/CampComponent";
-import PricingCard from "../../Components/PricingCard";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
 import DauntlessAthleticsTumblingCampsImg from "../../assets/Dauntless-Athletics-Tumbling-Camps.jpg";
@@ -67,6 +73,23 @@ export default function Home() {
     // eslint-disable-next-line
   }, []);
 
+  const classIconMap = {
+    Tumbling: <SportsGymnasticsOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
+    "Tumbling Camp": <EmojiEventsOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
+    "Strength, Conditioning & Flexibility": (
+      <FitnessCenterOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />
+    ),
+    Twisting: <SyncAltOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
+    Stunting: <GroupsOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
+    "Open Gym": <AccessTimeOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
+    "High School Onsite Training": (
+      <SchoolOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />
+    ),
+  };
+
+  const monthlyRates = pricingOptions.filter((option) => option.duration === "Per Month");
+  const otherRates = pricingOptions.filter((option) => option.duration !== "Per Month");
+
   return (
     <>
       <WebsiteNavbar />
@@ -91,8 +114,7 @@ export default function Home() {
           sx={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(120deg, rgba(10, 10, 14, 0.88) 10%, rgba(10, 10, 14, 0.65) 55%, rgba(225, 29, 72, 0.25) 100%)",
+            backgroundColor: "rgba(11, 13, 16, 0.78)",
           }}
         />
         <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1, py: { xs: 10, md: 16 } }}>
@@ -137,7 +159,7 @@ export default function Home() {
                     px: 3,
                     py: 1.2,
                     borderRadius: "999px",
-                    boxShadow: "0 18px 30px rgba(225, 29, 72, 0.35)",
+                    boxShadow: "0 18px 30px rgba(215, 38, 56, 0.35)",
                     "&:hover": {
                       backgroundColor: "var(--color-accent-2)",
                     },
@@ -157,7 +179,7 @@ export default function Home() {
                     borderRadius: "999px",
                     "&:hover": {
                       borderColor: "var(--color-accent)",
-                      backgroundColor: "rgba(225, 29, 72, 0.12)",
+                      backgroundColor: "rgba(215, 38, 56, 0.12)",
                     },
                   }}
                 >
@@ -368,37 +390,53 @@ export default function Home() {
                   </Box>
                 </Grid>
                 <Grid container size={12} justifyContent="center">
-                  <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
-                    We will captivate the minds of your children and teach them skills they thought
-                    they could never learn!
+                  <Typography textAlign="center" sx={{ color: "var(--color-muted)", maxWidth: "720px" }}>
+                    Programs designed for every level, with focused coaching that builds confidence
+                    and clean technique.
                   </Typography>
                 </Grid>
 
-                <Grid container justifyContent="center">
+                <Grid container spacing={3} sx={{ marginTop: "25px" }}>
                   {dauntlessClasses.map((c, index) => (
-                    <Grid
-                      key={`${c.title}-${index}`}
-                      container
-                      size={{ xs: 12, sm: 6 }}
-                      sx={{ padding: "75px 0px" }}
-                    >
-                      <Grid container size={{ xs: 9, sm: 8 }}>
-                        <Typography
-                          variant="h5"
-                          sx={{ textTransform: "uppercase", padding: "15px 0" }}
+                    <Grid key={`${c.title}-${index}`} size={{ xs: 12, sm: 6, md: 4 }}>
+                      <Box
+                        sx={{
+                          backgroundColor: "var(--color-surface-2)",
+                          border: "1px solid var(--color-border)",
+                          borderRadius: "20px",
+                          padding: "24px",
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "12px",
+                          boxShadow: "0 18px 35px rgba(0,0,0,0.35)",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: "52px",
+                            height: "52px",
+                            borderRadius: "14px",
+                            backgroundColor: "rgba(215, 38, 56, 0.12)",
+                            border: "1px solid rgba(215, 38, 56, 0.3)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
                         >
+                          {classIconMap[c.title] || (
+                            <SportsGymnasticsOutlinedIcon
+                              sx={{ fontSize: "26px", color: "var(--color-accent)" }}
+                            />
+                          )}
+                        </Box>
+                        <Typography variant="h5" sx={{ textTransform: "uppercase" }}>
                           {c.title}
                         </Typography>
-                        <Typography
-                          variant="body1"
-                          sx={{ color: "var(--color-muted)", padding: "15px 0px" }}
-                        >
+                        <Typography variant="body1" sx={{ color: "var(--color-muted)" }}>
                           {c.description}
                         </Typography>
-                      </Grid>
-                      <Grid container size={{ xs: 3, sm: 4 }} alignItems="flex-start">
-                        {c?.icon}
-                      </Grid>
+                      </Box>
                     </Grid>
                   ))}
                 </Grid>
@@ -579,23 +617,116 @@ export default function Home() {
                     </Typography>
                   </Grid>
 
-                  <Grid container justifyContent="center" alignItems="stretch" spacing={2}>
-                    {pricingOptions.map((option) => (
-                      <Grid
-                        key={option.title}
-                        container
-                        size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
-                        justifyContent="center"
+                  <Grid container spacing={3}>
+                    <Grid size={{ xs: 12, }}>
+                      <Box
+                        sx={{
+                          backgroundColor: "var(--color-surface-2)",
+                          border: "1px solid var(--color-border)",
+                          borderRadius: "24px",
+                          padding: { xs: "20px", md: "28px" },
+                          boxShadow: "0 22px 40px rgba(0,0,0,0.35)",
+                        }}
                       >
-                        <PricingCard
-                          title={option.title}
-                          cost={option.cost}
-                          duration={option.duration}
-                          buttonText={option.buttonText}
-                          buttonLink={option.buttonLink}
-                          backgroundColor={option.backgroundColor}
-                          optionalTextList={option.optionalTextList}
-                        />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            paddingBottom: "18px",
+                          }}
+                        >
+                          <Typography
+                            variant="subtitle2"
+                            sx={{
+                              color: "var(--color-muted)",
+                              textTransform: "uppercase",
+                              letterSpacing: "0.08em",
+                            }}
+                          >
+                            Hours per week
+                          </Typography>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{
+                              color: "var(--color-muted)",
+                              textTransform: "uppercase",
+                              letterSpacing: "0.08em",
+                            }}
+                          >
+                            Monthly rate
+                          </Typography>
+                        </Box>
+                        {monthlyRates.map((option, index) => (
+                          <Box key={option.title}>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                padding: "12px 0",
+                              }}
+                            >
+                              <Typography sx={{ textTransform: "uppercase" }}>
+                                {option.title}
+                              </Typography>
+                              <Typography sx={{ fontSize: "1.2rem", fontWeight: 600 }}>
+                                {option.cost}
+                              </Typography>
+                            </Box>
+                            {index !== monthlyRates.length - 1 && (
+                              <Divider sx={{ borderColor: "var(--color-border)" }} />
+                            )}
+                          </Box>
+                        ))}
+                      </Box>
+                    </Grid>
+                    {otherRates.map((option) => (
+                      <Grid size={{ xs: 12, md: 4 }}>
+                        <Box
+                          key={option.title}
+                          sx={{
+                            backgroundColor: "var(--color-surface-2)",
+                            border: "1px solid var(--color-border)",
+                            borderRadius: "20px",
+                            padding: "20px",
+                            boxShadow: "0 18px 35px rgba(0,0,0,0.35)",
+                          }}
+                        >
+                          <Typography variant="h5" sx={{ textTransform: "uppercase" }}>
+                            {option.title}
+                          </Typography>
+                          <Typography sx={{ fontSize: "1.6rem", fontWeight: 600 }}>
+                            {option.cost}
+                          </Typography>
+                          <Typography sx={{ color: "var(--color-muted)", paddingBottom: "10px" }}>
+                            {option.duration}
+                          </Typography>
+                          {option.optionalTextList?.length > 0 && (
+                            <Box
+                              component="ul"
+                              sx={{ margin: 0, paddingLeft: "18px", color: "var(--color-muted)" }}
+                            >
+                              {option.optionalTextList.map((text) => (
+                                <li key={text}>{text}</li>
+                              ))}
+                            </Box>
+                          )}
+                          <Button
+                            variant="contained"
+                            sx={{
+                              marginTop: "16px",
+                              backgroundColor: "var(--color-accent)",
+                              borderRadius: "999px",
+                              padding: "8px 20px",
+                              "&:hover": {
+                                backgroundColor: "var(--color-accent-2)",
+                              },
+                            }}
+                            href={option.buttonLink}
+                          >
+                            {option.buttonText}
+                          </Button>
+                        </Box>
                       </Grid>
                     ))}
                   </Grid>
