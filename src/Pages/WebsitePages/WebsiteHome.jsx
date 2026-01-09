@@ -140,8 +140,8 @@ export default function Home() {
                   fontSize: { xs: "1rem", md: "1.15rem" },
                 }}
               >
-                Elite tumbling, cheer, and strength training built for athletes who want to level up
-                fast.
+                Elite tumbling, cheer, and strength training built for athletes who want to grow
+                with confidence.
               </Typography>
               <Stack
                 direction={{ xs: "column", sm: "row" }}
@@ -170,7 +170,7 @@ export default function Home() {
                 <Button
                   variant="outlined"
                   component={Link}
-                  to="/contact-us/#"
+                  to="https://portal.iclasspro.com/dauntlessathletics/create-account-01-verify-email"
                   sx={{
                     color: "var(--color-text)",
                     borderColor: "var(--color-border)",
@@ -183,7 +183,7 @@ export default function Home() {
                     },
                   }}
                 >
-                  Book a Visit
+                  Create Account
                 </Button>
               </Stack>
             </Grid>
@@ -199,7 +199,7 @@ export default function Home() {
                 }}
               >
                 <Typography variant="h5" sx={{ textTransform: "uppercase" }}>
-                  9 Years Going Strong
+                  Welcome to Dauntless
                 </Typography>
                 <Typography sx={{ mt: 1, color: "var(--color-muted)" }}>
                   We appreciate the love and support you have shown us these past years and are
@@ -238,9 +238,6 @@ export default function Home() {
             }}
           >
             <Grid container justifyContent="center">
-              <Grid size={12}>
-                <Divider sx={{ bgcolor: "var(--color-border)", marginBottom: "1.1em" }} />
-              </Grid>
               <Typography
                 id="home"
                 ref={homeRef}
@@ -396,7 +393,7 @@ export default function Home() {
                   </Typography>
                 </Grid>
 
-                <Grid container spacing={3} sx={{ marginTop: "25px" }}>
+                <Grid container spacing={3} sx={{ margin: "25px 0" }}>
                   {dauntlessClasses.map((c, index) => (
                     <Grid key={`${c.title}-${index}`} size={{ xs: 12, sm: 6, md: 4 }}>
                       <Box
