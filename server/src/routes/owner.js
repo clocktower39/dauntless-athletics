@@ -7,6 +7,12 @@ const router = express.Router();
 router.use(requireRole("owner"));
 
 router.get("/summary", async (_req, res) => {
+  const inviteStatsResult = await query(
+    `SELECT COUNT(*)::int AS total_invites,
+            SUM(CASE WHEN used_at IS NOT NULL THEN 1 ELSE 0 END)::int AS used_invites
+     FROM invites`
+  );
+
   const summaryResult = await query(
     `SELECT COUNT(*)::int AS total_responses,
             AVG(q1)::numeric(4,2) AS avg_q1,
@@ -52,10 +58,17 @@ router.get("/summary", async (_req, res) => {
   );
 
   const summary = summaryResult.rows[0] || {};
+  const inviteStats = inviteStatsResult.rows[0] || {};
   const distribution = distributionResult.rows[0] || {};
+  const totalInvites = inviteStats.total_invites || 0;
+  const usedInvites = inviteStats.used_invites || 0;
+  const responseRate = totalInvites > 0 ? Number(((usedInvites / totalInvites) * 100).toFixed(1)) : 0;
 
   return res.json({
     totalResponses: summary.total_responses || 0,
+    totalInvites,
+    usedInvites,
+    responseRate,
     averages: {
       q1: summary.avg_q1 ? Number(summary.avg_q1) : null,
       q2: summary.avg_q2 ? Number(summary.avg_q2) : null,

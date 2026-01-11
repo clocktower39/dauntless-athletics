@@ -124,6 +124,54 @@ router.post("/invites", async (req, res) => {
   }
 });
 
+router.post("/invites/:id/reopen", async (req, res) => {
+  const inviteId = Number(req.params.id);
+  if (!Number.isInteger(inviteId)) {
+    return res.status(400).json({ error: "Invite id is required." });
+  }
+
+  const client = await getClient();
+  try {
+    await client.query("BEGIN");
+
+    const inviteResult = await client.query(
+      "SELECT id, used_at FROM invites WHERE id = $1 FOR UPDATE",
+      [inviteId]
+    );
+
+    if (inviteResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Invite not found." });
+    }
+
+    await client.query("DELETE FROM responses WHERE invite_id = $1", [inviteId]);
+    await client.query("UPDATE invites SET used_at = NULL WHERE id = $1", [inviteId]);
+
+    await client.query("COMMIT");
+
+    return res.json({ inviteId, reopened: true });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to reopen invite." });
+  } finally {
+    client.release();
+  }
+});
+
+router.delete("/invites/:id", async (req, res) => {
+  const inviteId = Number(req.params.id);
+  if (!Number.isInteger(inviteId)) {
+    return res.status(400).json({ error: "Invite id is required." });
+  }
+
+  const result = await query("DELETE FROM invites WHERE id = $1 RETURNING id", [inviteId]);
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Invite not found." });
+  }
+
+  return res.json({ inviteId, deleted: true });
+});
+
 router.get("/responses", async (req, res) => {
   const schoolId = req.query.school_id ? Number(req.query.school_id) : null;
   const params = [];

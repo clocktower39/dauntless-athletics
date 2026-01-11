@@ -193,6 +193,10 @@ export default function SurveyOwner() {
                     <Typography sx={{ fontSize: "1.4rem", color: "var(--color-text)" }}>
                       {summary.totalResponses}
                     </Typography>
+                    <Typography sx={{ color: "var(--color-muted)" }}>
+                      Response rate: {summary.responseRate ?? 0}% ({summary.usedInvites ?? 0}/
+                      {summary.totalInvites ?? 0})
+                    </Typography>
                   </Box>
 
                   <Box sx={classes.section}>

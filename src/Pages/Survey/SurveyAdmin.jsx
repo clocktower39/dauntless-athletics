@@ -206,6 +206,32 @@ export default function SurveyAdmin() {
     }
   };
 
+  const handleDeleteInvite = async (inviteId) => {
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/invites/${inviteId}`, {
+        method: "DELETE",
+        headers: authHeaders,
+      });
+      await loadData(selectedSchoolId);
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleReopenInvite = async (inviteId) => {
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/invites/${inviteId}/reopen`, {
+        method: "POST",
+        headers: authHeaders,
+      });
+      await loadData(selectedSchoolId);
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
   return (
     <Box sx={classes.page}>
       <Container maxWidth="lg" sx={{ display: "grid", gap: "20px" }}>
@@ -314,11 +340,40 @@ export default function SurveyAdmin() {
                 ) : (
                   <Box sx={{ display: "grid", gap: "8px" }}>
                     {invites.map((invite) => (
-                      <Box key={invite.id} sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <Typography>{invite.school_name}</Typography>
-                        <Typography sx={{ color: invite.used_at ? "var(--color-accent)" : "var(--color-muted)" }}>
-                          {invite.used_at ? `Used ${formatDate(invite.used_at)}` : "Unused"}
-                        </Typography>
+                      <Box
+                        key={invite.id}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          gap: "12px",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <Typography sx={{ color: "var(--color-text)" }}>{invite.school_name}</Typography>
+                        <Box sx={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+                          <Typography sx={{ color: invite.used_at ? "var(--color-accent)" : "var(--color-muted)" }}>
+                            {invite.used_at ? `Used ${formatDate(invite.used_at)}` : "Unused"}
+                          </Typography>
+                          {invite.used_at && (
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              sx={{ color: "var(--color-text)" }}
+                              onClick={() => handleReopenInvite(invite.id)}
+                            >
+                              Reopen
+                            </Button>
+                          )}
+                          <Button
+                            variant="outlined"
+                            size="small"
+                            sx={{ color: "var(--color-text)" }}
+                            onClick={() => handleDeleteInvite(invite.id)}
+                          >
+                            Delete
+                          </Button>
+                        </Box>
                       </Box>
                     ))}
                   </Box>
