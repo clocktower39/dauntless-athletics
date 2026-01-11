@@ -206,6 +206,20 @@ export default function SurveyAdmin() {
     }
   };
 
+  const handleRegenerateInvite = async (inviteId) => {
+    try {
+      setDataError("");
+      const result = await apiRequest(`/api/admin/invites/${inviteId}/regenerate`, {
+        method: "POST",
+        headers: authHeaders,
+      });
+      setLatestInvites(result.invites || []);
+      await loadData(selectedSchoolId);
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
   const handleDeleteInvite = async (inviteId) => {
     try {
       setDataError("");
@@ -293,11 +307,30 @@ export default function SurveyAdmin() {
                 <Select
                   value={selectedSchoolId}
                   onChange={(event) => setSelectedSchoolId(event.target.value)}
-                  sx={{ ...classes.input, minWidth: "240px" }}
+                  sx={{
+                    ...classes.input,
+                    minWidth: "240px",
+                    color: "var(--color-text)",
+                    "& .MuiSelect-icon": {
+                      color: "var(--color-muted)",
+                    },
+                  }}
                   displayEmpty
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        backgroundColor: "var(--color-surface-3)",
+                        color: "var(--color-text)",
+                        border: "1px solid var(--color-border)",
+                      },
+                    },
+                    MenuListProps: {
+                      sx: { color: "var(--color-text)" },
+                    },
+                  }}
                 >
                   {schoolOptions.map((school) => (
-                    <MenuItem key={school.id} value={school.id}>
+                    <MenuItem key={school.id} value={school.id} sx={{ color: "var(--color-text)" }}>
                       {school.name}
                     </MenuItem>
                   ))}
@@ -355,6 +388,16 @@ export default function SurveyAdmin() {
                           <Typography sx={{ color: invite.used_at ? "var(--color-accent)" : "var(--color-muted)" }}>
                             {invite.used_at ? `Used ${formatDate(invite.used_at)}` : "Unused"}
                           </Typography>
+                          {!invite.used_at && (
+                            <Button
+                              variant="outlined"
+                              size="small"
+                              sx={{ color: "var(--color-text)" }}
+                              onClick={() => handleRegenerateInvite(invite.id)}
+                            >
+                              Resend Link
+                            </Button>
+                          )}
                           {invite.used_at && (
                             <Button
                               variant="outlined"

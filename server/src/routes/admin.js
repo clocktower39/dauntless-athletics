@@ -124,6 +124,67 @@ router.post("/invites", async (req, res) => {
   }
 });
 
+router.post("/invites/:id/regenerate", async (req, res) => {
+  const inviteId = Number(req.params.id);
+  if (!Number.isInteger(inviteId)) {
+    return res.status(400).json({ error: "Invite id is required." });
+  }
+
+  const baseUrl = normalizeBaseUrl(process.env.SURVEY_BASE_URL);
+  const client = await getClient();
+
+  try {
+    await client.query("BEGIN");
+
+    const inviteResult = await client.query(
+      "SELECT invites.id, invites.school_id, invites.used_at, schools.name AS school_name FROM invites JOIN schools ON schools.id = invites.school_id WHERE invites.id = $1 FOR UPDATE",
+      [inviteId]
+    );
+
+    if (inviteResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Invite not found." });
+    }
+
+    const invite = inviteResult.rows[0];
+    if (invite.used_at) {
+      await client.query("ROLLBACK");
+      return res
+        .status(409)
+        .json({ error: "Invite already used. Reopen it before regenerating." });
+    }
+
+    await client.query("DELETE FROM invites WHERE id = $1", [inviteId]);
+
+    const token = crypto.randomBytes(32).toString("base64url");
+    const tokenHash = hashToken(token);
+    const newInviteResult = await client.query(
+      "INSERT INTO invites (school_id, token_hash) VALUES ($1, $2) RETURNING id, created_at",
+      [invite.school_id, tokenHash]
+    );
+
+    await client.query("COMMIT");
+
+    return res.status(201).json({
+      school: { id: invite.school_id, name: invite.school_name },
+      invites: [
+        {
+          id: newInviteResult.rows[0].id,
+          token,
+          link: baseUrl ? `${baseUrl}/${token}` : null,
+          createdAt: newInviteResult.rows[0].created_at,
+        },
+      ],
+      warning: baseUrl ? null : "SURVEY_BASE_URL is not set, links are omitted.",
+    });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to regenerate invite." });
+  } finally {
+    client.release();
+  }
+});
+
 router.post("/invites/:id/reopen", async (req, res) => {
   const inviteId = Number(req.params.id);
   if (!Number.isInteger(inviteId)) {

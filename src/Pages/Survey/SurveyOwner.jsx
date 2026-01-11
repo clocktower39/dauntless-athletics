@@ -145,15 +145,15 @@ export default function SurveyOwner() {
           <Typography
             sx={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--color-text)" }}
           >
-            Survey Owner View
+            Survey Responses
           </Typography>
           <Typography sx={{ color: "var(--color-muted)" }}>
-            Anonymous, aggregated results with comments only.
+            Anonymous, aggregated feedback for internal review.
           </Typography>
 
           {!token && (
             <Box component="form" onSubmit={handleLogin} sx={classes.section}>
-              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Owner Login</Typography>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Responses Login</Typography>
               <TextField
                 label="Username"
                 value={login.username}
