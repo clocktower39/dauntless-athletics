@@ -20,6 +20,9 @@ const classes = {
     padding: { xs: "32px 0", md: "48px 0" },
     background:
       "radial-gradient(circle at 80% 20%, rgba(215, 38, 56, 0.18), transparent 55%), var(--color-bg)",
+    "--color-text": "#ffffff",
+    "--color-muted": "#d5deea",
+    "--color-border": "rgba(255, 255, 255, 0.18)",
   },
   card: {
     backgroundColor: "var(--color-surface)",
@@ -139,7 +142,9 @@ export default function SurveyOwner() {
     <Box sx={classes.page}>
       <Container maxWidth="lg" sx={{ display: "grid", gap: "20px" }}>
         <Paper sx={classes.card}>
-          <Typography sx={{ fontFamily: "var(--font-display)", fontSize: "2rem" }}>
+          <Typography
+            sx={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--color-text)" }}
+          >
             Survey Owner View
           </Typography>
           <Typography sx={{ color: "var(--color-muted)" }}>
@@ -148,7 +153,7 @@ export default function SurveyOwner() {
 
           {!token && (
             <Box component="form" onSubmit={handleLogin} sx={classes.section}>
-              <Typography sx={{ fontWeight: 600 }}>Owner Login</Typography>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Owner Login</Typography>
               <TextField
                 label="Username"
                 value={login.username}
@@ -172,7 +177,7 @@ export default function SurveyOwner() {
           {token && (
             <>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography sx={{ fontWeight: 600 }}>Access Granted</Typography>
+                <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Access Granted</Typography>
                 <Button variant="outlined" onClick={handleLogout} sx={{ color: "var(--color-text)" }}>
                   Log out
                 </Button>
@@ -182,16 +187,22 @@ export default function SurveyOwner() {
               {summary && (
                 <>
                   <Box sx={classes.section}>
-                    <Typography sx={{ fontWeight: 600 }}>Overall Responses</Typography>
-                    <Typography sx={{ fontSize: "1.4rem" }}>{summary.totalResponses}</Typography>
+                    <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
+                      Overall Responses
+                    </Typography>
+                    <Typography sx={{ fontSize: "1.4rem", color: "var(--color-text)" }}>
+                      {summary.totalResponses}
+                    </Typography>
                   </Box>
 
                   <Box sx={classes.section}>
-                    <Typography sx={{ fontWeight: 600 }}>Question Averages</Typography>
+                    <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
+                      Question Averages
+                    </Typography>
                     <Box sx={{ display: "grid", gap: "16px" }}>
                       {surveyQuestions.map((question) => (
                         <Box key={question.key} sx={{ display: "grid", gap: "6px" }}>
-                          <Typography>{question.text}</Typography>
+                          <Typography sx={{ color: "var(--color-text)" }}>{question.text}</Typography>
                           <Typography sx={{ color: "var(--color-accent)", fontWeight: 600 }}>
                             Average: {summary.averages?.[question.key] ?? "n/a"}
                           </Typography>
@@ -204,7 +215,7 @@ export default function SurveyOwner() {
                   <Divider />
 
                   <Box sx={classes.section}>
-                    <Typography sx={{ fontWeight: 600 }}>Comments</Typography>
+                    <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Comments</Typography>
                     {summary.comments?.length ? (
                       <Box sx={{ display: "grid", gap: "12px" }}>
                         {summary.comments.map((comment, index) => (
@@ -215,7 +226,7 @@ export default function SurveyOwner() {
                             <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
                               {new Date(comment.created_at).toLocaleString()}
                             </Typography>
-                            <Typography>{comment.comment}</Typography>
+                            <Typography sx={{ color: "var(--color-text)" }}>{comment.comment}</Typography>
                           </Paper>
                         ))}
                       </Box>

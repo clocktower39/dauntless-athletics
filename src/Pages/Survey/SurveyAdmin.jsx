@@ -22,6 +22,9 @@ const classes = {
     padding: { xs: "32px 0", md: "48px 0" },
     background:
       "linear-gradient(145deg, rgba(19, 22, 28, 0.96), rgba(11, 13, 16, 0.95)), radial-gradient(circle at 20% 20%, rgba(215, 38, 56, 0.24), transparent 55%)",
+    "--color-text": "#ffffff",
+    "--color-muted": "#d5deea",
+    "--color-border": "rgba(255, 255, 255, 0.18)",
   },
   card: {
     backgroundColor: "var(--color-surface)",
@@ -207,7 +210,9 @@ export default function SurveyAdmin() {
     <Box sx={classes.page}>
       <Container maxWidth="lg" sx={{ display: "grid", gap: "20px" }}>
         <Paper sx={classes.card}>
-          <Typography sx={{ fontFamily: "var(--font-display)", fontSize: "2rem" }}>
+          <Typography
+            sx={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--color-text)" }}
+          >
             Survey Admin Dashboard
           </Typography>
           <Typography sx={{ color: "var(--color-muted)" }}>
@@ -216,7 +221,7 @@ export default function SurveyAdmin() {
 
           {!token && (
             <Box component="form" onSubmit={handleLogin} sx={classes.section}>
-              <Typography sx={{ fontWeight: 600 }}>Admin Login</Typography>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Admin Login</Typography>
               <TextField
                 label="Username"
                 value={login.username}
@@ -240,14 +245,14 @@ export default function SurveyAdmin() {
           {token && (
             <>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography sx={{ fontWeight: 600 }}>Access Granted</Typography>
+                <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Access Granted</Typography>
                 <Button variant="outlined" onClick={handleLogout} sx={{ color: "var(--color-text)" }}>
                   Log out
                 </Button>
               </Box>
               {dataError && <Alert severity="error">{dataError}</Alert>}
               <Box sx={classes.section}>
-                <Typography sx={{ fontWeight: 600 }}>Schools</Typography>
+                <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Schools</Typography>
                 <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                   <TextField
                     label="Add a new school"
@@ -274,7 +279,7 @@ export default function SurveyAdmin() {
               </Box>
 
               <Box sx={classes.section}>
-                <Typography sx={{ fontWeight: 600 }}>Invite Links</Typography>
+                <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Invite Links</Typography>
                 <Typography sx={{ color: "var(--color-muted)" }}>
                   Generate unique links per coach. Copy them now — they won’t be shown again.
                 </Typography>
@@ -303,7 +308,7 @@ export default function SurveyAdmin() {
               </Box>
 
               <Box sx={classes.section}>
-                <Typography sx={{ fontWeight: 600 }}>Invite Status</Typography>
+                <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Invite Status</Typography>
                 {invites.length === 0 ? (
                   <Typography sx={{ color: "var(--color-muted)" }}>No invite links yet.</Typography>
                 ) : (
@@ -323,19 +328,23 @@ export default function SurveyAdmin() {
               <Divider />
 
               <Box sx={classes.section}>
-                <Typography sx={{ fontWeight: 600 }}>Responses</Typography>
+                <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Responses</Typography>
                 {responses.length === 0 ? (
                   <Typography sx={{ color: "var(--color-muted)" }}>No responses yet.</Typography>
                 ) : (
                   <Box sx={{ display: "grid", gap: "16px" }}>
                     {responses.map((response) => (
                       <Paper key={response.id} sx={{ ...classes.section, backgroundColor: "var(--color-surface-3)" }}>
-                        <Typography sx={{ fontWeight: 600 }}>{response.school_name}</Typography>
+                        <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
+                          {response.school_name}
+                        </Typography>
                         <Typography sx={{ color: "var(--color-muted)" }}>{formatDate(response.created_at)}</Typography>
                         <Divider sx={{ borderColor: "var(--color-border)" }} />
                         {surveyQuestions.map((question) => (
                           <Box key={question.key} sx={{ display: "grid", gap: "4px" }}>
-                            <Typography sx={{ fontSize: "0.95rem" }}>{question.text}</Typography>
+                            <Typography sx={{ fontSize: "0.95rem", color: "var(--color-text)" }}>
+                              {question.text}
+                            </Typography>
                             <Typography sx={{ color: "var(--color-accent)" }}>
                               {ratingLabelMap[response[question.key]] || response[question.key]}
                             </Typography>
@@ -343,7 +352,9 @@ export default function SurveyAdmin() {
                         ))}
                         {response.comment && (
                           <Box>
-                            <Typography sx={{ fontWeight: 600 }}>Comments</Typography>
+                            <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
+                              Comments
+                            </Typography>
                             <Typography sx={{ color: "var(--color-muted)" }}>{response.comment}</Typography>
                           </Box>
                         )}

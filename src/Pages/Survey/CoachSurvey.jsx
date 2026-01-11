@@ -22,6 +22,9 @@ const classes = {
     padding: { xs: "32px 0", md: "48px 0" },
     background:
       "radial-gradient(circle at top, rgba(215, 38, 56, 0.22), transparent 55%), var(--color-bg)",
+    "--color-text": "#ffffff",
+    "--color-muted": "#d5deea",
+    "--color-border": "rgba(255, 255, 255, 0.18)",
   },
   card: {
     backgroundColor: "var(--color-surface)",
@@ -41,6 +44,7 @@ const classes = {
     fontFamily: "var(--font-display)",
     fontSize: { xs: "2rem", md: "2.6rem" },
     textTransform: "uppercase",
+    color: "var(--color-text)",
   },
   questionCard: {
     backgroundColor: "var(--color-surface-2)",
@@ -192,7 +196,7 @@ export default function CoachSurvey() {
             <Box component="form" onSubmit={handleSubmit} sx={{ display: "grid", gap: "20px" }}>
               {surveyQuestions.map((question, index) => (
                 <Box key={question.key} sx={classes.questionCard}>
-                  <Typography sx={{ fontWeight: 600 }}>
+                  <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
                     {index + 1}. {question.text}
                   </Typography>
                   <RadioGroup
@@ -214,7 +218,7 @@ export default function CoachSurvey() {
               ))}
 
               <Box sx={classes.questionCard}>
-                <Typography sx={{ fontWeight: 600 }}>
+                <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
                   6. Is there anything we can do better with our coaching approach? Anything you would like
                   changed moving forward?
                 </Typography>
