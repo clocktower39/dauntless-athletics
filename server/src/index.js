@@ -23,6 +23,19 @@ app.use(
 app.use(express.json({ limit: "64kb" }));
 app.use(express.urlencoded({ extended: true }));
 
+const enableRequestLogs = process.env.DEBUG_LOGS === "true";
+
+if (enableRequestLogs) {
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on("finish", () => {
+      const durationMs = Date.now() - start;
+      console.log(`[api] ${req.method} ${req.originalUrl} ${res.statusCode} ${durationMs}ms`);
+    });
+    next();
+  });
+}
+
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
