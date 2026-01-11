@@ -1,0 +1,151 @@
+import express from "express";
+import crypto from "crypto";
+import { query, getClient } from "../db.js";
+import { requireRole } from "../auth.js";
+
+const router = express.Router();
+
+const hashToken = (token) =>
+  crypto.createHash("sha256").update(token).digest("hex");
+
+const normalizeBaseUrl = (value) => {
+  if (!value) return null;
+  return value.endsWith("/") ? value.slice(0, -1) : value;
+};
+
+router.use(requireRole("admin"));
+
+router.get("/schools", async (_req, res) => {
+  const result = await query(
+    "SELECT id, name, created_at FROM schools ORDER BY name ASC"
+  );
+  return res.json({ schools: result.rows });
+});
+
+router.post("/schools", async (req, res) => {
+  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+  if (!name) {
+    return res.status(400).json({ error: "School name is required." });
+  }
+
+  try {
+    const result = await query(
+      "INSERT INTO schools (name) VALUES ($1) RETURNING id, name, created_at",
+      [name]
+    );
+    return res.status(201).json({ school: result.rows[0] });
+  } catch (error) {
+    return res.status(409).json({ error: "School already exists." });
+  }
+});
+
+router.get("/invites", async (req, res) => {
+  const schoolId = req.query.school_id ? Number(req.query.school_id) : null;
+  const params = [];
+  let whereClause = "";
+
+  if (schoolId) {
+    params.push(schoolId);
+    whereClause = "WHERE invites.school_id = $1";
+  }
+
+  const result = await query(
+    `SELECT invites.id, invites.school_id, invites.used_at, invites.created_at, schools.name AS school_name
+     FROM invites
+     JOIN schools ON schools.id = invites.school_id
+     ${whereClause}
+     ORDER BY invites.created_at DESC`,
+    params
+  );
+
+  return res.json({ invites: result.rows });
+});
+
+router.post("/invites", async (req, res) => {
+  const schoolId = Number(req.body?.school_id);
+  const count = Number(req.body?.count || 1);
+
+  if (!Number.isInteger(schoolId)) {
+    return res.status(400).json({ error: "school_id is required." });
+  }
+
+  if (!Number.isInteger(count) || count < 1 || count > 50) {
+    return res.status(400).json({ error: "count must be between 1 and 50." });
+  }
+
+  const baseUrl = normalizeBaseUrl(process.env.SURVEY_BASE_URL);
+  const client = await getClient();
+
+  try {
+    await client.query("BEGIN");
+
+    const schoolResult = await client.query(
+      "SELECT id, name FROM schools WHERE id = $1",
+      [schoolId]
+    );
+
+    if (schoolResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "School not found." });
+    }
+
+    const invites = [];
+    for (let i = 0; i < count; i += 1) {
+      const token = crypto.randomBytes(32).toString("base64url");
+      const tokenHash = hashToken(token);
+
+      const inviteResult = await client.query(
+        "INSERT INTO invites (school_id, token_hash) VALUES ($1, $2) RETURNING id, created_at",
+        [schoolId, tokenHash]
+      );
+
+      invites.push({
+        id: inviteResult.rows[0].id,
+        token,
+        link: baseUrl ? `${baseUrl}/${token}` : null,
+        createdAt: inviteResult.rows[0].created_at,
+      });
+    }
+
+    await client.query("COMMIT");
+
+    return res.status(201).json({
+      school: schoolResult.rows[0],
+      invites,
+      warning: baseUrl
+        ? null
+        : "SURVEY_BASE_URL is not set, links are omitted.",
+    });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to create invites." });
+  } finally {
+    client.release();
+  }
+});
+
+router.get("/responses", async (req, res) => {
+  const schoolId = req.query.school_id ? Number(req.query.school_id) : null;
+  const params = [];
+  let whereClause = "";
+
+  if (schoolId) {
+    params.push(schoolId);
+    whereClause = "WHERE responses.school_id = $1";
+  }
+
+  const result = await query(
+    `SELECT responses.id, responses.school_id, schools.name AS school_name,
+            responses.q1, responses.q2, responses.q3, responses.q4, responses.q5,
+            responses.comment, responses.created_at
+     FROM responses
+     JOIN schools ON schools.id = responses.school_id
+     ${whereClause}
+     ORDER BY responses.created_at DESC`,
+    params
+  );
+
+  return res.json({ responses: result.rows });
+});
+
+export default router;
