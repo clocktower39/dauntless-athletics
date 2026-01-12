@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   Button,
+  Checkbox,
   Container,
   Divider,
   MenuItem,
@@ -94,8 +95,11 @@ export default function SurveyAdmin() {
   const [invites, setInvites] = useState([]);
   const [selectedSchoolId, setSelectedSchoolId] = useState("");
   const [newSchoolName, setNewSchoolName] = useState("");
+  const [editingSchoolId, setEditingSchoolId] = useState(null);
+  const [editingSchoolName, setEditingSchoolName] = useState("");
   const [inviteCount, setInviteCount] = useState(1);
   const [latestInvites, setLatestInvites] = useState([]);
+  const [selectedInviteIds, setSelectedInviteIds] = useState([]);
   const [dataError, setDataError] = useState("");
 
   const schoolOptions = useMemo(() => {
@@ -200,10 +204,110 @@ export default function SurveyAdmin() {
         }),
       });
       setLatestInvites(result.invites || []);
+      setSelectedInviteIds([]);
       await loadData(selectedSchoolId);
     } catch (error) {
       setDataError(error.message);
     }
+  };
+
+  const handleEditSchool = (school) => {
+    setEditingSchoolId(school.id);
+    setEditingSchoolName(school.name);
+  };
+
+  const handleCancelEditSchool = () => {
+    setEditingSchoolId(null);
+    setEditingSchoolName("");
+  };
+
+  const handleSaveSchool = async (schoolId) => {
+    if (!editingSchoolName.trim()) {
+      setDataError("Enter a school name to save.");
+      return;
+    }
+
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/schools/${schoolId}`, {
+        method: "PUT",
+        headers: authHeaders,
+        body: JSON.stringify({ name: editingSchoolName.trim() }),
+      });
+      setEditingSchoolId(null);
+      setEditingSchoolName("");
+      await loadSchools();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleDeleteSchool = async (schoolId) => {
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/schools/${schoolId}`, {
+        method: "DELETE",
+        headers: authHeaders,
+      });
+      const nextSelectedId = String(schoolId) === String(selectedSchoolId) ? "" : selectedSchoolId;
+      if (nextSelectedId !== selectedSchoolId) {
+        setSelectedSchoolId(nextSelectedId);
+      }
+      await loadSchools();
+      await loadData(nextSelectedId);
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const getInviteText = (invite) => invite.link || invite.token;
+
+  const copyToClipboard = async (text) => {
+    if (!text) return;
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+    } catch (error) {
+      setDataError("Unable to copy to clipboard.");
+    }
+  };
+
+  const toggleInviteSelection = (inviteId) => {
+    setSelectedInviteIds((prev) =>
+      prev.includes(inviteId) ? prev.filter((id) => id !== inviteId) : [...prev, inviteId]
+    );
+  };
+
+  const allInvitesSelected =
+    latestInvites.length > 0 && selectedInviteIds.length === latestInvites.length;
+
+  const handleToggleAllInvites = () => {
+    if (allInvitesSelected) {
+      setSelectedInviteIds([]);
+    } else {
+      setSelectedInviteIds(latestInvites.map((invite) => invite.id));
+    }
+  };
+
+  const handleCopySelectedInvites = async () => {
+    const selected = latestInvites.filter((invite) => selectedInviteIds.includes(invite.id));
+    if (selected.length === 0) {
+      setDataError("Select at least one link to copy.");
+      return;
+    }
+    const payload = selected.map(getInviteText).filter(Boolean).join("\n");
+    await copyToClipboard(payload);
   };
 
   const handleRegenerateInvite = async (inviteId) => {
@@ -214,6 +318,7 @@ export default function SurveyAdmin() {
         headers: authHeaders,
       });
       setLatestInvites(result.invites || []);
+      setSelectedInviteIds([]);
       await loadData(selectedSchoolId);
     } catch (error) {
       setDataError(error.message);
@@ -335,6 +440,76 @@ export default function SurveyAdmin() {
                     </MenuItem>
                   ))}
                 </Select>
+                {schools.length > 0 && (
+                  <Box sx={{ display: "grid", gap: "10px" }}>
+                    {schools.map((school) => {
+                      const isEditing = editingSchoolId === school.id;
+                      return (
+                        <Box
+                          key={school.id}
+                          sx={{
+                            display: "flex",
+                            gap: "12px",
+                            alignItems: "center",
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {isEditing ? (
+                            <TextField
+                              label="School name"
+                              value={editingSchoolName}
+                              onChange={(event) => setEditingSchoolName(event.target.value)}
+                              sx={{ ...classes.input, minWidth: "220px" }}
+                            />
+                          ) : (
+                            <Typography sx={{ color: "var(--color-text)" }}>{school.name}</Typography>
+                          )}
+                          <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                            {isEditing ? (
+                              <>
+                                <Button
+                                  variant="contained"
+                                  size="small"
+                                  sx={classes.button}
+                                  onClick={() => handleSaveSchool(school.id)}
+                                >
+                                  Save
+                                </Button>
+                                <Button
+                                  variant="outlined"
+                                  size="small"
+                                  sx={{ color: "var(--color-text)" }}
+                                  onClick={handleCancelEditSchool}
+                                >
+                                  Cancel
+                                </Button>
+                              </>
+                            ) : (
+                              <>
+                                <Button
+                                  variant="outlined"
+                                  size="small"
+                                  sx={{ color: "var(--color-text)" }}
+                                  onClick={() => handleEditSchool(school)}
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  variant="outlined"
+                                  size="small"
+                                  sx={{ color: "var(--color-text)" }}
+                                  onClick={() => handleDeleteSchool(school.id)}
+                                >
+                                  Delete
+                                </Button>
+                              </>
+                            )}
+                          </Box>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                )}
               </Box>
 
               <Box sx={classes.section}>
@@ -356,12 +531,63 @@ export default function SurveyAdmin() {
                   </Button>
                 </Box>
                 {latestInvites.length > 0 && (
-                  <Box sx={{ display: "grid", gap: "8px" }}>
-                    {latestInvites.map((invite) => (
-                      <Typography key={invite.id} sx={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
-                        {invite.link || invite.token}
-                      </Typography>
-                    ))}
+                  <Box sx={{ display: "grid", gap: "10px" }}>
+                    <Box sx={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                      <Checkbox
+                        checked={allInvitesSelected}
+                        onChange={handleToggleAllInvites}
+                        sx={{
+                          color: "var(--color-muted)",
+                          "&.Mui-checked": { color: "var(--color-accent)" },
+                        }}
+                      />
+                      <Typography sx={{ color: "var(--color-text)" }}>Select all</Typography>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{ color: "var(--color-text)" }}
+                        onClick={handleCopySelectedInvites}
+                      >
+                        Copy selected
+                      </Button>
+                    </Box>
+                    {latestInvites.map((invite) => {
+                      const inviteText = getInviteText(invite);
+                      return (
+                        <Box
+                          key={invite.id}
+                          onClick={() => copyToClipboard(inviteText)}
+                          sx={{
+                            display: "grid",
+                            gap: "6px",
+                            padding: "12px 14px",
+                            borderRadius: "12px",
+                            backgroundColor: "var(--color-surface-3)",
+                            border: "1px solid var(--color-border)",
+                            color: "var(--color-text)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                            <Checkbox
+                              checked={selectedInviteIds.includes(invite.id)}
+                              onChange={() => toggleInviteSelection(invite.id)}
+                              onClick={(event) => event.stopPropagation()}
+                              sx={{
+                                color: "var(--color-muted)",
+                                "&.Mui-checked": { color: "var(--color-accent)" },
+                              }}
+                            />
+                            <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
+                              Click to copy
+                            </Typography>
+                          </Box>
+                          <Typography sx={{ fontFamily: "monospace", fontSize: "0.9rem" }}>
+                            {inviteText}
+                          </Typography>
+                        </Box>
+                      );
+                    })}
                   </Box>
                 )}
               </Box>

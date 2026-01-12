@@ -39,6 +39,47 @@ router.post("/schools", async (req, res) => {
   }
 });
 
+router.put("/schools/:id", async (req, res) => {
+  const schoolId = Number(req.params.id);
+  if (!Number.isInteger(schoolId)) {
+    return res.status(400).json({ error: "School id is required." });
+  }
+
+  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+  if (!name) {
+    return res.status(400).json({ error: "School name is required." });
+  }
+
+  try {
+    const result = await query(
+      "UPDATE schools SET name = $1 WHERE id = $2 RETURNING id, name, created_at",
+      [name, schoolId]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "School not found." });
+    }
+    return res.json({ school: result.rows[0] });
+  } catch (error) {
+    return res.status(409).json({ error: "School already exists." });
+  }
+});
+
+router.delete("/schools/:id", async (req, res) => {
+  const schoolId = Number(req.params.id);
+  if (!Number.isInteger(schoolId)) {
+    return res.status(400).json({ error: "School id is required." });
+  }
+
+  const result = await query("DELETE FROM schools WHERE id = $1 RETURNING id", [
+    schoolId,
+  ]);
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "School not found." });
+  }
+
+  return res.json({ schoolId, deleted: true });
+});
+
 router.get("/invites", async (req, res) => {
   const schoolId = req.query.school_id ? Number(req.query.school_id) : null;
   const params = [];
