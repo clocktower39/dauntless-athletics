@@ -2,10 +2,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import {
   Alert,
+  Avatar,
   Box,
   Button,
   CircularProgress,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControlLabel,
   Paper,
   Radio,
@@ -15,6 +20,7 @@ import {
 } from "@mui/material";
 import { ratingOptions, surveyQuestions } from "./surveyConfig";
 import { apiRequest } from "./surveyApi";
+import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
 const classes = {
   page: {
@@ -111,6 +117,7 @@ export default function CoachSurvey() {
   const [answers, setAnswers] = useState(buildInitialAnswers);
   const [comment, setComment] = useState("");
   const [submitState, setSubmitState] = useState({ submitting: false, error: "", success: false });
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const missingAnswers = useMemo(() => {
     return surveyQuestions.filter((question) => !answers[question.key]);
@@ -142,14 +149,19 @@ export default function CoachSurvey() {
     setAnswers((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (missingAnswers.length > 0) {
       setSubmitState({ submitting: false, error: "Please answer every question.", success: false });
       return;
     }
 
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmSubmit = async () => {
     setSubmitState({ submitting: true, error: "", success: false });
+    setConfirmOpen(false);
 
     try {
       await apiRequest(`/api/survey/${token}`, {
@@ -170,6 +182,13 @@ export default function CoachSurvey() {
     <Box sx={classes.page}>
       <Container maxWidth="md">
         <Paper sx={classes.card}>
+          <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "8px" }}>
+            <Avatar
+              src={DauntlessAthleticsLogoDesktopCircleImg}
+              alt="Dauntless Athletics Logo"
+              sx={{ width: 72, height: 72 }}
+            />
+          </Box>
           <Typography sx={classes.headerEyebrow}>High School Coaching Survey</Typography>
           <Typography sx={classes.title} gutterBottom>
             Dauntless Athletics
@@ -252,6 +271,30 @@ export default function CoachSurvey() {
           )}
         </Paper>
       </Container>
+      <Dialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        PaperProps={{ sx: { backgroundColor: "var(--color-surface)", color: "var(--color-text)" } }}
+      >
+        <DialogTitle sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
+          Submit survey?
+        </DialogTitle>
+        <DialogContent sx={{ color: "var(--color-muted)" }}>
+          Submissions are final and cannot be edited.
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => setConfirmOpen(false)}>
+            Review
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: "var(--color-accent)" }}
+            onClick={handleConfirmSubmit}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

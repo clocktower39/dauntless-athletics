@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
+  Avatar,
   Box,
   Button,
   Checkbox,
@@ -14,6 +15,7 @@ import {
 } from "@mui/material";
 import { apiRequest, authHeader } from "./surveyApi";
 import { ratingOptions, surveyQuestions } from "./surveyConfig";
+import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
 const TOKEN_KEY = "dauntlessSurveyAdminToken";
 
@@ -355,6 +357,13 @@ export default function SurveyAdmin() {
     <Box sx={classes.page}>
       <Container maxWidth="lg" sx={{ display: "grid", gap: "20px" }}>
         <Paper sx={classes.card}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Avatar
+              src={DauntlessAthleticsLogoDesktopCircleImg}
+              alt="Dauntless Athletics Logo"
+              sx={{ width: 72, height: 72 }}
+            />
+          </Box>
           <Typography
             sx={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--color-text)" }}
           >

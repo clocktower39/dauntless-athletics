@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
+  Avatar,
   Box,
   Button,
   Container,
@@ -11,6 +12,7 @@ import {
 } from "@mui/material";
 import { apiRequest, authHeader } from "./surveyApi";
 import { ratingOptions, surveyQuestions } from "./surveyConfig";
+import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
 const TOKEN_KEY = "dauntlessSurveyOwnerToken";
 
@@ -40,6 +42,14 @@ const classes = {
     padding: "18px",
     display: "grid",
     gap: "12px",
+  },
+  statCard: {
+    backgroundColor: "var(--color-surface-3)",
+    border: "1px solid var(--color-border)",
+    borderRadius: "14px",
+    padding: "14px",
+    display: "grid",
+    gap: "6px",
   },
   input: {
     "& .MuiOutlinedInput-root": {
@@ -142,6 +152,13 @@ export default function SurveyOwner() {
     <Box sx={classes.page}>
       <Container maxWidth="lg" sx={{ display: "grid", gap: "20px" }}>
         <Paper sx={classes.card}>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Avatar
+              src={DauntlessAthleticsLogoDesktopCircleImg}
+              alt="Dauntless Athletics Logo"
+              sx={{ width: 72, height: 72 }}
+            />
+          </Box>
           <Typography
             sx={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--color-text)" }}
           >
@@ -199,13 +216,15 @@ export default function SurveyOwner() {
                     </Typography>
                   </Box>
 
+                  <Divider />
+
                   <Box sx={classes.section}>
                     <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
                       Question Averages
                     </Typography>
                     <Box sx={{ display: "grid", gap: "16px" }}>
                       {surveyQuestions.map((question) => (
-                        <Box key={question.key} sx={{ display: "grid", gap: "6px" }}>
+                        <Box key={question.key} sx={classes.statCard}>
                           <Typography sx={{ color: "var(--color-text)" }}>{question.text}</Typography>
                           <Typography sx={{ color: "var(--color-accent)", fontWeight: 600 }}>
                             Average: {summary.averages?.[question.key] ?? "n/a"}
