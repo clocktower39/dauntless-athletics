@@ -212,21 +212,20 @@ const schedule = [
 ];
 
 const holidaySchedule = [
-  "Apr 18th – Apr 20th",
-  "May 26th",
-  "Jun 29th – Jul 6th",
-  "Sept 1st",
-  "Oct 31st",
-  "Nov 26th – Nov 30th",
-  "Dec 24th – Jan 4th",
+  "Apr 3rd – Apr 5th",
+  "May 25th",
+  "Jun 28th – Jul 5th",
+  "Sept 7th",
+  "Nov 25th – Nov 29th",
+  "Dec 24th – Jan 3rd",
 ];
 
 export const holidayScheduleEvents = [
   {
     Id: 20250418,
     Subject: 'Closed',
-    StartTime: new Date(2025, 3, 18, 0, 0),
-    EndTime:   new Date(2025, 3, 21, 0, 0),
+    StartTime: new Date(2026, 3, 3, 0, 0),
+    EndTime:   new Date(2026, 3, 6, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -234,8 +233,8 @@ export const holidayScheduleEvents = [
   {
     Id: 20250526,
     Subject: 'Closed',
-    StartTime: new Date(2025, 4, 26, 0, 0),
-    EndTime:   new Date(2025, 4, 27, 0, 0),
+    StartTime: new Date(2026, 4, 25, 0, 0),
+    EndTime:   new Date(2026, 4, 26, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -243,8 +242,8 @@ export const holidayScheduleEvents = [
   {
     Id: 20251031,
     Subject: 'Closed',
-    StartTime: new Date(2025, 5, 29, 0, 0),
-    EndTime:   new Date(2025, 6, 7, 0, 0),
+    StartTime: new Date(2026, 5, 28, 0, 0),
+    EndTime:   new Date(2026, 6, 6, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -252,17 +251,8 @@ export const holidayScheduleEvents = [
   {
     Id: 20251031,
     Subject: 'Closed',
-    StartTime: new Date(2025, 9, 31, 0, 0),
-    EndTime:   new Date(2025, 10, 1, 0, 0),
-    IsAllDay: true,
-    IsBlock: true,
-    zIndex: 1,
-  },
-  {
-    Id: 20251031,
-    Subject: 'Closed',
-    StartTime: new Date(2025, 9, 31, 0, 0),
-    EndTime:   new Date(2025, 10, 1, 0, 0),
+    StartTime: new Date(2026, 8, 7, 0, 0),
+    EndTime:   new Date(2026, 8, 8, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -270,8 +260,8 @@ export const holidayScheduleEvents = [
   {
     Id: 20251126,
     Subject: 'Closed',
-    StartTime: new Date(2025, 10, 26, 0, 0),
-    EndTime:   new Date(2025, 11, 1, 0, 0),
+    StartTime: new Date(2026, 10, 25, 0, 0),
+    EndTime:   new Date(2026, 10, 30, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -288,8 +278,8 @@ export const holidayScheduleEvents = [
   {
     Id: 20251224,
     Subject: 'Closed',
-    StartTime: new Date(2025, 11, 24, 0, 0),
-    EndTime:   new Date(2026, 0, 5, 0, 0),
+    StartTime: new Date(2026, 11, 24, 0, 0),
+    EndTime:   new Date(2027, 0, 4, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
