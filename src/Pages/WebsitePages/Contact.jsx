@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Button, Container, Divider, Grid, TextField, Typography } from "@mui/material";
+import HolidayClosure from "../../Components/HolidayClosure";
 import Footer from "../../Components/Footer";
 import {
   ContactPhoneOutlined as ContactPhoneOutlinedIcon,
@@ -354,85 +355,7 @@ export default function Contact() {
                 justifyContent="center"
                 sx={{ padding: "15px 0", flexGrow: 1, flexShrink: 0, minHeight: "150px" }}
               >
-                <ul
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    fontSize: "16px",
-                    paddingLeft: "0", // Remove default padding of the ul
-                    color: "var(--color-muted)",
-                  }}
-                >
-                  <li
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <span>Apr 18th – Apr 20th:</span>
-                    <span style={{ paddingLeft: "25px" }}>Closed</span>
-                  </li>
-                  <li
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <span>May 26th:</span>
-                    <span>Closed</span>
-                  </li>
-                  <li
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <span>Jun 29th – Jul 6th:</span>
-                    <span>Closed</span>
-                  </li>
-                  <li
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <span>Sept 1st:</span>
-                    <span>Closed</span>
-                  </li>
-                  <li
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <span>Oct 31st:</span>
-                    <span>Closed</span>
-                  </li>
-                  <li
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <span>Nov 26th – Nov 30th:</span>
-                    <span>Closed</span>
-                  </li>
-                  <li
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    <span>Dec 24th – Jan 4th:</span>
-                    <span>Closed</span>
-                  </li>
-                </ul>
+                <HolidayClosure />
               </Grid>
             </Grid>
 

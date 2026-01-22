@@ -2,6 +2,7 @@ import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
+import HolidayClosure from "../../Components/HolidayClosure";
 import {
   ScheduleComponent,
   Day,
@@ -211,21 +212,12 @@ const schedule = [
   },
 ];
 
-const holidaySchedule = [
-  "Apr 3rd – Apr 5th",
-  "May 25th",
-  "Jun 28th – Jul 5th",
-  "Sept 7th",
-  "Nov 25th – Nov 29th",
-  "Dec 24th – Jan 3rd",
-];
-
 export const holidayScheduleEvents = [
   {
     Id: 20250418,
     Subject: 'Closed',
     StartTime: new Date(2026, 3, 3, 0, 0),
-    EndTime:   new Date(2026, 3, 6, 0, 0),
+    EndTime: new Date(2026, 3, 6, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -234,7 +226,7 @@ export const holidayScheduleEvents = [
     Id: 20250526,
     Subject: 'Closed',
     StartTime: new Date(2026, 4, 25, 0, 0),
-    EndTime:   new Date(2026, 4, 26, 0, 0),
+    EndTime: new Date(2026, 4, 26, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -243,7 +235,7 @@ export const holidayScheduleEvents = [
     Id: 20251031,
     Subject: 'Closed',
     StartTime: new Date(2026, 5, 28, 0, 0),
-    EndTime:   new Date(2026, 6, 6, 0, 0),
+    EndTime: new Date(2026, 6, 6, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -252,7 +244,7 @@ export const holidayScheduleEvents = [
     Id: 20251031,
     Subject: 'Closed',
     StartTime: new Date(2026, 8, 7, 0, 0),
-    EndTime:   new Date(2026, 8, 8, 0, 0),
+    EndTime: new Date(2026, 8, 8, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
@@ -261,17 +253,17 @@ export const holidayScheduleEvents = [
     Id: 20251126,
     Subject: 'Closed',
     StartTime: new Date(2026, 10, 25, 0, 0),
-    EndTime:   new Date(2026, 10, 30, 0, 0),
+    EndTime: new Date(2026, 10, 30, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
     description: `We are closed for all classes 
   from ${dayjs
-      .utc(new Date("2025-11-26"))
-      .format("dddd, MMMM Do")}
+        .utc(new Date("2025-11-26"))
+        .format("dddd, MMMM Do")}
       through ${dayjs
-      .utc(new Date("2025-11-30"))
-      .format("dddd, MMMM Do")}.
+        .utc(new Date("2025-11-30"))
+        .format("dddd, MMMM Do")}.
   Happy Thanksgiving!`,
 
   },
@@ -279,17 +271,17 @@ export const holidayScheduleEvents = [
     Id: 20251224,
     Subject: 'Closed',
     StartTime: new Date(2026, 11, 24, 0, 0),
-    EndTime:   new Date(2027, 0, 4, 0, 0),
+    EndTime: new Date(2027, 0, 4, 0, 0),
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
     description: `We are closed for all classes 
   from ${dayjs
-      .utc(new Date("2025-12-24"))
-      .format("dddd, MMMM Do")}
+        .utc(new Date("2025-12-24"))
+        .format("dddd, MMMM Do")}
       through ${dayjs
-      .utc(new Date("2026-01-04"))
-      .format("dddd, MMMM Do")}.
+        .utc(new Date("2026-01-04"))
+        .format("dddd, MMMM Do")}.
   Happy Holidays!`,
   },
 ];
@@ -563,19 +555,6 @@ export default function ClassSchedule() {
     );
   };
 
-  const HolidayClosure = ({ range }) => {
-    return (
-      <Grid container size={12} sx={{ padding: "5px 25px", color: "var(--color-muted)" }}>
-        <Grid container size={8}>
-          {range}:
-        </Grid>
-        <Grid container size={4} justifyContent="flex-end">
-          Closed
-        </Grid>
-      </Grid>
-    );
-  };
-
   const onPopupOpen = (args) => {
 
     if (args.type === 'Editor') {
@@ -718,9 +697,7 @@ export default function ClassSchedule() {
               margin: "20px 0",
             }}
           >
-            {holidaySchedule.map((range) => (
-              <HolidayClosure range={range} />
-            ))}
+            <HolidayClosure />
           </Box>
 
           <Grid size={12} sx={{ padding: "25px" }}>
