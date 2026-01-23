@@ -279,6 +279,34 @@ export const camps = [
       innerText: "Register For Clinic",
     },
   },
+  {
+    icon: <img src="/images/camps/2026_feb_clinics.PNG" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
+    Subject: "Back Handspring Clinic",
+    StartTime: new Date(2026, 1, 7, 15, 0),
+    EndTime: new Date(2026, 1, 7, 16, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 35,
+    description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/2026_feb_clinics.PNG" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Aerial/Acro Clinic",
+    StartTime: new Date(2026, 1, 7, 16, 30),
+    EndTime: new Date(2026, 1, 7, 18, 0),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: 35,
+    description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      innerText: "Register For Clinic",
+    },
+  },
 ];
 
 export const dauntlessClasses = [
