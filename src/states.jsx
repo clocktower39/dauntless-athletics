@@ -280,7 +280,7 @@ export const camps = [
     },
   },
   {
-    icon: <img src="/images/camps/2026_feb_clinics.PNG" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
+    icon: <img src="/images/camps/2026_feb_clinics.jpeg" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
     Subject: "Back Handspring Clinic",
     StartTime: new Date(2026, 1, 7, 15, 0),
     EndTime: new Date(2026, 1, 7, 16, 30),
@@ -294,7 +294,7 @@ export const camps = [
     },
   },
   {
-    icon: <img src="/images/camps/2026_feb_clinics.PNG" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    icon: <img src="/images/camps/2026_feb_clinics.jpeg" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     Subject: "Aerial/Acro Clinic",
     StartTime: new Date(2026, 1, 7, 16, 30),
     EndTime: new Date(2026, 1, 7, 18, 0),
