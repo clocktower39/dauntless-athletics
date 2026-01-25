@@ -280,7 +280,7 @@ export const camps = [
     },
   },
   {
-    icon: <img src="/images/camps/2026_feb_clinics.jpeg" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
+    icon: <img src="/images/camps/2026_feb_clinics.jpeg" style={{ ...classes.DauntlessCampIcon, borderRadius: '25%', }} />,
     Subject: "Back Handspring Clinic",
     StartTime: new Date(2026, 1, 7, 15, 0),
     EndTime: new Date(2026, 1, 7, 16, 30),
@@ -289,12 +289,12 @@ export const camps = [
     cost: 35,
     description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
     link: {
-      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
       innerText: "Register For Clinic",
     },
   },
   {
-    icon: <img src="/images/camps/2026_feb_clinics.jpeg" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    icon: <img src="/images/camps/2026_feb_clinics.jpeg" style={{ ...classes.DauntlessCampIcon, borderRadius: '25%', }} />,
     Subject: "Aerial/Acro Clinic",
     StartTime: new Date(2026, 1, 7, 16, 30),
     EndTime: new Date(2026, 1, 7, 18, 0),
@@ -303,7 +303,7 @@ export const camps = [
     cost: 35,
     description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
     link: {
-      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
       innerText: "Register For Clinic",
     },
   },

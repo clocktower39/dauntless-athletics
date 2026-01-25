@@ -118,7 +118,7 @@ export default function Camps() {
               </Typography>
             </li>
           </ul>
-          <Grid container justifyContent="center">
+          <Grid container justifyContent="center" spacing={{ xs: 1, md: 2 }}>
             {camps.map((camp, index) => (
               <CampComponent key={`${camp.title}-${index}`} camp={camp} index={index} />
             ))}

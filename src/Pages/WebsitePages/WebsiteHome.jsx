@@ -361,7 +361,7 @@ export default function Home() {
                     />
                   </Link>
                 </Grid>
-                <Grid container size={12} justifyContent="center">
+                <Grid container size={12} justifyContent="center" spacing={{ xs: 3, md: 4 }}>
                   {camps.map((camp, index) => (
                     <CampComponent key={`${camp.title}-${index}`} camp={camp} index={index} />
                   ))}

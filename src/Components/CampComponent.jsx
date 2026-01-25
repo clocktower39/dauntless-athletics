@@ -89,7 +89,15 @@ export default function CampComponent({ camp, index }) {
             color={camp.color || "var(--color-text)"}
             variant="h5"
             textAlign="center"
-            sx={{ padding: "15px 0", maxWidth: "250px" }}
+            sx={{
+              padding: "15px 0",
+              maxWidth: "250px",
+              lineHeight: 1.2,
+              minHeight: "6em",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             {camp.Subject}
           </Typography>
