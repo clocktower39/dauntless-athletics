@@ -7,8 +7,10 @@ dayjs.extend(utc);
 export default function CampComponent({ camp, index }) {
   const today = dayjs.utc().add(-31, "hours").startOf("day");
   const [zoomImage, setZoomImage] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   const hasDatePast = (camp) => {
+    if (camp?.isTBA) return true;
     return dayjs(camp.EndTime).utc().isAfter(today, "day");
   };
 
@@ -104,12 +106,14 @@ export default function CampComponent({ camp, index }) {
         </Grid>
         <Grid container justifyContent="center">
           <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
-            <strong>Date:</strong>{" "}{dayjs(camp.StartTime).format("dddd, MMMM Do")}
+            <strong>Date:</strong>{" "}
+            {camp.dateText || dayjs(camp.StartTime).format("dddd, MMMM Do")}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
           <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
-            <strong>Time:</strong> {dayjs(camp.StartTime).format("h:mm")} - {dayjs(camp.EndTime).format("h:mm a")}
+            <strong>Time:</strong>{" "}
+            {camp.timeText || `${dayjs(camp.StartTime).format("h:mm")} - ${dayjs(camp.EndTime).format("h:mm a")}`}
           </Typography>
         </Grid>
         <Grid container justifyContent="center">
@@ -126,23 +130,46 @@ export default function CampComponent({ camp, index }) {
             per athlete
           </Typography>
         </Grid>
-        <Grid container justifyContent="center">
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "var(--color-accent)",
-              margin: "25px 0 10px",
-              borderRadius: "999px",
-              padding: "10px 24px",
-              "&:hover": {
-                backgroundColor: "var(--color-accent-2)",
-              },
-            }}
-            href={camp.link.href}
-          >
-            {camp.link.innerText}
-          </Button>
-        </Grid>
+        {camp.link && (
+          <Grid container justifyContent="center">
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "var(--color-accent)",
+                margin: "25px 0 10px",
+                borderRadius: "999px",
+                padding: "10px 24px",
+                "&:hover": {
+                  backgroundColor: "var(--color-accent-2)",
+                },
+              }}
+              href={camp.link.href}
+            >
+              {camp.link.innerText}
+            </Button>
+          </Grid>
+        )}
+        {camp.showDetailsButton && (
+          <Grid container justifyContent="center">
+            <Button
+              variant="outlined"
+              sx={{
+                borderColor: "var(--color-accent)",
+                color: "var(--color-text)",
+                margin: "10px 0 10px",
+                borderRadius: "999px",
+                padding: "10px 24px",
+                "&:hover": {
+                  borderColor: "var(--color-accent-2)",
+                  backgroundColor: "rgba(255,255,255,0.04)",
+                },
+              }}
+              onClick={() => setShowDetails(true)}
+            >
+              More Info
+            </Button>
+          </Grid>
+        )}
 
         {/* Fullscreen Dialog */}
         <Dialog
@@ -179,6 +206,36 @@ export default function CampComponent({ camp, index }) {
                 boxShadow: 5,
               }}
             />
+          </DialogContent>
+        </Dialog>
+        <Dialog
+          open={showDetails}
+          onClose={() => setShowDetails(false)}
+          maxWidth="md"
+          fullWidth
+          PaperProps={{
+            sx: {
+              backgroundColor: "var(--color-surface-2)",
+              borderRadius: "20px",
+              border: "1px solid var(--color-border)",
+            },
+          }}
+        >
+          <DialogContent sx={{ p: { xs: 3, md: 4 } }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: "var(--font-display)",
+                textTransform: "uppercase",
+                mb: 2,
+                color: "var(--color-text)",
+              }}
+            >
+              {camp.Subject}
+            </Typography>
+            <Typography sx={{ color: "var(--color-text)", whiteSpace: "pre-line" }}>
+              {camp.description}
+            </Typography>
           </DialogContent>
         </Dialog>
       </Grid>

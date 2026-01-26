@@ -503,7 +503,7 @@ const data = [
       innerText: "Register for a jumps class",
     }
   },
-  ...camps,
+  ...camps.filter((camp) => camp.includeInSchedule !== false),
   ...holidayScheduleEvents,
 ];
 
