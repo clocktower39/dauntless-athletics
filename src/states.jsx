@@ -320,7 +320,7 @@ export const camps = [
     cost: { day: 55, week: 150 },
     description: "Spring Break Camp Week 1 (March 9-11). $55 per day or $150 per week.",
     link: {
-      href: "https://www.iclassprov2.com/parentportal/dauntlessathletics/camps?camptype=1",
+      href: "https://portal.iclasspro.com/dauntlessathletics/camps/27",
       innerText: "Register For Camp",
     },
   },
@@ -337,24 +337,24 @@ export const camps = [
     cost: { day: 55, week: 150 },
     description: "Spring Break Camp Week 2 (March 16-18). $55 per day or $150 per week.",
     link: {
-      href: "https://www.iclassprov2.com/parentportal/dauntlessathletics/camps?camptype=1",
+      href: "https://portal.iclasspro.com/dauntlessathletics/camps/27",
       innerText: "Register For Camp",
     },
   },
   {
     icon: <img src="/images/camps/silhouette_group_stunting.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     Subject: "All-Girl Stunt School",
-    StartTime: new Date(2026, 5, 1, 9, 0),
-    EndTime: new Date(2026, 5, 1, 12, 0),
-    dateText: "TBA",
-    timeText: "TBA",
-    isTBA: true,
-    includeInSchedule: false,
+    StartTime: new Date(2026, 2, 1, 9, 0),
+    EndTime: new Date(2026, 2, 1, 12, 0),
     showDetailsButton: true,
     color: "#065E99",
     place: "Dauntless Athletics",
-    cost: "TBA",
+    cost: 120,
     description: "This All-Girl Stunt School is hosted by Coach Anthony, Coach Dawa, Coach Oatha, Coach Bailee, and guest College National Championship All-Girl coaches and helpers!\n\nThis clinic is designed for pre-formed stunt groups looking to use the off-season to sharpen technique, clean fundamentals, and prepare for the upcoming season and tryouts. Athletes must bring their own full stunt group - groups will not be formed at the clinic.\n\nRather than focusing on set competition routines, this clinic will emphasize:\n- Improving stunt technique and consistency\n- Breaking down skills your group is currently working on\n- Fixing problem areas or skills you've been stuck on\n- Learning and safely progressing new all-girl/group stunt skills\n- Building confidence and readiness heading into the next season\n\nInstruction will be customized to each stunt group's goals and skill level. Coaches will provide:\n- Live stunt demonstrations\n- Step-by-step technique breakdowns\n- Individualized, hands-on feedback for every position in the group\n- Close, personal coaching from multiple experienced coaches\n\nThis clinic will be offered in two separate sessions:\n- Middle School / Junior High Session (ages 10-13)\n- High School and up Session (13+)\n\nAll athletes attending must have an active DAUNTLESS account.",
+    link: {
+      href: "https://portal.iclasspro.com/dauntlessathletics/camps/35",
+      innerText: "Register For Clinic",
+    },
   },
 ];
 

@@ -130,7 +130,7 @@ export default function CampComponent({ camp, index }) {
             per athlete
           </Typography>
         </Grid>
-        {camp.link && (
+        {camp.link && !camp.showDetailsButton && (
           <Grid container justifyContent="center">
             <Button
               variant="contained"
@@ -236,6 +236,24 @@ export default function CampComponent({ camp, index }) {
             <Typography sx={{ color: "var(--color-text)", whiteSpace: "pre-line" }}>
               {camp.description}
             </Typography>
+            {camp.showDetailsButton && camp.link && (
+              <Box sx={{ display: "flex", justifyContent: "center", marginTop: 3 }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "var(--color-accent)",
+                    borderRadius: "999px",
+                    padding: "10px 24px",
+                    "&:hover": {
+                      backgroundColor: "var(--color-accent-2)",
+                    },
+                  }}
+                  href={camp.link.href}
+                >
+                  {camp.link.innerText}
+                </Button>
+              </Box>
+            )}
           </DialogContent>
         </Dialog>
       </Grid>
