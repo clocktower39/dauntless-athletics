@@ -15,7 +15,7 @@ import {
   SchoolOutlined as SchoolOutlinedIcon,
 } from "@mui/icons-material";
 import WebsiteNavbar from "./WebsiteNavbar";
-import ReactPlayer from "react-player";
+import ReactPlayer from "../../Components/YouTubeOnlyPlayer";
 import CampComponent from "../../Components/CampComponent";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";

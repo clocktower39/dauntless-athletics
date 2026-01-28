@@ -32,18 +32,13 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          "react-vendor": ["react", "react-dom"],
-          "mui-vendor": [
-            "@mui/material",
-            "@mui/icons-material",
-            "@mui/styles",
-            "@emotion/react",
-            "@emotion/styled",
-          ],
-          "date-utils": ["dayjs"],
-          utils: ["axios", "react-player"],
-          "router-vendor": ["react-router", "react-router-dom", "react-router-hash-link", ],
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return;
+          if (id.includes("react-player") || id.includes("youtube-video-element")) return "player";
+          if (id.includes("@mui") || id.includes("@emotion")) return "mui";
+          if (id.includes("react-router")) return "router";
+          if (id.includes("dayjs")) return "dayjs";
+          return "vendor";
         },
       },
     },

@@ -15,7 +15,7 @@ import {
   Gavel as GavelIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
-import ReactPlayer from "react-player";
+import ReactPlayer from "../../Components/YouTubeOnlyPlayer";
 
 const classes = {
   mainImgBox: {
