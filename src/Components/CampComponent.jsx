@@ -124,10 +124,12 @@ export default function CampComponent({ camp, index }) {
         <Grid container justifyContent="center">
           <Typography textAlign="center" sx={{ color: "var(--color-muted)" }}>
             <strong>Cost:</strong>{" "}
-            {camp.cost.week
+            {camp.cost?.week
               ? `$${camp.cost.day} per day OR $${camp.cost.week} a week`
-              : `$${camp.cost}`}{" "}
-            per athlete
+              : camp.cost?.amount
+                ? `$${camp.cost.amount}`
+                : `$${camp.cost}`}{" "}
+            {(camp.cost && camp.cost.label) || camp.costLabel || "per athlete"}
           </Typography>
         </Grid>
         {camp.link && !camp.showDetailsButton && (

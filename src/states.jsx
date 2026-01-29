@@ -34,7 +34,7 @@ export const camps = [
     EndTime: new Date(2025, 9, 19, 16, 0),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 69,
+    cost: { amount: 69, label: "per athlete" },
     description: 'Camp is a 3-hour camp that is for all levels from the very beginner to the most advanced. It will cover all aspects of Tumbling from running, standing, and combination passes for all levels. ',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/1",
@@ -48,7 +48,7 @@ export const camps = [
     EndTime: new Date(2025, 9, 25, 15, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -62,7 +62,7 @@ export const camps = [
     EndTime: new Date(2025, 9, 25, 16, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Tumbling camp for those who need to get a back tuck and above. Requirement of a back handspring without a spot. This will cover from the intermediate level to the most advanced levels.',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -76,7 +76,7 @@ export const camps = [
     EndTime: new Date(2025, 9, 25, 17, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -90,7 +90,7 @@ export const camps = [
     EndTime: new Date(2025, 9, 26, 15, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 50,
+    cost: { amount: 50, label: "per athlete" },
     description: 'This is a clinic designed for Dads and daughters to do together. They will cover tumbling, stunting, and stretch skills in this clinic and will work at the level the athletes are at and build on this. Please make sure that both Dad and the athlete have been registered online it is $25 for each for a total of $50 for both Daddy/daughter together.',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/36",
@@ -104,7 +104,7 @@ export const camps = [
     EndTime: new Date(2025, 10, 2, 15, 0),
     color: "#065E99",
     place: "Dauntless Athletics",
-    cost: 30,
+    cost: { amount: 30, label: "per athlete" },
     description: "Must be a with a stunt group to attend. This is an all-girl group stunt style clinic hosted by Coach Dawa, Coach Oatha, Coach Leo and guest coaches and helpers from the GCU Cheerleaders. You MUST BRING YOUR OWN FULL STUNT GROUP. This camp is to help prep for competition season with your group. This camp will help sharpen your skills and get help with skills your group may be stuck on; and/or help your group gain new skills. The camp will be tailored to skills you and your group are wanting help with or want to learn and work on with the help and assistance of all these incredible coaches. There will be live stunt demonstrations, stunt techniques broken down with close personal help with multiple coaches for everyone in your stunt group.\nEVERYONE IN YOUR STUNT GROUP THAT COMES TO THE CLINIC MUST HAVE AN ACCOUNT MADE BY THEIR PARENT OR GUARDIAN THAT IS IN THEIR PARENT OR GUARDIANS NAMES WITH THE PARENT OR GUARDIANS INFORMATION AND ACCEPTANCE OF ALL THE RULES AND POLICIES. THE ATHLETE'S NAME MUST GO UNDER THE STUDENT PORTION.",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/35",
@@ -118,7 +118,7 @@ export const camps = [
     EndTime: new Date(2025, 10, 9, 14, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 15,
+    cost: { amount: 15, label: "per athlete" },
     description: 'This is a clinic designed for Adults ages 19 and older. This clinic will focus on tumbling, stunting, jumps, and stretching. It is designed for all levels and for those who are adults and wish to work on tumbling, stunting, and jump skills.',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/11",
@@ -132,7 +132,7 @@ export const camps = [
     EndTime: new Date(2025, 10, 15, 15, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -146,7 +146,7 @@ export const camps = [
     EndTime: new Date(2025, 10, 15, 16, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Tumbling camp for those who need to get a back tuck and above. Requirement of a back handspring without a spot. This will cover from the intermediate level to the most advanced levels.',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -160,7 +160,7 @@ export const camps = [
     EndTime: new Date(2025, 10, 15, 17, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -174,7 +174,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 6, 15, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -188,7 +188,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 6, 16, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Tumbling camp for those who need to get a back tuck and above. Requirement of a back handspring without a spot. This will cover from the intermediate level to the most advanced levels.',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -202,7 +202,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 6, 17, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 25,
+    cost: { amount: 25, label: "per athlete" },
     description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -216,7 +216,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 14, 14, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 150,
+    cost: { amount: 150, label: "per athlete" },
     description: 'Fearless Flight Crew Camp at Dauntless if for those who wish to experience a high-flying elite level of coaching and elite level flying. All athletes who wish to participate in this camp must have skill that are at least an intermediate Co-ed level (skills must have are full ups, full arounds, TikToks, and high to high TikToks, if have more than these skills all the better)',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/34",
@@ -230,7 +230,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 27, 13, 30),
     color: "#f01313",
     place: "Influence Gymnastics",
-    cost: 50,
+    cost: { amount: 50, label: "per athlete" },
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -244,7 +244,7 @@ export const camps = [
     EndTime: new Date(2025, 11, 27, 15, 0),
     color: "#f01313",
     place: "Influence Gymnastics",
-    cost: 50,
+    cost: { amount: 50, label: "per athlete" },
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -258,7 +258,7 @@ export const camps = [
     EndTime: new Date(2026, 0, 3, 13, 30),
     color: "#14b62c",
     place: "Influence Gymnastics",
-    cost: 50,
+    cost: { amount: 50, label: "per athlete" },
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -272,7 +272,7 @@ export const camps = [
     EndTime: new Date(2026, 0, 3, 15, 0),
     color: "#14b62c",
     place: "Influence Gymnastics",
-    cost: 50,
+    cost: { amount: 50, label: "per athlete" },
     description: "This Clinic is for those athlete's 12 years old and up at all skill levels, Beginner to advanced. The clinic will be at Influence Gymnastics, and ALL Athletes must have their parent/guardian also make an account through Influence gymnastics website as the waiver is through the online account. (Link Below- you may have to copy and paste the link)\n \nhttps://portal.iclasspro.com/influence\n\nScottsdale and North Phoenix!! Come tumble with two of your favorite coaches. Coach Oatha and Coach Dawa in your own area. Whether you are looking to work on some new skills, push for that skill that you are close to, or just trying to keep up with your skills over the break, we are here to help you and serve you with whatever your skill needs and goals are!",
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/18",
@@ -286,7 +286,7 @@ export const camps = [
     EndTime: new Date(2026, 1, 7, 16, 30),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 35,
+    cost: { amount: 35, label: "per athlete" },
     description: 'Tumbling camp is for Beginners and those that need to get a back handspring or need to clean up and refine their back handspring',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
@@ -300,7 +300,7 @@ export const camps = [
     EndTime: new Date(2026, 1, 7, 18, 0),
     color: "#f01313",
     place: "Dauntless Athletics",
-    cost: 35,
+    cost: { amount: 35, label: "per athlete" },
     description: 'Camp is for those that need to get aerials for dance, pom, cheer, etc. ',
     link: {
       href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
@@ -315,7 +315,7 @@ export const camps = [
     showDetailsButton: true,
     color: "#065E99",
     place: "Dauntless Athletics",
-    cost: 120,
+    cost: { amount: 120, label: "per group" },
     description: "This All-Girl Stunt School is hosted by Coach Anthony, Coach Dawa, Coach Oatha, Coach Bailee, and guest College National Championship All-Girl coaches and helpers!\n\nThis clinic is designed for pre-formed stunt groups looking to use the off-season to sharpen technique, clean fundamentals, and prepare for the upcoming season and tryouts. Athletes must bring their own full stunt group - groups will not be formed at the clinic.\n\nRather than focusing on set competition routines, this clinic will emphasize:\n- Improving stunt technique and consistency\n- Breaking down skills your group is currently working on\n- Fixing problem areas or skills you've been stuck on\n- Learning and safely progressing new all-girl/group stunt skills\n- Building confidence and readiness heading into the next season\n\nInstruction will be customized to each stunt group's goals and skill level. Coaches will provide:\n- Live stunt demonstrations\n- Step-by-step technique breakdowns\n- Individualized, hands-on feedback for every position in the group\n- Close, personal coaching from multiple experienced coaches\n\nThis clinic will be offered in two separate sessions:\n- Middle School / Junior High Session (ages 10-13)\n- High School and up Session (13+)\n\nAll athletes attending must have an active DAUNTLESS account.",
     link: {
       href: "https://portal.iclasspro.com/dauntlessathletics/camps/35",
@@ -332,7 +332,7 @@ export const camps = [
     timeText: "9:00 AM - 12:00 PM",
     color: "#46B04B",
     place: "Dauntless Athletics",
-    cost: { day: 55, week: 150 },
+    cost: { day: 55, week: 150, label: "per athlete" },
     description: "Spring Break Camp Week 1 (March 9-11). $55 per day or $150 per week.",
     link: {
       href: "https://portal.iclasspro.com/dauntlessathletics/camps/27",
@@ -349,7 +349,7 @@ export const camps = [
     timeText: "9:00 AM - 12:00 PM",
     color: "#46B04B",
     place: "Dauntless Athletics",
-    cost: { day: 55, week: 150 },
+    cost: { day: 55, week: 150, label: "per athlete" },
     description: "Spring Break Camp Week 2 (March 16-18). $55 per day or $150 per week.",
     link: {
       href: "https://portal.iclasspro.com/dauntlessathletics/camps/27",
