@@ -17,6 +17,7 @@ const HolidayClosure = () => {
                 color: "var(--color-muted)",
                 fontFamily: "var(--font-body)",
                 fontSize: "16px",
+                padding: '5px 30px'
             }}>
                 <Grid container size={8}>
                     {range}:
