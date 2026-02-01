@@ -233,10 +233,10 @@ export default function Contact() {
             boxShadow: "0 28px 50px rgba(0,0,0,0.45)",
           }}
         >
-          <Grid container sx={{ padding: "25px 0" }} spacing={2}>
+          <Grid container spacing={1}>
             <Grid
               container
-              size={{ xs: 12, md: 3 }}
+              size={{ xs: 12, sm:6, md: 3 }}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
@@ -245,7 +245,7 @@ export default function Contact() {
               }}
             >
               <Grid container size={12} justifyContent="center">
-                <PhoneIcon sx={{ fontSize: "64px", padding: "25px 0", color: "var(--color-accent)" }} />
+                <PhoneIcon sx={{ fontSize: "5em", padding: "25px 0", color: "var(--color-accent)" }} />
               </Grid>
               <Grid container size={12} justifyContent="center">
                 <Typography textAlign="center" sx={{ fontFamily: "var(--font-display)", fontSize: "36px" }}>
@@ -291,7 +291,7 @@ export default function Contact() {
 
             <Grid
               container
-              size={{ xs: 12, md: 3 }}
+              size={{ xs: 12, sm:6, md: 3 }}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
@@ -301,7 +301,7 @@ export default function Contact() {
             >
               <Grid container size={12} justifyContent="center">
                 <EventAvailableOutlinedIcon
-                  sx={{ color: "var(--color-accent)", fontSize: "64px", padding: "25px 0" }}
+                  sx={{ color: "var(--color-accent)", fontSize: "5em", padding: "25px 0" }}
                 />
               </Grid>
               <Grid container size={12} justifyContent="center">
@@ -331,7 +331,7 @@ export default function Contact() {
 
             <Grid
               container
-              size={{ xs: 12, md: 3 }}
+              size={{ xs: 12, sm:6, md: 3 }}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
@@ -341,7 +341,7 @@ export default function Contact() {
             >
               <Grid container size={12} justifyContent="center">
                 <EventBusyOutlinedIcon
-                  sx={{ color: "var(--color-accent)", fontSize: "64px", padding: "25px 0" }}
+                  sx={{ color: "var(--color-accent)", fontSize: "5em", padding: "25px 0" }}
                 />
               </Grid>
               <Grid container size={12} justifyContent="center">
@@ -361,7 +361,7 @@ export default function Contact() {
 
             <Grid
               container
-              size={{ xs: 12, md: 3 }}
+              size={{ xs: 12, sm:6, md: 3 }}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
@@ -371,7 +371,7 @@ export default function Contact() {
             >
               <Grid container size={12} justifyContent="center">
                 <LocationOnIcon
-                  sx={{ color: "var(--color-accent)", fontSize: "64px", padding: "25px 0" }}
+                  sx={{ color: "var(--color-accent)", fontSize: "5em", padding: "25px 0" }}
                 />
               </Grid>
               <Grid container size={12} justifyContent="center">
@@ -406,6 +406,7 @@ export default function Contact() {
                 overflow: "hidden",
                 border: "1px solid var(--color-border)",
                 boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
+                margin: '15px 0'
               }}
             >
               <iframe
