@@ -48,21 +48,21 @@ function App() {
         {/* Default website pages, anyone can access */}
         {checkSubDomain() ? (
           <>
-            <Route exact path="/" element={<WebsiteHome />} />
-            <Route exact path="/camps" element={<Camps />} />
-            <Route exact path="/college-combine" element={<CollegeCombine />} />
-            <Route exact path="/class-schedule" element={<ClassSchedule />} />
-            <Route exact path="/services" element={<Services />} />
-            <Route exact path="/staff" element={<Staff />} />
-            <Route exact path="/facility" element={<Facility />} />
-            <Route exact path="/contact-us" element={<Contact />} />
+            <Route path="/" element={<WebsiteHome />} />
+            <Route path="/camps" element={<Camps />} />
+            <Route path="/college-combine" element={<CollegeCombine />} />
+            <Route path="/class-schedule" element={<ClassSchedule />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/staff" element={<Staff />} />
+            <Route path="/facility" element={<Facility />} />
+            <Route path="/contact-us" element={<Contact />} />
           </>
         ) : (
           <> {/* App */}</>
         )}
-        <Route exact path="/hs-coach-survey/:token" element={<CoachSurvey />} />
-        <Route exact path="/survey-admin" element={<SurveyAdmin />} />
-        <Route exact path="/survey-owner" element={<SurveyOwner />} />
+        <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
+        <Route path="/survey-admin" element={<SurveyAdmin />} />
+        <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

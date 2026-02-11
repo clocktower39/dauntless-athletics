@@ -7,7 +7,6 @@ export default defineConfig({
   plugins: [
     react(),
     PrerenderSPAPlugin({
-      staticDir: "./dist",
       routes: [
         "/",
         "/camps",
@@ -32,7 +31,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks(id) {
+        manualChunks(id: string) {
           if (!id.includes("node_modules")) return;
           if (id.includes("react-player") || id.includes("youtube-video-element")) return "player";
           if (id.includes("@mui") || id.includes("@emotion")) return "mui";
