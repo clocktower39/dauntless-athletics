@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   SportsGymnastics as SportsGymnasticsIcon,
   FitnessCenter as FitnessCenterIcon,
@@ -26,7 +27,47 @@ const classes = {
   },
 };
 
-export const camps = [
+type CampCost = { amount: number; label: string } | { day: number; week: number; label: string } | string;
+
+type CampLink = { href: string; innerText: string };
+
+type Camp = { 
+  Subject: string;
+  StartTime: Date;
+  EndTime: Date;
+  color: string;
+  place: string;
+  cost: CampCost;
+  description: string;
+  link: CampLink;
+  icon?: ReactNode;
+  poster?: string;
+  video?: string;
+  showDetailsButton?: boolean;
+  RecurrenceRule?: string;
+  dateText?: string;
+  timeText?: string;
+  isTBA?: boolean;
+  costLabel?: string;
+}
+
+type DauntlessClass = {
+  title: string;
+  description: string;
+  icon: ReactNode;
+}
+
+type PricingOption = {
+  title: string;
+  cost: string;
+  duration: string;
+  buttonText: string;
+  buttonLink: string;
+  backgroundColor: string;
+  optionalTextList?: string[];
+}
+
+export const camps: Camp[] = [
   {
     icon: <img src="/images/camps/silhouette_skeleton_toe_touch.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     Subject: "October Tumbling Camp",
@@ -358,7 +399,7 @@ export const camps = [
   },
 ];
 
-export const dauntlessClasses = [
+export const dauntlessClasses: DauntlessClass[] = [
   {
     title: "Tumbling",
     description:
@@ -409,7 +450,7 @@ export const dauntlessClasses = [
   },
 ];
 
-export const pricingOptions = [
+export const pricingOptions: PricingOption[] = [
   {
     title: "1 hour Each Week",
     cost: "$85",
