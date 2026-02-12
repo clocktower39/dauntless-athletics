@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { MouseEvent } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { useLocation } from "react-router";
 import {
@@ -33,6 +34,16 @@ import { holidayScheduleEvents } from "./ClassSchedule";
 import useWindowWidth from "../../Hooks/WindowWidth";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 import dayjs from "dayjs";
+
+type HolidayEvent = {
+  Id: number;
+  StartTime: Date;
+  EndTime: Date;
+  description?: string;
+};
+
+type NavSubItem = { name: string; link: string; textColor?: string };
+type NavItem = { name: string; link: string; textColor?: string; submenu?: NavSubItem[] };
 
 const classes = {
   TopDivider: {
@@ -79,10 +90,10 @@ const classes = {
 export default function WebsiteNavbar() {
   const wide = useWindowWidth(850);
   const [menuOpen, setMenuOpen] = useState(false);
-  const toolbarRef = useRef(null);
+  const toolbarRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
-  const getNextHoliday = (events) => {
+  const getNextHoliday = (events: HolidayEvent[]) => {
     const today = dayjs();
     const upcoming = events.filter((e) => dayjs(e.EndTime).isAfter(today, "day"));
 
@@ -98,22 +109,25 @@ export default function WebsiteNavbar() {
     ? dayjs(nextHoliday.StartTime).diff(today, "day")
     : Infinity;
 
-  const hasAnnouncement = nextHoliday && daysUntilHoliday <= 10;
-  const announcementMessage = nextHoliday && nextHoliday.description;
+  const hasAnnouncement = !!nextHoliday && daysUntilHoliday <= 10;
+  const announcementMessage = nextHoliday?.description;
 
   const announcementKey = nextHoliday
-    ? `announcementDismissed_${btoa(announcementMessage)}`
+    ? `announcementDismissed_${nextHoliday.Id}`
     : null;
   const [dismissed, setDismissed] = useState(() => {
+    if (!announcementKey) return false;
     return localStorage.getItem(announcementKey) === "true";
   });
 
   const handleDismiss = () => {
+    if (!announcementKey) return;
     localStorage.setItem(announcementKey, "true");
     setDismissed(true);
   };
 
   const handleRestoreAnnouncement = () => {
+    if (!announcementKey) return;
     localStorage.removeItem(announcementKey);
     setDismissed(false);
   };
@@ -144,7 +158,7 @@ export default function WebsiteNavbar() {
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  const isActive = (path) => {
+  const isActive = (path: string) => {
     if (!path) return false;
 
     // Exact match for the home path without a hash
@@ -165,7 +179,7 @@ export default function WebsiteNavbar() {
     return false;
   };
 
-  const navItems = [
+  const navItems: NavItem[] = [
     {
       name: "Home",
       link: "/#",
@@ -437,26 +451,40 @@ export default function WebsiteNavbar() {
   );
 }
 
-const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed, }) => {
+type SubMenuItemProps = {
+  item: NavItem & { submenu: NavSubItem[] };
+  isActive: (path: string) => boolean;
+  isTouchDevice: boolean;
+  hasAnnouncement: boolean;
+  dismissed: boolean;
+};
+
+const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed }: SubMenuItemProps) => {
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
-  const closeTimer = useRef(null);
+  const anchorRef = useRef<HTMLButtonElement | null>(null);
+  const closeTimer = useRef<number | null>(null);
 
   const handleOpen = () => {
-    clearTimeout(closeTimer.current);
+    if (closeTimer.current !== null) {
+      clearTimeout(closeTimer.current);
+    }
     setOpen(true);
   };
 
   const handleClose = () => {
     hasOpenedOnceRef.current = false;
-    closeTimer.current = setTimeout(() => setOpen(false), 200);
+    closeTimer.current = window.setTimeout(() => setOpen(false), 200);
   };
 
-  const cancelClose = () => clearTimeout(closeTimer.current);
+  const cancelClose = () => {
+    if (closeTimer.current !== null) {
+      clearTimeout(closeTimer.current);
+    }
+  };
 
   const hasOpenedOnceRef = useRef(false);
 
-  const handleClick = (e) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     if (isTouchDevice) {
       if (!hasOpenedOnceRef.current) {
         e.preventDefault();
