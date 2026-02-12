@@ -73,7 +73,7 @@ export default function Home() {
     // eslint-disable-next-line
   }, []);
 
-  const classIconMap = {
+  const classIconMap: Record<string, React.ReactNode> = {
     Tumbling: <SportsGymnasticsOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
     "Tumbling Camp": <EmojiEventsOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
     "Strength, Conditioning & Flexibility": (
@@ -249,7 +249,7 @@ export default function Home() {
                 }}
               >
                 9 Years{" "}
-                <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
+                <Typography variant="inherit" component="span"  sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                   Going Strong
                 </Typography>
               </Typography>
@@ -316,11 +316,9 @@ export default function Home() {
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3331.796753358821!2d-111.80131568449212!3d33.376371860489485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x872ba8fa94329e07%3A0xf92b7042f9fabc0d!2sDauntless%20Athletics!5e0!3m2!1sen!2sus!4v1607308532613!5m2!1sen!2sus"
                     width="100%"
                     height="450"
-                    frameBorder="0"
                     style={{ border: 0, borderRadius: "16px", boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
-                    allowFullScreen=""
+                    allowFullScreen={false}
                     aria-hidden="false"
-                    tabIndex="0"
                   ></iframe>
                 </Grid>
               </Grid>
@@ -336,7 +334,7 @@ export default function Home() {
                     sx={{ textTransform: "uppercase" }}
                   >
                     Upcoming{" "}
-                    <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
+                    <Typography variant="inherit" component="span"  sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                       Camps
                     </Typography>
                   </Typography>
@@ -363,7 +361,7 @@ export default function Home() {
                 </Grid>
                 <Grid container size={12} justifyContent="center" spacing={{ xs: 3, md: 4 }}>
                   {camps.map((camp, index) => (
-                    <CampComponent key={`${camp.title}-${index}`} camp={camp} index={index} />
+                    <CampComponent key={`${camp.Subject}-${index}`} camp={camp} index={index} />
                   ))}
                 </Grid>
               </Grid>
@@ -380,7 +378,7 @@ export default function Home() {
                       }}
                     >
                       Our{" "}
-                      <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
+                      <Typography variant="inherit" component="span"  sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                         Classes
                       </Typography>
                     </Typography>
@@ -470,7 +468,7 @@ export default function Home() {
                     sx={{ textTransform: "uppercase" }}
                   >
                     Why{" "}
-                    <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
+                    <Typography variant="inherit" component="span"  sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                       Choose Us
                     </Typography>
                   </Typography>
@@ -492,7 +490,7 @@ export default function Home() {
                   </Typography>
                   <Typography variant="h4" sx={{ ...classes.WhyChooseUs.h4.main }}>
                     Dedicated and Experienced{" "}
-                    <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
+                    <Typography variant="inherit" component="span"  sx={{ ...classes.WhyChooseUs.h4.span }}>
                       Coaches And Staff
                     </Typography>
                   </Typography>
@@ -511,11 +509,11 @@ export default function Home() {
                   </Typography>
                   <Typography variant="h4" sx={{ ...classes.WhyChooseUs.h4.main }}>
                     Our{" "}
-                    <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
+                    <Typography variant="inherit" component="span"  sx={{ ...classes.WhyChooseUs.h4.span }}>
                       Phenomenally{" "}
                     </Typography>
                     Amazing{" "}
-                    <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
+                    <Typography variant="inherit" component="span"  sx={{ ...classes.WhyChooseUs.h4.span }}>
                       Tumbling Programs
                     </Typography>
                   </Typography>
@@ -533,7 +531,7 @@ export default function Home() {
                     03.
                   </Typography>
                   <Typography variant="h4" sx={{ ...classes.WhyChooseUs.h4.main }}>
-                    <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
+                    <Typography variant="inherit" component="span"  sx={{ ...classes.WhyChooseUs.h4.span }}>
                       Stretch & Strength Training Programs!{" "}
                     </Typography>
                     Building a foundation for your skills{" "}
@@ -553,7 +551,7 @@ export default function Home() {
                   </Typography>
                   <Typography variant="h4" sx={{ ...classes.WhyChooseUs.h4.main }}>
                     Amazing Stunt Programs for{" "}
-                    <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
+                    <Typography variant="inherit" component="span"  sx={{ ...classes.WhyChooseUs.h4.span }}>
                       Flyers and Bases{" "}
                     </Typography>
                     taught by ex-college and worlds cheerleader athletes
@@ -573,7 +571,7 @@ export default function Home() {
                   </Typography>
                   <Typography variant="h4" sx={{ ...classes.WhyChooseUs.h4.main }}>
                     High School{" "}
-                    <Typography variant="span" sx={{ ...classes.WhyChooseUs.h4.span }}>
+                    <Typography variant="inherit" component="span"  sx={{ ...classes.WhyChooseUs.h4.span }}>
                       Onsite Tumbling Coaching{" "}
                     </Typography>
                     taught by ex-gymnasts, college and worlds cheerleaders
@@ -592,7 +590,7 @@ export default function Home() {
                       }}
                     >
                       TUITION{" "}
-                      <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
+                      <Typography variant="inherit" component="span"  sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                         RATES
                       </Typography>
                     </Typography>
@@ -677,7 +675,9 @@ export default function Home() {
                         ))}
                       </Box>
                     </Grid>
-                    {otherRates.map((option) => (
+                    {otherRates.map((option) => {
+                      const optionalTextList = option.optionalTextList ?? [];
+                      return (
                       <Grid size={{ xs: 12, md: 4 }}>
                         <Box
                           key={option.title}
@@ -698,12 +698,12 @@ export default function Home() {
                           <Typography sx={{ color: "var(--color-muted)", paddingBottom: "10px" }}>
                             {option.duration}
                           </Typography>
-                          {option.optionalTextList?.length > 0 && (
+                          {optionalTextList.length > 0 && (
                             <Box
                               component="ul"
                               sx={{ margin: 0, paddingLeft: "18px", color: "var(--color-muted)" }}
                             >
-                              {option.optionalTextList.map((text) => (
+                              {optionalTextList.map((text) => (
                                 <li key={text}>{text}</li>
                               ))}
                             </Box>
@@ -725,7 +725,8 @@ export default function Home() {
                           </Button>
                         </Box>
                       </Grid>
-                    ))}
+                      );
+                    })}
                   </Grid>
                 </Grid>
               </Grid>

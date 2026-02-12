@@ -258,7 +258,7 @@ export default function Services() {
               }}
             >
               Our{" "}
-              <Typography variant="span" sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
+              <Typography variant="inherit" component="span"  sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                 Services
               </Typography>
             </Typography>
