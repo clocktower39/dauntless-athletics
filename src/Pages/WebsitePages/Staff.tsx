@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography, Skeleton } from "@mui/material";
 import Footer from "../../Components/Footer";
 
+type Employee = {
+  displayName: string;
+  positionTitle: string;
+  picture: string;
+};
+
+type StaffMemberCardProps = {
+  employee: Employee;
+};
+
 export default function Staff() {
-  const staff = [
+
+  const staff: Employee[] = [
     {
       displayName: "Anthony “DOM” Damiani",
       positionTitle: "Owner | Head Coach",
@@ -142,7 +153,7 @@ export default function Staff() {
     },
   ];
 
-  const StaffMemberCard = ({ employee }) => {
+  const StaffMemberCard = ({ employee }: StaffMemberCardProps) => {
     const [loaded, setLoaded] = useState(false);
 
     return (
@@ -168,7 +179,7 @@ export default function Staff() {
               variant="rectangular"
               height={330}
               width="100%"
-              animation=""
+              animation="pulse"
               sx={{
                 bgcolor: "var(--color-surface-3)",
               }}

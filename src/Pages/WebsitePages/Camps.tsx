@@ -1,4 +1,3 @@
-import React from "react";
 import { camps } from "../../states";
 import WebsiteNavbar from "./WebsiteNavbar";
 import CampComponent from "../../Components/CampComponent";
@@ -120,7 +119,7 @@ export default function Camps() {
           </ul>
           <Grid container justifyContent="center" spacing={{ xs: 1, md: 2 }}>
             {camps.map((camp, index) => (
-              <CampComponent key={`${camp.title}-${index}`} camp={camp} index={index} />
+              <CampComponent key={`${camp.Subject}-${index}`} camp={camp} index={index} />
             ))}
           </Grid>
         </Container>

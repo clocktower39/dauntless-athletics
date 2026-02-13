@@ -1,18 +1,11 @@
-import React from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { HashLink as Link } from "react-router-hash-link";
-import { Button, Box, Container, Divider, Paper, Grid, Typography } from "@mui/material";
+import { Button, Box, Container, Divider, Grid, Typography } from "@mui/material";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
 import {
-  Policy as PolicyIcon,
-  Hub as HubIcon,
-  School as SchoolIcon,
-  Diversity2 as Diversity2Icon,
   MiscellaneousServices as MiscellaneousServicesIcon,
   Fireplace as FireplaceIcon,
-  Class as ClassIcon,
-  Gavel as GavelIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
 } from "@mui/icons-material";
 import ReactPlayer from "../../Components/YouTubeOnlyPlayer";

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import WebsiteNavbar from "./WebsiteNavbar";
-import { Box, Button, Container, Divider, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
 import HolidayClosure from "../../Components/HolidayClosure";
 import Footer from "../../Components/Footer";
 import {
@@ -48,22 +48,47 @@ const classes = {
   },
 };
 
+type ContactFieldKey = "name" | "email" | "phoneNumber"| "subject" | "message";
+
+type ContactField = {
+  label: string;
+  value: string;
+  error: boolean | null;
+  helperText: string | null;
+  type?: string;
+  multiline?: boolean;
+  minRows?: number;
+};
+
+type ContactFormData = Record<ContactFieldKey, ContactField>;
+
+type ContactFormInputProps = {
+  fieldProperty: ContactFieldKey;
+  label: string;
+  value: string;
+  error: boolean | null;
+  helperText: string | null;
+  type?: string;
+  multiline?: boolean;
+  minRows?: number;
+  setContactFormData: React.Dispatch<React.SetStateAction<ContactFormData>>;
+}
+
 const ContactFormInput = ({
   fieldProperty,
   label,
   value,
   error,
   multiline = false,
-  minRows = null,
+  minRows = 1,
   helperText,
   type,
   setContactFormData,
-}) => {
+}: ContactFormInputProps) => {
   return (
     <Grid container size={12} sx={{ ...classes.contactFormTextField }}>
       <TextField
         color="secondary"
-        sx={classes.textField}
         fullWidth
         label={label}
         value={value}
@@ -90,7 +115,7 @@ const ContactFormInput = ({
 };
 
 export default function Contact() {
-  const [contactFormData, setContactFormData] = useState({
+  const [contactFormData, setContactFormData] = useState<ContactFormData>({
     name: {
       label: "Name",
       value: "",
@@ -138,9 +163,9 @@ export default function Contact() {
 
   const [loading, setLoading] = useState(false);
 
-  const fieldProperties = Object.keys(contactFormData);
+  const fieldProperties = Object.keys(contactFormData) as ContactFieldKey[];
 
-  const setError = (fieldProperty, hasError, helperText) => {
+  const setError = (fieldProperty: ContactFieldKey, hasError: boolean, helperText: string | null) => {
     setContactFormData((prev) => ({
       ...prev,
       [fieldProperty]: {
@@ -151,7 +176,7 @@ export default function Contact() {
     }));
   };
 
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
 
@@ -417,7 +442,7 @@ export default function Contact() {
                 style={{ border: 0 }}
                 allowFullScreen
                 aria-hidden="false"
-                tabIndex="0"
+                tabIndex={0}
               ></iframe>
             </Box>
           </Grid>
