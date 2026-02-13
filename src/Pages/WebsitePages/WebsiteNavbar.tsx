@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import type { MouseEvent } from "react";
+import type { ElementType, MouseEvent } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { useLocation } from "react-router";
 import {
@@ -44,6 +44,8 @@ type HolidayEvent = {
 
 type NavSubItem = { name: string; link: string; textColor?: string };
 type NavItem = { name: string; link: string; textColor?: string; submenu?: NavSubItem[] };
+
+const HashLinkComponent = Link as ElementType;
 
 const classes = {
   TopDivider: {
@@ -202,6 +204,9 @@ export default function WebsiteNavbar() {
     },
   ];
 
+  const hasSubmenu = (item: NavItem): item is NavItem & { submenu: NavSubItem[] } =>
+    Array.isArray(item.submenu);
+
   return (
     <AppBar position="sticky" sx={{ zIndex: 1000, backgroundColor: "transparent", boxShadow: "none" }}>
       <Divider sx={classes.TopDivider} />
@@ -249,7 +254,7 @@ export default function WebsiteNavbar() {
           <IconButton
             color="inherit"
             sx={{ ...classes.ToolbarButtonHover }}
-            component={Link}
+            component={HashLinkComponent}
             to={"https://www.facebook.com/dauntlessathletics"}
           >
             <Facebook sx={{ ...classes.ToolbarIcon }} />
@@ -257,7 +262,7 @@ export default function WebsiteNavbar() {
           <IconButton
             color="inherit"
             sx={{ ...classes.ToolbarButtonHover }}
-            component={Link}
+            component={HashLinkComponent}
             to={"https://www.instagram.com/dauntless_athletics"}
           >
             <Instagram sx={{ ...classes.ToolbarIcon }} />
@@ -265,7 +270,7 @@ export default function WebsiteNavbar() {
           <IconButton
             color="inherit"
             sx={{ ...classes.ToolbarButtonHover }}
-            component={Link}
+            component={HashLinkComponent}
             to={"https://www.youtube.com/channel/UCyH9jh0OGP1pV2T7jyfBb2g"}
           >
             <YouTube sx={{ ...classes.ToolbarIcon }} />
@@ -282,7 +287,7 @@ export default function WebsiteNavbar() {
               color: "var(--color-text)",
               ...classes.ToolbarButtonHover,
             }}
-            component={Link}
+            component={HashLinkComponent}
             to={"https://stores.inksoft.com/dauntless_apparel/shop/home"}
           >
             <ShoppingCartIcon sx={{ fontSize: "1.3em" }} /> Merch
@@ -300,7 +305,7 @@ export default function WebsiteNavbar() {
               color: "var(--color-text)",
               ...classes.ToolbarButtonHover,
             }}
-            component={Link}
+            component={HashLinkComponent}
             to={"https://portal.iclasspro.com/dauntlessathletics/create-account-01-verify-email"}
           >
             Create Account
@@ -311,7 +316,7 @@ export default function WebsiteNavbar() {
       <Toolbar ref={toolbarRef} sx={{ ...classes.Toolbar, borderBottom: "1px solid var(--color-border)" }}>
         <Box sx={{ ...classes.ToolbarContent }}>
           <IconButton
-            component={Link}
+            component={HashLinkComponent}
             to={"/#"}
             sx={{ justifyContent: "center", alignItems: "center", display: "flex" }}
           >
@@ -324,7 +329,7 @@ export default function WebsiteNavbar() {
           {wide ? (
             <Stack direction="row" spacing={1} sx={{ marginLeft: "auto" }}>
               {navItems.map((item) => {
-                if (item.submenu) {
+                if (hasSubmenu(item)) {
                   return (
                     <SubMenuItem
                       key={item.name}
@@ -353,7 +358,7 @@ export default function WebsiteNavbar() {
                         backgroundColor: "rgba(215, 38, 56, 0.18)",
                       },
                     }}
-                    component={Link}
+                    component={HashLinkComponent}
                     to={item.link}
                     variant="contained"
                     size="small"
@@ -412,13 +417,13 @@ export default function WebsiteNavbar() {
             <MenuItem
               key={item.name}
               onClick={handleMenuClose}
-              component={Link}
+              component={HashLinkComponent}
               to={item.link}
               sx={{
                 ...classes.MenuItem,
                 color: isActive(item.link) ? "var(--color-text)" : item.textColor || "var(--color-muted)",
                 backgroundColor: isActive(item.link) ? "var(--color-surface-2)" : "inherit",
-                borderLeft: isActive(item.link) && "3px solid var(--color-accent)",
+                borderLeft: isActive(item.link) ? "3px solid var(--color-accent)" : "none",
               }}
             >
               {item.name}
@@ -430,14 +435,14 @@ export default function WebsiteNavbar() {
               <MenuItem
                 key={`${item.name}-${sub.name}`}
                 onClick={handleMenuClose}
-                component={Link}
+                component={HashLinkComponent}
                 to={sub.link}
                 sx={{
                   ...classes.MenuItem,
                   paddingLeft: "32px", // Indent for subitems
                   color: isActive(sub.link) ? "var(--color-text)" : sub.textColor || "var(--color-muted)",
                   backgroundColor: isActive(sub.link) ? "var(--color-surface-2)" : "inherit",
-                  borderLeft: isActive(sub.link) && "3px solid var(--color-accent)",
+                  borderLeft: isActive(sub.link) ? "3px solid var(--color-accent)" : "none",
                 }}
               >
                 {sub.name}
@@ -500,7 +505,7 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
   return (
     <>
       <Button
-        component={Link}
+        component={HashLinkComponent}
         to={item.link}
         onClick={handleClick}
         onMouseEnter={!isTouchDevice ? handleOpen : undefined}
@@ -548,10 +553,10 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
                   {item.submenu.map((sub) => (
                     <MenuItem
                       key={sub.name}
-                      component={Link}
+                      component={HashLinkComponent}
                       to={sub.link}
-                      scroll={(el) => {
-                        const yOffset = (hasAnnouncement && !dismissed) ? -100 : 0; // scroll 100px more (move element down) 
+                      
+                        scroll={(el: HTMLElement) => {const yOffset = (hasAnnouncement && !dismissed) ? -100 : 0; // scroll 100px more (move element down) 
                         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
                         window.scrollTo({ top: y, behavior: "smooth" });
                       }}
@@ -560,7 +565,7 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
                         color: isActive(sub.link) ? "var(--color-text)" : sub.textColor || "var(--color-muted)",
                         backgroundColor: isActive(sub.link) ? "var(--color-surface-2)" : "inherit",
                         borderBottom: "1px solid var(--color-border)",
-                        borderLeft: isActive(sub.link) && "3px solid var(--color-accent)",
+                        borderLeft: isActive(sub.link) ? "3px solid var(--color-accent)" : "none",
                         padding: "12.5px",
                       }}
                     >
