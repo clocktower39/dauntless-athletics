@@ -22,6 +22,39 @@ import { ratingOptions, surveyQuestions } from "./surveyConfig";
 import { apiRequest } from "./surveyApi";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
+type SurveyQuestion = {
+  key: string;
+  text: string;
+};
+
+type RatingOption = {
+  value: number;
+  label: string;
+};
+
+type AnswerValue = number | "";
+type Answers = Record<string, AnswerValue>;
+
+type SurveyStatus = {
+  error: string;
+  used: boolean;
+  schoolName: string;
+};
+
+type SubmitState = {
+  submitting: boolean;
+  error: string;
+  success: boolean;
+};
+
+type SurveyStatusResponse = {
+  used: boolean;
+  schoolName?: string;
+};
+
+const questions = surveyQuestions as SurveyQuestion[];
+const ratings = ratingOptions as RatingOption[];
+
 const classes = {
   page: {
     minHeight: "100vh",
@@ -103,37 +136,50 @@ const classes = {
   },
 };
 
-const buildInitialAnswers = () => {
-  return surveyQuestions.reduce((acc, question) => {
+const buildInitialAnswers = (items: SurveyQuestion[]): Answers => {
+  return items.reduce<Answers>((acc, question) => {
     acc[question.key] = "";
     return acc;
   }, {});
 };
 
+const getErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : "Request failed.";
+
 export default function CoachSurvey() {
-  const { token } = useParams();
+  const { token } = useParams<{ token: string }>();
+  const tokenParam = token ?? "";
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState({ error: "", used: false, schoolName: "" });
-  const [answers, setAnswers] = useState(buildInitialAnswers);
+  const [status, setStatus] = useState<SurveyStatus>({ error: "", used: false, schoolName: "" });
+  const [answers, setAnswers] = useState<Answers>(() => buildInitialAnswers(questions));
   const [comment, setComment] = useState("");
-  const [submitState, setSubmitState] = useState({ submitting: false, error: "", success: false });
+  const [submitState, setSubmitState] = useState<SubmitState>({
+    submitting: false,
+    error: "",
+    success: false,
+  });
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const missingAnswers = useMemo(() => {
-    return surveyQuestions.filter((question) => !answers[question.key]);
+    return questions.filter((question) => answers[question.key] === "");
   }, [answers]);
 
   useEffect(() => {
     let active = true;
     const fetchStatus = async () => {
+      if (!tokenParam) {
+        setStatus({ error: "Invalid survey link.", used: false, schoolName: "" });
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
-        const result = await apiRequest(`/api/survey/${token}`);
+        const result = (await apiRequest(`/api/survey/${tokenParam}`)) as SurveyStatusResponse;
         if (!active) return;
         setStatus({ error: "", used: result.used, schoolName: result.schoolName || "" });
       } catch (error) {
         if (!active) return;
-        setStatus({ error: error.message, used: false, schoolName: "" });
+        setStatus({ error: getErrorMessage(error), used: false, schoolName: "" });
       } finally {
         if (active) setLoading(false);
       }
@@ -143,13 +189,13 @@ export default function CoachSurvey() {
     return () => {
       active = false;
     };
-  }, [token]);
+  }, [tokenParam]);
 
-  const handleAnswerChange = (key, value) => {
+  const handleAnswerChange = (key: string, value: number) => {
     setAnswers((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (missingAnswers.length > 0) {
       setSubmitState({ submitting: false, error: "Please answer every question.", success: false });
@@ -164,7 +210,7 @@ export default function CoachSurvey() {
     setConfirmOpen(false);
 
     try {
-      await apiRequest(`/api/survey/${token}`, {
+      await apiRequest(`/api/survey/${tokenParam}`, {
         method: "POST",
         body: JSON.stringify({
           ...answers,
@@ -174,7 +220,7 @@ export default function CoachSurvey() {
 
       setSubmitState({ submitting: false, error: "", success: true });
     } catch (error) {
-      setSubmitState({ submitting: false, error: error.message, success: false });
+      setSubmitState({ submitting: false, error: getErrorMessage(error), success: false });
     }
   };
 
@@ -213,7 +259,7 @@ export default function CoachSurvey() {
 
           {!loading && !status.error && !status.used && !submitState.success && (
             <Box component="form" onSubmit={handleSubmit} sx={{ display: "grid", gap: "20px" }}>
-              {surveyQuestions.map((question, index) => (
+              {questions.map((question, index) => (
                 <Box key={question.key} sx={classes.questionCard}>
                   <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
                     {index + 1}. {question.text}
@@ -223,7 +269,7 @@ export default function CoachSurvey() {
                     value={answers[question.key]}
                     onChange={(event) => handleAnswerChange(question.key, Number(event.target.value))}
                   >
-                    {ratingOptions.map((option) => (
+                    {ratings.map((option) => (
                       <FormControlLabel
                         key={option.value}
                         value={option.value}
