@@ -16,6 +16,41 @@ import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athle
 
 const TOKEN_KEY = "dauntlessSurveyOwnerToken";
 
+type QuestionKey = "q1" | "q2" | "q3" | "q4" | "q5";
+
+type SurveyQuestion = {
+  key: QuestionKey;
+  text: string;
+};
+
+type RatingOption = {
+  value: number;
+  label: string;
+};
+
+type RatingValue = 1 | 2 | 3 | 4 | 5;
+type RatingDistribution = Record<RatingValue, number>;
+
+type SummaryResponse = {
+  totalResponses: number;
+  totalInvites: number;
+  usedInvites: number;
+  responseRate: number;
+  averages: Record<QuestionKey, number | null>;
+  distribution: Record<QuestionKey, RatingDistribution>;
+  comments: Array<{ comment: string; created_at: string }>;
+};
+
+type LoginState = {
+  username: string;
+  password: string;
+};
+
+type AuthResponse = {
+  role: string;
+  token: string;
+};
+
 const classes = {
   page: {
     minHeight: "100vh",
@@ -80,15 +115,19 @@ const classes = {
   },
 };
 
-const ratingLabels = ratingOptions.map((option) => option.value).sort((a, b) => b - a);
+const questions = surveyQuestions as SurveyQuestion[];
+const ratings = ratingOptions as RatingOption[];
+const ratingLabels = ratings
+  .map((option) => option.value)
+  .sort((a, b) => b - a) as RatingValue[];
 
 export default function SurveyOwner() {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
-  const [login, setLogin] = useState({ username: "", password: "" });
+  const [login, setLogin] = useState<LoginState>({ username: "", password: "" });
   const [loginError, setLoginError] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
 
-  const [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState<SummaryResponse | null>(null);
   const [dataError, setDataError] = useState("");
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
@@ -99,33 +138,33 @@ export default function SurveyOwner() {
     const fetchSummary = async () => {
       try {
         setDataError("");
-        const result = await apiRequest("/api/owner/summary", { headers: authHeaders });
+        const result = (await apiRequest("/api/owner/summary", { headers: authHeaders })) as SummaryResponse;
         setSummary(result);
-      } catch (error) {
-        setDataError(error.message);
+      } catch (error: unknown) {
+        setDataError(error instanceof Error ? error.message : "Request Failed");
       }
     };
 
     fetchSummary();
   }, [token, authHeaders]);
 
-  const handleLogin = async (event) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAuthLoading(true);
     setLoginError("");
     try {
-      const result = await apiRequest("/api/auth/login", {
+      const result = (await apiRequest("/api/auth/login", {
         method: "POST",
         body: JSON.stringify(login),
-      });
+      })) as AuthResponse;
       if (result.role !== "owner") {
         throw new Error("This account does not have owner access.");
       }
       localStorage.setItem(TOKEN_KEY, result.token);
       setToken(result.token);
       setLogin({ username: "", password: "" });
-    } catch (error) {
-      setLoginError(error.message);
+    } catch (error: unknown) {
+      setLoginError(error instanceof Error ? error.message : "Request Failed");
     } finally {
       setAuthLoading(false);
     }
@@ -136,7 +175,7 @@ export default function SurveyOwner() {
     setToken("");
   };
 
-  const renderDistribution = (distribution) => {
+  const renderDistribution = (distribution?: RatingDistribution) => {
     return (
       <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
         {ratingLabels.map((rating) => (
@@ -223,7 +262,7 @@ export default function SurveyOwner() {
                       Question Averages
                     </Typography>
                     <Box sx={{ display: "grid", gap: "16px" }}>
-                      {surveyQuestions.map((question) => (
+                      {questions.map((question) => (
                         <Box key={question.key} sx={classes.statCard}>
                           <Typography sx={{ color: "var(--color-text)" }}>{question.text}</Typography>
                           <Typography sx={{ color: "var(--color-accent)", fontWeight: 600 }}>
