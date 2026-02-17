@@ -6,21 +6,21 @@ import {
   Button,
   Container,
   Divider,
+  MenuItem,
   Paper,
   TextField,
   Typography,
 } from "@mui/material";
 import { apiRequest, authHeader } from "./surveyApi";
-import { ratingOptions, surveyQuestions } from "./surveyConfig";
+import { ratingOptions } from "./surveyConfig";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
 const TOKEN_KEY = "dauntlessSurveyOwnerToken";
 
-type QuestionKey = "q1" | "q2" | "q3" | "q4" | "q5";
-
 type SurveyQuestion = {
-  key: QuestionKey;
+  id: number;
   text: string;
+  order: number;
 };
 
 type RatingOption = {
@@ -32,12 +32,21 @@ type RatingValue = 1 | 2 | 3 | 4 | 5;
 type RatingDistribution = Record<RatingValue, number>;
 
 type SummaryResponse = {
+  survey: {
+    id: number;
+    title: string;
+    description?: string;
+    commentPrompt?: string;
+    isActive: boolean;
+    createdAt: string;
+  } | null;
+  questions: SurveyQuestion[];
   totalResponses: number;
   totalInvites: number;
   usedInvites: number;
   responseRate: number;
-  averages: Record<QuestionKey, number | null>;
-  distribution: Record<QuestionKey, RatingDistribution>;
+  averages: Record<string, number | null>;
+  distribution: Record<string, RatingDistribution>;
   comments: Array<{ comment: string; created_at: string }>;
 };
 
@@ -115,7 +124,6 @@ const classes = {
   },
 };
 
-const questions = surveyQuestions as SurveyQuestion[];
 const ratings = ratingOptions as RatingOption[];
 const ratingLabels = ratings
   .map((option) => option.value)
@@ -127,6 +135,14 @@ export default function SurveyOwner() {
   const [loginError, setLoginError] = useState("");
   const [authLoading, setAuthLoading] = useState(false);
 
+  const [surveys, setSurveys] = useState<
+    Array<{
+      id: number;
+      title: string;
+      is_active?: boolean;
+    }>
+  >([]);
+  const [selectedSurveyId, setSelectedSurveyId] = useState("");
   const [summary, setSummary] = useState<SummaryResponse | null>(null);
   const [dataError, setDataError] = useState("");
 
@@ -135,10 +151,34 @@ export default function SurveyOwner() {
   useEffect(() => {
     if (!token) return;
 
+    const fetchSurveys = async () => {
+      try {
+        setDataError("");
+        const result = await apiRequest("/api/owner/surveys", { headers: authHeaders });
+        const list = result?.surveys || [];
+        setSurveys(list);
+        if (!selectedSurveyId && list.length > 0) {
+          const activeSurvey = list.find((survey) => survey.is_active);
+          setSelectedSurveyId(String((activeSurvey || list[0]).id));
+        }
+      } catch (error: unknown) {
+        setDataError(error instanceof Error ? error.message : "Request Failed");
+      }
+    };
+
+    fetchSurveys();
+  }, [token, authHeaders]);
+
+  useEffect(() => {
+    if (!token) return;
+
     const fetchSummary = async () => {
       try {
         setDataError("");
-        const result = (await apiRequest("/api/owner/summary", { headers: authHeaders })) as SummaryResponse;
+        const query = selectedSurveyId ? `?survey_id=${selectedSurveyId}` : "";
+        const result = (await apiRequest(`/api/owner/summary${query}`, {
+          headers: authHeaders,
+        })) as SummaryResponse;
         setSummary(result);
       } catch (error: unknown) {
         setDataError(error instanceof Error ? error.message : "Request Failed");
@@ -146,7 +186,7 @@ export default function SurveyOwner() {
     };
 
     fetchSummary();
-  }, [token, authHeaders]);
+  }, [token, authHeaders, selectedSurveyId]);
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -240,11 +280,36 @@ export default function SurveyOwner() {
               </Box>
               {dataError && <Alert severity="error">{dataError}</Alert>}
 
-              {summary && (
+              {surveys.length > 0 && (
+                <Box sx={classes.section}>
+                  <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Survey</Typography>
+                  <TextField
+                    select
+                    label="Choose a survey"
+                    value={selectedSurveyId}
+                    onChange={(event) => setSelectedSurveyId(event.target.value)}
+                    sx={classes.input}
+                  >
+                    {surveys.map((survey) => (
+                      <MenuItem key={survey.id} value={survey.id}>
+                        {survey.title}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Box>
+              )}
+
+              {summary && !summary.survey && (
+                <Typography sx={{ color: "var(--color-muted)" }}>
+                  No surveys available yet. Create one in the admin dashboard.
+                </Typography>
+              )}
+
+              {summary && summary.survey && (
                 <>
                   <Box sx={classes.section}>
                     <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
-                      Overall Responses
+                      {summary.survey?.title ? `${summary.survey.title} Overview` : "Overall Responses"}
                     </Typography>
                     <Typography sx={{ fontSize: "1.4rem", color: "var(--color-text)" }}>
                       {summary.totalResponses}
@@ -262,13 +327,13 @@ export default function SurveyOwner() {
                       Question Averages
                     </Typography>
                     <Box sx={{ display: "grid", gap: "16px" }}>
-                      {questions.map((question) => (
-                        <Box key={question.key} sx={classes.statCard}>
+                      {(summary.questions || []).map((question) => (
+                        <Box key={question.id} sx={classes.statCard}>
                           <Typography sx={{ color: "var(--color-text)" }}>{question.text}</Typography>
                           <Typography sx={{ color: "var(--color-accent)", fontWeight: 600 }}>
-                            Average: {summary.averages?.[question.key] ?? "n/a"}
+                            Average: {summary.averages?.[String(question.id)] ?? "n/a"}
                           </Typography>
-                          {renderDistribution(summary.distribution?.[question.key])}
+                          {renderDistribution(summary.distribution?.[String(question.id)])}
                         </Box>
                       ))}
                     </Box>

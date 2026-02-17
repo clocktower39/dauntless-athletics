@@ -12,6 +12,7 @@ import NotFoundPage from "./Pages/NotFoundPage";
 import CoachSurvey from "./Pages/Survey/CoachSurvey";
 import SurveyAdmin from "./Pages/Survey/SurveyAdmin";
 import SurveyOwner from "./Pages/Survey/SurveyOwner";
+import ContactsAdmin from "./Pages/Contacts/ContactsAdmin";
 import "./App.css";
 
 function App() {
@@ -61,8 +62,9 @@ function App() {
           <> {/* App */}</>
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
-        <Route path="/survey-admin" element={<SurveyAdmin />} />
+        <Route path="/survey-admin/*" element={<SurveyAdmin />} />
         <Route path="/survey-owner" element={<SurveyOwner />} />
+        <Route path="/contacts-admin" element={<ContactsAdmin />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

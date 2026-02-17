@@ -6,114 +6,131 @@ const router = express.Router();
 
 router.use(requireRole("owner"));
 
+router.get("/surveys", async (_req, res) => {
+  const result = await query(
+    "SELECT id, title, description, comment_prompt, is_active, created_at FROM surveys ORDER BY created_at DESC"
+  );
+  return res.json({ surveys: result.rows });
+});
+
 router.get("/summary", async (_req, res) => {
+  const surveyIdParam = _req.query.survey_id ? Number(_req.query.survey_id) : null;
+  let surveyId = Number.isInteger(surveyIdParam) ? surveyIdParam : null;
+
+  if (!surveyId) {
+    const latestSurvey = await query(
+      "SELECT id FROM surveys WHERE is_active = TRUE ORDER BY created_at DESC LIMIT 1"
+    );
+    if (latestSurvey.rowCount === 0) {
+      const anySurvey = await query("SELECT id FROM surveys ORDER BY created_at DESC LIMIT 1");
+      if (anySurvey.rowCount === 0) {
+        return res.json({
+          survey: null,
+          questions: [],
+          totalResponses: 0,
+          totalInvites: 0,
+          usedInvites: 0,
+          responseRate: 0,
+          averages: {},
+          distribution: {},
+          comments: [],
+        });
+      }
+      surveyId = anySurvey.rows[0].id;
+    } else {
+      surveyId = latestSurvey.rows[0].id;
+    }
+  }
+
+  const surveyResult = await query(
+    "SELECT id, title, description, comment_prompt, is_active, created_at FROM surveys WHERE id = $1",
+    [surveyId]
+  );
+
+  if (surveyResult.rowCount === 0) {
+    return res.status(404).json({ error: "Survey not found." });
+  }
+
+  const questionsResult = await query(
+    "SELECT id, prompt, sort_order FROM survey_questions WHERE survey_id = $1 ORDER BY sort_order ASC",
+    [surveyId]
+  );
+
   const inviteStatsResult = await query(
     `SELECT COUNT(*)::int AS total_invites,
             SUM(CASE WHEN used_at IS NOT NULL THEN 1 ELSE 0 END)::int AS used_invites
-     FROM invites`
+     FROM invites WHERE survey_id = $1`,
+    [surveyId]
   );
 
-  const summaryResult = await query(
-    `SELECT COUNT(*)::int AS total_responses,
-            AVG(q1)::numeric(4,2) AS avg_q1,
-            AVG(q2)::numeric(4,2) AS avg_q2,
-            AVG(q3)::numeric(4,2) AS avg_q3,
-            AVG(q4)::numeric(4,2) AS avg_q4,
-            AVG(q5)::numeric(4,2) AS avg_q5
-     FROM responses`
+  const responsesResult = await query(
+    "SELECT answers, comment, created_at FROM responses WHERE survey_id = $1 ORDER BY created_at DESC",
+    [surveyId]
   );
 
-  const distributionResult = await query(
-    `SELECT
-      SUM(CASE WHEN q1 = 5 THEN 1 ELSE 0 END)::int AS q1_5,
-      SUM(CASE WHEN q1 = 4 THEN 1 ELSE 0 END)::int AS q1_4,
-      SUM(CASE WHEN q1 = 3 THEN 1 ELSE 0 END)::int AS q1_3,
-      SUM(CASE WHEN q1 = 2 THEN 1 ELSE 0 END)::int AS q1_2,
-      SUM(CASE WHEN q1 = 1 THEN 1 ELSE 0 END)::int AS q1_1,
-      SUM(CASE WHEN q2 = 5 THEN 1 ELSE 0 END)::int AS q2_5,
-      SUM(CASE WHEN q2 = 4 THEN 1 ELSE 0 END)::int AS q2_4,
-      SUM(CASE WHEN q2 = 3 THEN 1 ELSE 0 END)::int AS q2_3,
-      SUM(CASE WHEN q2 = 2 THEN 1 ELSE 0 END)::int AS q2_2,
-      SUM(CASE WHEN q2 = 1 THEN 1 ELSE 0 END)::int AS q2_1,
-      SUM(CASE WHEN q3 = 5 THEN 1 ELSE 0 END)::int AS q3_5,
-      SUM(CASE WHEN q3 = 4 THEN 1 ELSE 0 END)::int AS q3_4,
-      SUM(CASE WHEN q3 = 3 THEN 1 ELSE 0 END)::int AS q3_3,
-      SUM(CASE WHEN q3 = 2 THEN 1 ELSE 0 END)::int AS q3_2,
-      SUM(CASE WHEN q3 = 1 THEN 1 ELSE 0 END)::int AS q3_1,
-      SUM(CASE WHEN q4 = 5 THEN 1 ELSE 0 END)::int AS q4_5,
-      SUM(CASE WHEN q4 = 4 THEN 1 ELSE 0 END)::int AS q4_4,
-      SUM(CASE WHEN q4 = 3 THEN 1 ELSE 0 END)::int AS q4_3,
-      SUM(CASE WHEN q4 = 2 THEN 1 ELSE 0 END)::int AS q4_2,
-      SUM(CASE WHEN q4 = 1 THEN 1 ELSE 0 END)::int AS q4_1,
-      SUM(CASE WHEN q5 = 5 THEN 1 ELSE 0 END)::int AS q5_5,
-      SUM(CASE WHEN q5 = 4 THEN 1 ELSE 0 END)::int AS q5_4,
-      SUM(CASE WHEN q5 = 3 THEN 1 ELSE 0 END)::int AS q5_3,
-      SUM(CASE WHEN q5 = 2 THEN 1 ELSE 0 END)::int AS q5_2,
-      SUM(CASE WHEN q5 = 1 THEN 1 ELSE 0 END)::int AS q5_1
-     FROM responses`
-  );
+  const questions = questionsResult.rows;
+  const totals = {};
+  questions.forEach((question) => {
+    totals[question.id] = {
+      sum: 0,
+      count: 0,
+      distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+    };
+  });
 
-  const commentsResult = await query(
-    "SELECT comment, created_at FROM responses WHERE comment IS NOT NULL AND comment <> '' ORDER BY created_at DESC"
-  );
+  const comments = [];
 
-  const summary = summaryResult.rows[0] || {};
+  responsesResult.rows.forEach((row) => {
+    const answers = row.answers || {};
+    questions.forEach((question) => {
+      const raw = answers?.[question.id] ?? answers?.[String(question.id)];
+      const value = Number(raw);
+      if (Number.isInteger(value) && value >= 1 && value <= 5) {
+        totals[question.id].sum += value;
+        totals[question.id].count += 1;
+        totals[question.id].distribution[value] += 1;
+      }
+    });
+
+    if (row.comment) {
+      comments.push({ comment: row.comment, created_at: row.created_at });
+    }
+  });
+
+  const averages = {};
+  const distribution = {};
+  questions.forEach((question) => {
+    const stats = totals[question.id];
+    averages[question.id] = stats.count > 0 ? Number((stats.sum / stats.count).toFixed(2)) : null;
+    distribution[question.id] = stats.distribution;
+  });
+
   const inviteStats = inviteStatsResult.rows[0] || {};
-  const distribution = distributionResult.rows[0] || {};
   const totalInvites = inviteStats.total_invites || 0;
   const usedInvites = inviteStats.used_invites || 0;
   const responseRate = totalInvites > 0 ? Number(((usedInvites / totalInvites) * 100).toFixed(1)) : 0;
 
   return res.json({
-    totalResponses: summary.total_responses || 0,
+    survey: {
+      id: surveyResult.rows[0].id,
+      title: surveyResult.rows[0].title,
+      description: surveyResult.rows[0].description,
+      commentPrompt: surveyResult.rows[0].comment_prompt,
+      isActive: surveyResult.rows[0].is_active,
+      createdAt: surveyResult.rows[0].created_at,
+    },
+    questions: questions.map((question) => ({
+      id: question.id,
+      text: question.prompt,
+      order: question.sort_order,
+    })),
+    totalResponses: responsesResult.rowCount || 0,
     totalInvites,
     usedInvites,
     responseRate,
-    averages: {
-      q1: summary.avg_q1 ? Number(summary.avg_q1) : null,
-      q2: summary.avg_q2 ? Number(summary.avg_q2) : null,
-      q3: summary.avg_q3 ? Number(summary.avg_q3) : null,
-      q4: summary.avg_q4 ? Number(summary.avg_q4) : null,
-      q5: summary.avg_q5 ? Number(summary.avg_q5) : null,
-    },
-    distribution: {
-      q1: {
-        5: distribution.q1_5 || 0,
-        4: distribution.q1_4 || 0,
-        3: distribution.q1_3 || 0,
-        2: distribution.q1_2 || 0,
-        1: distribution.q1_1 || 0,
-      },
-      q2: {
-        5: distribution.q2_5 || 0,
-        4: distribution.q2_4 || 0,
-        3: distribution.q2_3 || 0,
-        2: distribution.q2_2 || 0,
-        1: distribution.q2_1 || 0,
-      },
-      q3: {
-        5: distribution.q3_5 || 0,
-        4: distribution.q3_4 || 0,
-        3: distribution.q3_3 || 0,
-        2: distribution.q3_2 || 0,
-        1: distribution.q3_1 || 0,
-      },
-      q4: {
-        5: distribution.q4_5 || 0,
-        4: distribution.q4_4 || 0,
-        3: distribution.q4_3 || 0,
-        2: distribution.q4_2 || 0,
-        1: distribution.q4_1 || 0,
-      },
-      q5: {
-        5: distribution.q5_5 || 0,
-        4: distribution.q5_4 || 0,
-        3: distribution.q5_3 || 0,
-        2: distribution.q5_2 || 0,
-        1: distribution.q5_1 || 0,
-      },
-    },
-    comments: commentsResult.rows,
+    averages,
+    distribution,
+    comments,
   });
 });
 

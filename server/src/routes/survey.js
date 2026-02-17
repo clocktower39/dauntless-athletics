@@ -4,32 +4,54 @@ import { getClient, query } from "../db.js";
 
 const router = express.Router();
 
-const ratingKeys = ["q1", "q2", "q3", "q4", "q5"];
-
 const hashToken = (token) =>
   crypto.createHash("sha256").update(token).digest("hex");
 
-const parseRatings = (payload) => {
-  const result = {};
-  const errors = [];
+const toRatingValue = (value) => {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1 || parsed > 5) {
+    return null;
+  }
+  return parsed;
+};
 
-  ratingKeys.forEach((key) => {
-    const value = Number(payload?.[key]);
-    if (!Number.isInteger(value) || value < 1 || value > 5) {
-      errors.push(`${key} must be an integer from 1 to 5.`);
-    } else {
-      result[key] = value;
-    }
-  });
+const toAnswersMap = (payload) => {
+  const input = payload?.answers;
+  if (!input) return {};
 
-  return { ratings: result, errors };
+  if (Array.isArray(input)) {
+    return input.reduce((acc, item) => {
+      const questionId = Number(item?.question_id);
+      if (Number.isInteger(questionId)) {
+        acc[questionId] = item?.value;
+      }
+      return acc;
+    }, {});
+  }
+
+  if (typeof input === "object") {
+    return Object.entries(input).reduce((acc, [key, value]) => {
+      const questionId = Number(key);
+      if (Number.isInteger(questionId)) {
+        acc[questionId] = value;
+      }
+      return acc;
+    }, {});
+  }
+
+  return {};
 };
 
 router.get("/:token", async (req, res) => {
   const tokenHash = hashToken(req.params.token);
 
   const result = await query(
-    "SELECT invites.used_at, schools.name AS school_name FROM invites JOIN schools ON schools.id = invites.school_id WHERE invites.token_hash = $1",
+    `SELECT invites.used_at, invites.survey_id, schools.name AS school_name,
+            surveys.title, surveys.description, surveys.comment_prompt
+     FROM invites
+     JOIN schools ON schools.id = invites.school_id
+     JOIN surveys ON surveys.id = invites.survey_id
+     WHERE invites.token_hash = $1`,
     [tokenHash]
   );
 
@@ -38,18 +60,29 @@ router.get("/:token", async (req, res) => {
   }
 
   const invite = result.rows[0];
+  const questionsResult = await query(
+    "SELECT id, prompt, sort_order FROM survey_questions WHERE survey_id = $1 ORDER BY sort_order ASC",
+    [invite.survey_id]
+  );
+
   return res.json({
     schoolName: invite.school_name,
     used: Boolean(invite.used_at),
+    survey: {
+      id: invite.survey_id,
+      title: invite.title,
+      description: invite.description,
+      commentPrompt: invite.comment_prompt,
+      questions: questionsResult.rows.map((row) => ({
+        id: row.id,
+        text: row.prompt,
+        order: row.sort_order,
+      })),
+    },
   });
 });
 
 router.post("/:token", async (req, res) => {
-  const { ratings, errors } = parseRatings(req.body);
-  if (errors.length > 0) {
-    return res.status(400).json({ error: "Invalid ratings.", details: errors });
-  }
-
   const comment = typeof req.body?.comment === "string" ? req.body.comment.trim() : "";
   if (comment.length > 2000) {
     return res.status(400).json({ error: "Comment is too long." });
@@ -77,16 +110,40 @@ router.post("/:token", async (req, res) => {
       return res.status(409).json({ error: "This link has already been used." });
     }
 
+    const questionsResult = await client.query(
+      "SELECT id FROM survey_questions WHERE survey_id = $1 ORDER BY sort_order ASC",
+      [invite.survey_id]
+    );
+    const questions = questionsResult.rows;
+    if (questions.length === 0) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Survey has no questions." });
+    }
+
+    const answersMap = toAnswersMap(req.body);
+    const answers = {};
+    const errors = [];
+    questions.forEach((question) => {
+      const value = toRatingValue(answersMap[question.id]);
+      if (value === null) {
+        errors.push(`Question ${question.id} must be an integer from 1 to 5.`);
+      } else {
+        answers[String(question.id)] = value;
+      }
+    });
+
+    if (errors.length > 0) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Invalid ratings.", details: errors });
+    }
+
     await client.query(
-      "INSERT INTO responses (school_id, invite_id, q1, q2, q3, q4, q5, comment) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+      "INSERT INTO responses (survey_id, school_id, invite_id, answers, comment) VALUES ($1, $2, $3, $4, $5)",
       [
+        invite.survey_id,
         invite.school_id,
         invite.id,
-        ratings.q1,
-        ratings.q2,
-        ratings.q3,
-        ratings.q4,
-        ratings.q5,
+        answers,
         comment || null,
       ]
     );
