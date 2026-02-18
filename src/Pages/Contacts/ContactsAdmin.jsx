@@ -415,11 +415,11 @@ export default function ContactsAdmin() {
                 <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                   <Button
                     component={Link}
-                    to="/survey-admin"
+                    to="/dashboard/contacts"
                     variant="outlined"
                     sx={{ color: "var(--color-text)" }}
                   >
-                    Surveys
+                    Dashboard
                   </Button>
                   <Button variant="outlined" onClick={handleLogout} sx={{ color: "var(--color-text)" }}>
                     Log out

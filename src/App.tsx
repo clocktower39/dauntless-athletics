@@ -63,6 +63,7 @@ function App() {
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
         <Route path="/survey-admin/*" element={<SurveyAdmin />} />
+        <Route path="/dashboard/*" element={<SurveyAdmin />} />
         <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="/contacts-admin" element={<ContactsAdmin />} />
         <Route path="*" element={<NotFoundPage />} />

@@ -13,6 +13,11 @@ const normalizeBaseUrl = (value) => {
   return value.endsWith("/") ? value.slice(0, -1) : value;
 };
 
+const isValidTime = (value) => {
+  if (typeof value !== "string") return false;
+  return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
+};
+
 const buildSurveyPayload = (survey, questions) => ({
   id: survey.id,
   title: survey.title,
@@ -874,6 +879,154 @@ router.delete("/contacts/:id", async (req, res) => {
   }
 
   return res.json({ contactId, deleted: true });
+});
+
+router.get("/practices", async (req, res) => {
+  const teamId = req.query.team_id ? Number(req.query.team_id) : null;
+  const params = [];
+  const filters = [];
+
+  if (teamId) {
+    params.push(teamId);
+    filters.push(`practices.team_id = $${params.length}`);
+  }
+
+  const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
+
+  const result = await query(
+    `SELECT practices.id, practices.team_id, practices.contact_id, practices.day_of_week,
+            practices.start_time, practices.end_time, practices.location, practices.notes,
+            practices.created_at, teams.name AS team_name, schools.name AS school_name,
+            contacts.name AS contact_name, contacts.role AS contact_role
+     FROM practices
+     JOIN teams ON teams.id = practices.team_id
+     LEFT JOIN schools ON schools.id = teams.school_id
+     LEFT JOIN contacts ON contacts.id = practices.contact_id
+     ${whereClause}
+     ORDER BY practices.day_of_week ASC, practices.start_time ASC`,
+    params
+  );
+
+  return res.json({ practices: result.rows });
+});
+
+router.post("/practices", async (req, res) => {
+  const teamId = Number(req.body?.team_id);
+  const contactId = req.body?.contact_id ? Number(req.body.contact_id) : null;
+  const dayOfWeek = Number(req.body?.day_of_week);
+  const startTime = req.body?.start_time;
+  const endTime = req.body?.end_time;
+  const location = typeof req.body?.location === "string" ? req.body.location.trim() : "";
+  const notes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
+
+  if (!Number.isInteger(teamId) || teamId < 1) {
+    return res.status(400).json({ error: "team_id is required." });
+  }
+  if (!Number.isInteger(dayOfWeek) || dayOfWeek < 0 || dayOfWeek > 6) {
+    return res.status(400).json({ error: "day_of_week must be between 0 and 6." });
+  }
+  if (!isValidTime(startTime) || !isValidTime(endTime)) {
+    return res.status(400).json({ error: "start_time and end_time must be HH:MM." });
+  }
+  if (startTime >= endTime) {
+    return res.status(400).json({ error: "end_time must be after start_time." });
+  }
+
+  const teamResult = await query("SELECT id FROM teams WHERE id = $1", [teamId]);
+  if (teamResult.rowCount === 0) {
+    return res.status(404).json({ error: "Team not found." });
+  }
+
+  if (contactId) {
+    const contactResult = await query(
+      "SELECT id FROM contacts WHERE id = $1 AND team_id = $2",
+      [contactId, teamId]
+    );
+    if (contactResult.rowCount === 0) {
+      return res.status(404).json({ error: "Contact not found for this team." });
+    }
+  }
+
+  const result = await query(
+    `INSERT INTO practices (team_id, contact_id, day_of_week, start_time, end_time, location, notes)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING id, team_id, contact_id, day_of_week, start_time, end_time, location, notes, created_at`,
+    [teamId, contactId, dayOfWeek, startTime, endTime, location || null, notes || null]
+  );
+
+  return res.status(201).json({ practice: result.rows[0] });
+});
+
+router.put("/practices/:id", async (req, res) => {
+  const practiceId = Number(req.params.id);
+  if (!Number.isInteger(practiceId)) {
+    return res.status(400).json({ error: "Practice id is required." });
+  }
+
+  const teamId = Number(req.body?.team_id);
+  const contactId = req.body?.contact_id ? Number(req.body.contact_id) : null;
+  const dayOfWeek = Number(req.body?.day_of_week);
+  const startTime = req.body?.start_time;
+  const endTime = req.body?.end_time;
+  const location = typeof req.body?.location === "string" ? req.body.location.trim() : "";
+  const notes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
+
+  if (!Number.isInteger(teamId) || teamId < 1) {
+    return res.status(400).json({ error: "team_id is required." });
+  }
+  if (!Number.isInteger(dayOfWeek) || dayOfWeek < 0 || dayOfWeek > 6) {
+    return res.status(400).json({ error: "day_of_week must be between 0 and 6." });
+  }
+  if (!isValidTime(startTime) || !isValidTime(endTime)) {
+    return res.status(400).json({ error: "start_time and end_time must be HH:MM." });
+  }
+  if (startTime >= endTime) {
+    return res.status(400).json({ error: "end_time must be after start_time." });
+  }
+
+  const teamResult = await query("SELECT id FROM teams WHERE id = $1", [teamId]);
+  if (teamResult.rowCount === 0) {
+    return res.status(404).json({ error: "Team not found." });
+  }
+
+  if (contactId) {
+    const contactResult = await query(
+      "SELECT id FROM contacts WHERE id = $1 AND team_id = $2",
+      [contactId, teamId]
+    );
+    if (contactResult.rowCount === 0) {
+      return res.status(404).json({ error: "Contact not found for this team." });
+    }
+  }
+
+  const result = await query(
+    `UPDATE practices
+     SET team_id = $1, contact_id = $2, day_of_week = $3, start_time = $4, end_time = $5,
+         location = $6, notes = $7
+     WHERE id = $8
+     RETURNING id, team_id, contact_id, day_of_week, start_time, end_time, location, notes, created_at`,
+    [teamId, contactId, dayOfWeek, startTime, endTime, location || null, notes || null, practiceId]
+  );
+
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Practice not found." });
+  }
+
+  return res.json({ practice: result.rows[0] });
+});
+
+router.delete("/practices/:id", async (req, res) => {
+  const practiceId = Number(req.params.id);
+  if (!Number.isInteger(practiceId)) {
+    return res.status(400).json({ error: "Practice id is required." });
+  }
+
+  const result = await query("DELETE FROM practices WHERE id = $1 RETURNING id", [practiceId]);
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Practice not found." });
+  }
+
+  return res.json({ practiceId, deleted: true });
 });
 
 export default router;

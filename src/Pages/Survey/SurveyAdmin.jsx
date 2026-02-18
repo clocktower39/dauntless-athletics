@@ -37,6 +37,48 @@ import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athle
 const TOKEN_KEY = "dauntlessSurveyAdminToken";
 const drawerWidth = 240;
 
+const dayOptions = [
+  { value: 0, label: "Sunday" },
+  { value: 1, label: "Monday" },
+  { value: 2, label: "Tuesday" },
+  { value: 3, label: "Wednesday" },
+  { value: 4, label: "Thursday" },
+  { value: 5, label: "Friday" },
+  { value: 6, label: "Saturday" },
+];
+
+const emptyTeam = {
+  schoolId: "",
+  name: "",
+  sport: "",
+  level: "",
+  season: "",
+  location: "",
+  notes: "",
+};
+
+const emptyContact = {
+  teamId: "",
+  name: "",
+  role: "",
+  audience: "Coach",
+  email: "",
+  phone: "",
+  notes: "",
+};
+
+const emptyPractice = {
+  teamId: "",
+  contactId: "",
+  dayOfWeek: 1,
+  startTime: "15:00",
+  endTime: "17:00",
+  location: "",
+  notes: "",
+};
+
+const audienceOptions = ["Coach", "Athlete", "Parent", "Staff", "Other"];
+
 const classes = {
   page: {
     minHeight: "100vh",
@@ -128,11 +170,14 @@ export default function SurveyAdmin() {
   const [authLoading, setAuthLoading] = useState(false);
 
   const [schools, setSchools] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [surveys, setSurveys] = useState([]);
   const [responses, setResponses] = useState([]);
   const [invites, setInvites] = useState([]);
   const [selectedSchoolId, setSelectedSchoolId] = useState("");
   const [selectedSurveyId, setSelectedSurveyId] = useState("");
+  const [selectedTeamId, setSelectedTeamId] = useState("");
   const [newSchoolName, setNewSchoolName] = useState("");
   const [newSurveyTitle, setNewSurveyTitle] = useState("");
   const [newSurveyDescription, setNewSurveyDescription] = useState("");
@@ -144,8 +189,15 @@ export default function SurveyAdmin() {
   const [editSurveyDescription, setEditSurveyDescription] = useState("");
   const [editSurveyCommentPrompt, setEditSurveyCommentPrompt] = useState("");
   const [editSurveyActive, setEditSurveyActive] = useState(true);
+  const [teamForm, setTeamForm] = useState(emptyTeam);
+  const [contactForm, setContactForm] = useState(emptyContact);
+  const [practiceForm, setPracticeForm] = useState(emptyPractice);
+  const [practices, setPractices] = useState([]);
   const [editingSchoolId, setEditingSchoolId] = useState(null);
   const [editingSchoolName, setEditingSchoolName] = useState("");
+  const [editingTeamId, setEditingTeamId] = useState(null);
+  const [editingContactId, setEditingContactId] = useState(null);
+  const [editingPracticeId, setEditingPracticeId] = useState(null);
   const [inviteCount, setInviteCount] = useState(1);
   const [latestInvites, setLatestInvites] = useState([]);
   const [selectedInviteIds, setSelectedInviteIds] = useState([]);
@@ -170,25 +222,36 @@ export default function SurveyAdmin() {
     [surveys, selectedSurveyId]
   );
 
+  const totalContacts = useMemo(
+    () => teams.reduce((sum, team) => sum + (team.contact_count || 0), 0),
+    [teams]
+  );
+
   const activeSection = useMemo(() => {
     const parts = location.pathname.split("/").filter(Boolean);
-    if (parts[0] !== "survey-admin") return "surveys";
-    return parts[1] || "surveys";
+    if (parts[0] !== "survey-admin" && parts[0] !== "dashboard") return "overview";
+    return parts[1] || "overview";
+  }, [location.pathname]);
+
+  const basePath = useMemo(() => {
+    const parts = location.pathname.split("/").filter(Boolean);
+    return parts[0] === "survey-admin" ? "/survey-admin" : "/dashboard";
   }, [location.pathname]);
 
   const navItems = useMemo(
     () => [
+      { id: "overview", label: "Overview" },
+      { id: "clients", label: "Clients" },
+      { id: "contacts", label: "Contacts" },
+      { id: "schedules", label: "Schedules" },
       { id: "surveys", label: "Surveys" },
-      { id: "schools", label: "Schools" },
-      { id: "invites", label: "Invites" },
-      { id: "responses", label: "Responses" },
     ],
     []
   );
 
   const activeLabel = useMemo(() => {
     const match = navItems.find((item) => item.id === activeSection);
-    return match ? match.label : "Surveys";
+    return match ? match.label : "Overview";
   }, [navItems, activeSection]);
 
   const handleDrawerToggle = () => {
@@ -205,7 +268,7 @@ export default function SurveyAdmin() {
         />
         <Box>
           <Typography sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
-            Survey Admin
+            Client Management
           </Typography>
           <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
             Dauntless Athletics
@@ -219,7 +282,7 @@ export default function SurveyAdmin() {
             <ListItemButton
               key={item.id}
               component={Link}
-              to={`/survey-admin/${item.id}`}
+              to={`${basePath}/${item.id}`}
               onClick={() => setMobileOpen(false)}
               selected={activeSection === item.id}
               sx={{
@@ -243,15 +306,6 @@ export default function SurveyAdmin() {
       <Box sx={{ marginTop: "auto", display: "grid", gap: "8px" }}>
         {token && (
           <>
-            <Button
-              component={Link}
-              to="/contacts-admin"
-              variant="outlined"
-              sx={{ color: "var(--color-text)" }}
-              onClick={() => setMobileOpen(false)}
-            >
-              Contacts
-            </Button>
             <Button variant="outlined" onClick={handleLogout} sx={{ color: "var(--color-text)" }}>
               Log out
             </Button>
@@ -265,6 +319,39 @@ export default function SurveyAdmin() {
     const result = await apiRequest("/api/admin/schools", { headers: authHeaders });
     setSchools(result.schools || []);
   }, [authHeaders]);
+
+  const loadTeams = useCallback(async () => {
+    const result = await apiRequest("/api/admin/teams", { headers: authHeaders });
+    setTeams(result.teams || []);
+  }, [authHeaders]);
+
+  const loadContacts = useCallback(
+    async (teamId) => {
+      if (!teamId) {
+        setContacts([]);
+        return;
+      }
+      const result = await apiRequest(`/api/admin/contacts?team_id=${teamId}`, {
+        headers: authHeaders,
+      });
+      setContacts(result.contacts || []);
+    },
+    [authHeaders]
+  );
+
+  const loadPractices = useCallback(
+    async (teamId) => {
+      if (!teamId) {
+        setPractices([]);
+        return;
+      }
+      const result = await apiRequest(`/api/admin/practices?team_id=${teamId}`, {
+        headers: authHeaders,
+      });
+      setPractices(result.practices || []);
+    },
+    [authHeaders]
+  );
 
   const loadSurveys = useCallback(async () => {
     const result = await apiRequest("/api/admin/surveys", { headers: authHeaders });
@@ -294,11 +381,18 @@ export default function SurveyAdmin() {
   }, [selectedSurveyId, surveys]);
 
   useEffect(() => {
+    if (!selectedTeamId && teams.length > 0) {
+      setSelectedTeamId(String(teams[0].id));
+    }
+  }, [selectedTeamId, teams]);
+
+  useEffect(() => {
     if (!token) return;
     const fetchAll = async () => {
       try {
         setDataError("");
         await loadSchools();
+        await loadTeams();
         await loadSurveys();
         await loadData(selectedSchoolId, selectedSurveyId);
       } catch (error) {
@@ -306,7 +400,25 @@ export default function SurveyAdmin() {
       }
     };
     fetchAll();
-  }, [token, selectedSchoolId, selectedSurveyId, loadSchools, loadSurveys, loadData]);
+  }, [token, selectedSchoolId, selectedSurveyId, loadSchools, loadSurveys, loadTeams, loadData]);
+
+  useEffect(() => {
+    if (!token) return;
+    loadContacts(selectedTeamId);
+    loadPractices(selectedTeamId);
+  }, [token, selectedTeamId, loadContacts, loadPractices]);
+
+  useEffect(() => {
+    if (!editingContactId) {
+      setContactForm((prev) => ({ ...prev, teamId: selectedTeamId || "" }));
+    }
+  }, [selectedTeamId, editingContactId]);
+
+  useEffect(() => {
+    if (!editingPracticeId) {
+      setPracticeForm((prev) => ({ ...prev, teamId: selectedTeamId || "" }));
+    }
+  }, [selectedTeamId, editingPracticeId]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -612,6 +724,248 @@ export default function SurveyAdmin() {
     }
   };
 
+  const handleSaveTeam = async () => {
+    if (!teamForm.name.trim()) {
+      setDataError("Team name is required.");
+      return;
+    }
+
+    try {
+      setDataError("");
+      if (editingTeamId) {
+        await apiRequest(`/api/admin/teams/${editingTeamId}`, {
+          method: "PUT",
+          headers: authHeaders,
+          body: JSON.stringify({
+            school_id: teamForm.schoolId ? Number(teamForm.schoolId) : null,
+            name: teamForm.name.trim(),
+            sport: teamForm.sport.trim(),
+            level: teamForm.level.trim(),
+            season: teamForm.season.trim(),
+            location: teamForm.location.trim(),
+            notes: teamForm.notes.trim(),
+          }),
+        });
+      } else {
+        await apiRequest("/api/admin/teams", {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify({
+            school_id: teamForm.schoolId ? Number(teamForm.schoolId) : null,
+            name: teamForm.name.trim(),
+            sport: teamForm.sport.trim(),
+            level: teamForm.level.trim(),
+            season: teamForm.season.trim(),
+            location: teamForm.location.trim(),
+            notes: teamForm.notes.trim(),
+          }),
+        });
+      }
+      setTeamForm(emptyTeam);
+      setEditingTeamId(null);
+      await loadTeams();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleEditTeam = (team) => {
+    setEditingTeamId(team.id);
+    setTeamForm({
+      schoolId: team.school_id ? String(team.school_id) : "",
+      name: team.name || "",
+      sport: team.sport || "",
+      level: team.level || "",
+      season: team.season || "",
+      location: team.location || "",
+      notes: team.notes || "",
+    });
+  };
+
+  const handleCancelTeamEdit = () => {
+    setEditingTeamId(null);
+    setTeamForm(emptyTeam);
+  };
+
+  const handleDeleteTeam = async (teamId) => {
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/teams/${teamId}`, {
+        method: "DELETE",
+        headers: authHeaders,
+      });
+      const nextSelectedId = String(teamId) === String(selectedTeamId) ? "" : selectedTeamId;
+      if (nextSelectedId !== selectedTeamId) {
+        setSelectedTeamId(nextSelectedId);
+      }
+      await loadTeams();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleSaveContact = async () => {
+    if (!contactForm.teamId) {
+      setDataError("Select a team for this contact.");
+      return;
+    }
+    if (!contactForm.name.trim()) {
+      setDataError("Contact name is required.");
+      return;
+    }
+
+    try {
+      setDataError("");
+      if (editingContactId) {
+        await apiRequest(`/api/admin/contacts/${editingContactId}`, {
+          method: "PUT",
+          headers: authHeaders,
+          body: JSON.stringify({
+            team_id: Number(contactForm.teamId),
+            name: contactForm.name.trim(),
+            role: contactForm.role.trim(),
+            audience: contactForm.audience.trim(),
+            email: contactForm.email.trim(),
+            phone: contactForm.phone.trim(),
+            notes: contactForm.notes.trim(),
+          }),
+        });
+      } else {
+        await apiRequest("/api/admin/contacts", {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify({
+            team_id: Number(contactForm.teamId),
+            name: contactForm.name.trim(),
+            role: contactForm.role.trim(),
+            audience: contactForm.audience.trim(),
+            email: contactForm.email.trim(),
+            phone: contactForm.phone.trim(),
+            notes: contactForm.notes.trim(),
+          }),
+        });
+      }
+      setContactForm((prev) => ({ ...emptyContact, teamId: prev.teamId }));
+      setEditingContactId(null);
+      await loadContacts(contactForm.teamId);
+      await loadTeams();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleEditContact = (contact) => {
+    setEditingContactId(contact.id);
+    setContactForm({
+      teamId: String(contact.team_id),
+      name: contact.name || "",
+      role: contact.role || "",
+      audience: contact.audience || "Coach",
+      email: contact.email || "",
+      phone: contact.phone || "",
+      notes: contact.notes || "",
+    });
+  };
+
+  const handleCancelContactEdit = () => {
+    setEditingContactId(null);
+    setContactForm((prev) => ({ ...emptyContact, teamId: prev.teamId }));
+  };
+
+  const handleDeleteContact = async (contactId) => {
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/contacts/${contactId}`, {
+        method: "DELETE",
+        headers: authHeaders,
+      });
+      await loadContacts(selectedTeamId);
+      await loadTeams();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleSavePractice = async () => {
+    if (!practiceForm.teamId) {
+      setDataError("Select a team for this practice.");
+      return;
+    }
+    if (!practiceForm.startTime || !practiceForm.endTime) {
+      setDataError("Start and end times are required.");
+      return;
+    }
+
+    try {
+      setDataError("");
+      if (editingPracticeId) {
+        await apiRequest(`/api/admin/practices/${editingPracticeId}`, {
+          method: "PUT",
+          headers: authHeaders,
+          body: JSON.stringify({
+            team_id: Number(practiceForm.teamId),
+            contact_id: practiceForm.contactId ? Number(practiceForm.contactId) : null,
+            day_of_week: Number(practiceForm.dayOfWeek),
+            start_time: practiceForm.startTime,
+            end_time: practiceForm.endTime,
+            location: practiceForm.location.trim(),
+            notes: practiceForm.notes.trim(),
+          }),
+        });
+      } else {
+        await apiRequest("/api/admin/practices", {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify({
+            team_id: Number(practiceForm.teamId),
+            contact_id: practiceForm.contactId ? Number(practiceForm.contactId) : null,
+            day_of_week: Number(practiceForm.dayOfWeek),
+            start_time: practiceForm.startTime,
+            end_time: practiceForm.endTime,
+            location: practiceForm.location.trim(),
+            notes: practiceForm.notes.trim(),
+          }),
+        });
+      }
+      setPracticeForm((prev) => ({ ...emptyPractice, teamId: prev.teamId }));
+      setEditingPracticeId(null);
+      await loadPractices(practiceForm.teamId);
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleEditPractice = (practice) => {
+    setEditingPracticeId(practice.id);
+    setPracticeForm({
+      teamId: String(practice.team_id),
+      contactId: practice.contact_id ? String(practice.contact_id) : "",
+      dayOfWeek: Number(practice.day_of_week),
+      startTime: practice.start_time?.slice(0, 5) || "15:00",
+      endTime: practice.end_time?.slice(0, 5) || "17:00",
+      location: practice.location || "",
+      notes: practice.notes || "",
+    });
+  };
+
+  const handleCancelPracticeEdit = () => {
+    setEditingPracticeId(null);
+    setPracticeForm((prev) => ({ ...emptyPractice, teamId: prev.teamId }));
+  };
+
+  const handleDeletePractice = async (practiceId) => {
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/practices/${practiceId}`, {
+        method: "DELETE",
+        headers: authHeaders,
+      });
+      await loadPractices(selectedTeamId);
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
   const getInviteText = (invite) => {
     if (!invite) return "";
     const isLocalhost = typeof window !== "undefined" &&
@@ -753,7 +1107,7 @@ export default function SurveyAdmin() {
                 <Typography
                   sx={{ fontFamily: "var(--font-display)", fontSize: "1.6rem", color: "var(--color-text)" }}
                 >
-                  Survey Admin
+                  Client Management
                 </Typography>
                 <Typography sx={{ color: "var(--color-muted)" }}>
                   {token ? `${activeLabel} Dashboard` : "Sign in to continue"}
@@ -762,7 +1116,7 @@ export default function SurveyAdmin() {
             </Box>
           </Box>
           <Typography sx={{ color: "var(--color-muted)" }}>
-            Confidential view with school names and invite management.
+            Internal dashboard for managing clients, teams, schedules, and surveys.
           </Typography>
 
           {!token && (
@@ -1007,8 +1361,41 @@ export default function SurveyAdmin() {
                 )}
               </Box>
               )}
-              {activeSection === "schools" && (
+
+              {activeSection === "overview" && (
                 <Box sx={classes.section}>
+                  <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Business Snapshot</Typography>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gap: "12px",
+                      gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+                    }}
+                  >
+                    {[
+                      { label: "Clients", value: schools.length },
+                      { label: "Teams", value: teams.length },
+                      { label: "Contacts", value: totalContacts },
+                      { label: "Practices", value: practices.length },
+                      { label: "Surveys", value: surveys.length },
+                      { label: "Responses", value: responses.length },
+                    ].map((stat) => (
+                      <Box key={stat.label} sx={classes.statCard}>
+                        <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
+                          {stat.label}
+                        </Typography>
+                        <Typography sx={{ color: "var(--color-text)", fontSize: "1.4rem", fontWeight: 700 }}>
+                          {stat.value}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              )}
+
+              {activeSection === "clients" && (
+                <>
+                  <Box sx={classes.section}>
                 <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Schools</Typography>
                 <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                   <TextField
@@ -1139,10 +1526,460 @@ export default function SurveyAdmin() {
                     </Table>
                   </TableContainer>
                 )}
-              </Box>
+                  </Box>
+
+                  <Box sx={classes.section}>
+                    <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Teams</Typography>
+                    <Box sx={{ display: "grid", gap: "12px" }}>
+                      <TextField
+                        select
+                        label="School (optional)"
+                        value={teamForm.schoolId}
+                        onChange={(event) => setTeamForm((prev) => ({ ...prev, schoolId: event.target.value }))}
+                        sx={classes.input}
+                      >
+                        <MenuItem value="">No school selected</MenuItem>
+                        {schools.map((school) => (
+                          <MenuItem key={school.id} value={school.id}>
+                            {school.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                      <TextField
+                        label="Team name"
+                        value={teamForm.name}
+                        onChange={(event) => setTeamForm((prev) => ({ ...prev, name: event.target.value }))}
+                        sx={classes.input}
+                      />
+                      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                        <TextField
+                          label="Sport"
+                          value={teamForm.sport}
+                          onChange={(event) => setTeamForm((prev) => ({ ...prev, sport: event.target.value }))}
+                          sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+                        />
+                        <TextField
+                          label="Level"
+                          value={teamForm.level}
+                          onChange={(event) => setTeamForm((prev) => ({ ...prev, level: event.target.value }))}
+                          sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+                        />
+                        <TextField
+                          label="Season"
+                          value={teamForm.season}
+                          onChange={(event) => setTeamForm((prev) => ({ ...prev, season: event.target.value }))}
+                          sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+                        />
+                      </Box>
+                      <TextField
+                        label="Location"
+                        value={teamForm.location}
+                        onChange={(event) => setTeamForm((prev) => ({ ...prev, location: event.target.value }))}
+                        sx={classes.input}
+                      />
+                      <TextField
+                        label="Notes"
+                        value={teamForm.notes}
+                        onChange={(event) => setTeamForm((prev) => ({ ...prev, notes: event.target.value }))}
+                        sx={classes.input}
+                        multiline
+                        minRows={2}
+                      />
+                      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                        <Button variant="contained" sx={classes.button} onClick={handleSaveTeam}>
+                          {editingTeamId ? "Save Team" : "Add Team"}
+                        </Button>
+                        {editingTeamId && (
+                          <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={handleCancelTeamEdit}>
+                            Cancel
+                          </Button>
+                        )}
+                      </Box>
+                    </Box>
+
+                    {teams.length > 0 && (
+                      <TableContainer
+                        component={Paper}
+                        sx={{ backgroundColor: "var(--color-surface-3)", borderRadius: "14px" }}
+                      >
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell sx={{ color: "var(--color-muted)" }}>Team</TableCell>
+                              <TableCell sx={{ color: "var(--color-muted)" }}>School</TableCell>
+                              <TableCell sx={{ color: "var(--color-muted)" }}>Contacts</TableCell>
+                              <TableCell sx={{ color: "var(--color-muted)" }} align="right">
+                                Actions
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {teams.map((team) => (
+                              <TableRow key={team.id} hover>
+                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+                                  {team.name}
+                                </TableCell>
+                                <TableCell sx={{ color: "var(--color-text)" }}>
+                                  {team.school_name || "—"}
+                                </TableCell>
+                                <TableCell sx={{ color: "var(--color-text)" }}>
+                                  {team.contact_count || 0}
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                                    <Button
+                                      variant="outlined"
+                                      size="small"
+                                      sx={{ color: "var(--color-text)" }}
+                                      onClick={() => handleEditTeam(team)}
+                                    >
+                                      Edit
+                                    </Button>
+                                    <Button
+                                      variant="outlined"
+                                      size="small"
+                                      sx={{ color: "var(--color-text)" }}
+                                      onClick={() => handleDeleteTeam(team.id)}
+                                    >
+                                      Delete
+                                    </Button>
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    )}
+                  </Box>
+                </>
               )}
 
-              {activeSection === "invites" && (
+              {activeSection === "contacts" && (
+                <Box sx={classes.section}>
+                  <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Contacts</Typography>
+                  {teams.length === 0 ? (
+                    <Typography sx={{ color: "var(--color-muted)" }}>
+                      Add a team first to start collecting contacts.
+                    </Typography>
+                  ) : (
+                    <>
+                      <TextField
+                        select
+                        label="Team"
+                        value={selectedTeamId}
+                        onChange={(event) => setSelectedTeamId(event.target.value)}
+                        sx={classes.input}
+                      >
+                        {teams.map((team) => (
+                          <MenuItem key={team.id} value={team.id}>
+                            {team.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                      <Divider sx={{ borderColor: "var(--color-border)" }} />
+                      <Box sx={{ display: "grid", gap: "12px" }}>
+                        <TextField
+                          label="Contact name"
+                          value={contactForm.name}
+                          onChange={(event) => setContactForm((prev) => ({ ...prev, name: event.target.value }))}
+                          sx={classes.input}
+                        />
+                        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                          <TextField
+                            label="Role / Title"
+                            value={contactForm.role}
+                            onChange={(event) => setContactForm((prev) => ({ ...prev, role: event.target.value }))}
+                            sx={{ ...classes.input, flex: 1, minWidth: "200px" }}
+                          />
+                          <TextField
+                            select
+                            label="Audience"
+                            value={contactForm.audience}
+                            onChange={(event) => setContactForm((prev) => ({ ...prev, audience: event.target.value }))}
+                            sx={{ ...classes.input, flex: 1, minWidth: "160px" }}
+                          >
+                            {audienceOptions.map((option) => (
+                              <MenuItem key={option} value={option}>
+                                {option}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                        </Box>
+                        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                          <TextField
+                            label="Email"
+                            value={contactForm.email}
+                            onChange={(event) => setContactForm((prev) => ({ ...prev, email: event.target.value }))}
+                            sx={{ ...classes.input, flex: 1, minWidth: "220px" }}
+                          />
+                          <TextField
+                            label="Phone"
+                            value={contactForm.phone}
+                            onChange={(event) => setContactForm((prev) => ({ ...prev, phone: event.target.value }))}
+                            sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+                          />
+                        </Box>
+                        <TextField
+                          label="Notes"
+                          value={contactForm.notes}
+                          onChange={(event) => setContactForm((prev) => ({ ...prev, notes: event.target.value }))}
+                          sx={classes.input}
+                          multiline
+                          minRows={2}
+                        />
+                        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                          <Button variant="contained" sx={classes.button} onClick={handleSaveContact}>
+                            {editingContactId ? "Save Contact" : "Add Contact"}
+                          </Button>
+                          {editingContactId && (
+                            <Button
+                              variant="outlined"
+                              sx={{ color: "var(--color-text)" }}
+                              onClick={handleCancelContactEdit}
+                            >
+                              Cancel
+                            </Button>
+                          )}
+                        </Box>
+                      </Box>
+
+                      {contacts.length === 0 ? (
+                        <Typography sx={{ color: "var(--color-muted)" }}>No contacts yet.</Typography>
+                      ) : (
+                        <TableContainer
+                          component={Paper}
+                          sx={{ backgroundColor: "var(--color-surface-3)", borderRadius: "14px" }}
+                        >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Name</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Role</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Audience</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Email</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Phone</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }} align="right">
+                                  Actions
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {contacts.map((contact) => (
+                                <TableRow key={contact.id} hover>
+                                  <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+                                    {contact.name}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {contact.role || "—"}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {contact.audience || "—"}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {contact.email || "—"}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {contact.phone || "—"}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                                      <Button
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{ color: "var(--color-text)" }}
+                                        onClick={() => handleEditContact(contact)}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Button
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{ color: "var(--color-text)" }}
+                                        onClick={() => handleDeleteContact(contact.id)}
+                                      >
+                                        Delete
+                                      </Button>
+                                    </Box>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      )}
+                    </>
+                  )}
+                </Box>
+              )}
+
+              {activeSection === "schedules" && (
+                <Box sx={classes.section}>
+                  <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Practice Schedule</Typography>
+                  {teams.length === 0 ? (
+                    <Typography sx={{ color: "var(--color-muted)" }}>
+                      Add a team first to create a practice schedule.
+                    </Typography>
+                  ) : (
+                    <>
+                      <TextField
+                        select
+                        label="Team"
+                        value={selectedTeamId}
+                        onChange={(event) => setSelectedTeamId(event.target.value)}
+                        sx={classes.input}
+                      >
+                        {teams.map((team) => (
+                          <MenuItem key={team.id} value={team.id}>
+                            {team.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                      <Divider sx={{ borderColor: "var(--color-border)" }} />
+                      <Box sx={{ display: "grid", gap: "12px" }}>
+                        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                          <TextField
+                            select
+                            label="Day"
+                            value={practiceForm.dayOfWeek}
+                            onChange={(event) =>
+                              setPracticeForm((prev) => ({ ...prev, dayOfWeek: Number(event.target.value) }))
+                            }
+                            sx={{ ...classes.input, minWidth: "160px" }}
+                          >
+                            {dayOptions.map((day) => (
+                              <MenuItem key={day.value} value={day.value}>
+                                {day.label}
+                              </MenuItem>
+                            ))}
+                          </TextField>
+                          <TextField
+                            type="time"
+                            label="Start"
+                            value={practiceForm.startTime}
+                            onChange={(event) => setPracticeForm((prev) => ({ ...prev, startTime: event.target.value }))}
+                            sx={{ ...classes.input, minWidth: "160px" }}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                          <TextField
+                            type="time"
+                            label="End"
+                            value={practiceForm.endTime}
+                            onChange={(event) => setPracticeForm((prev) => ({ ...prev, endTime: event.target.value }))}
+                            sx={{ ...classes.input, minWidth: "160px" }}
+                            InputLabelProps={{ shrink: true }}
+                          />
+                        </Box>
+                        <TextField
+                          select
+                          label="Coach / Primary Contact"
+                          value={practiceForm.contactId}
+                          onChange={(event) => setPracticeForm((prev) => ({ ...prev, contactId: event.target.value }))}
+                          sx={classes.input}
+                        >
+                          <MenuItem value="">Unassigned</MenuItem>
+                          {contacts.map((contact) => (
+                            <MenuItem key={contact.id} value={contact.id}>
+                              {contact.name}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                        <TextField
+                          label="Location"
+                          value={practiceForm.location}
+                          onChange={(event) => setPracticeForm((prev) => ({ ...prev, location: event.target.value }))}
+                          sx={classes.input}
+                        />
+                        <TextField
+                          label="Notes"
+                          value={practiceForm.notes}
+                          onChange={(event) => setPracticeForm((prev) => ({ ...prev, notes: event.target.value }))}
+                          sx={classes.input}
+                          multiline
+                          minRows={2}
+                        />
+                        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                          <Button variant="contained" sx={classes.button} onClick={handleSavePractice}>
+                            {editingPracticeId ? "Save Practice" : "Add Practice"}
+                          </Button>
+                          {editingPracticeId && (
+                            <Button
+                              variant="outlined"
+                              sx={{ color: "var(--color-text)" }}
+                              onClick={handleCancelPracticeEdit}
+                            >
+                              Cancel
+                            </Button>
+                          )}
+                        </Box>
+                      </Box>
+
+                      {practices.length === 0 ? (
+                        <Typography sx={{ color: "var(--color-muted)" }}>No practices scheduled yet.</Typography>
+                      ) : (
+                        <TableContainer
+                          component={Paper}
+                          sx={{ backgroundColor: "var(--color-surface-3)", borderRadius: "14px" }}
+                        >
+                          <Table size="small">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Day</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Time</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Coach</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }}>Location</TableCell>
+                                <TableCell sx={{ color: "var(--color-muted)" }} align="right">
+                                  Actions
+                                </TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {practices.map((practice) => (
+                                <TableRow key={practice.id} hover>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {dayOptions.find((day) => day.value === practice.day_of_week)?.label || "—"}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {practice.start_time?.slice(0, 5)} - {practice.end_time?.slice(0, 5)}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {practice.contact_name || "—"}
+                                  </TableCell>
+                                  <TableCell sx={{ color: "var(--color-text)" }}>
+                                    {practice.location || "—"}
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                                      <Button
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{ color: "var(--color-text)" }}
+                                        onClick={() => handleEditPractice(practice)}
+                                      >
+                                        Edit
+                                      </Button>
+                                      <Button
+                                        variant="outlined"
+                                        size="small"
+                                        sx={{ color: "var(--color-text)" }}
+                                        onClick={() => handleDeletePractice(practice.id)}
+                                      >
+                                        Delete
+                                      </Button>
+                                    </Box>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      )}
+                    </>
+                  )}
+                </Box>
+              )}
+
+              {activeSection === "surveys" && (
                 <>
                   <Box sx={classes.section}>
                 <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Invite Links</Typography>
@@ -1342,7 +2179,7 @@ export default function SurveyAdmin() {
                 </>
               )}
 
-              {activeSection === "responses" && (
+              {activeSection === "surveys" && (
                 <Box sx={classes.section}>
                 <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Responses</Typography>
                 <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>

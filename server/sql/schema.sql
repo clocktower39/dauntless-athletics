@@ -75,3 +75,17 @@ CREATE TABLE IF NOT EXISTS contacts (
 );
 
 CREATE INDEX IF NOT EXISTS contacts_team_id_idx ON contacts (team_id);
+
+CREATE TABLE IF NOT EXISTS practices (
+  id BIGSERIAL PRIMARY KEY,
+  team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+  contact_id BIGINT REFERENCES contacts(id) ON DELETE SET NULL,
+  day_of_week SMALLINT NOT NULL CHECK (day_of_week BETWEEN 0 AND 6),
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  location TEXT,
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS practices_team_id_idx ON practices (team_id);
