@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router";
 import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
 import Camps from "./Pages/WebsitePages/Camps";
 import CollegeCombine from "./Pages/WebsitePages/CollegeCombine";
@@ -62,7 +62,7 @@ function App() {
           <> {/* App */}</>
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
-        <Route path="/survey-admin/*" element={<SurveyAdmin />} />
+        <Route path="/survey-admin/*" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard/*" element={<SurveyAdmin />} />
         <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="/contacts-admin" element={<ContactsAdmin />} />
