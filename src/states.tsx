@@ -397,6 +397,48 @@ export const camps: Camp[] = [
       innerText: "Register For Camp",
     },
   },
+  {
+    icon: <img src="/images/camps/silhouette_backhandspring.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '15%', }} />,
+    Subject: "Back Handspring Clinic",
+    StartTime: new Date(2026, 2, 21, 12, 0),
+    EndTime: new Date(2026, 2, 21, 13, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: { amount: 35, label: "per athlete" },
+    description: "Back handspring clinic for athletes ages 5 and up. Max 20 athletes. First come, first serve.",
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_back_tuck.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Hard Floor Clinic",
+    StartTime: new Date(2026, 2, 21, 13, 30),
+    EndTime: new Date(2026, 2, 21, 15, 0),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: { amount: 35, label: "per athlete" },
+    description: "Hard floor clinic (will take place on dead floor) for athletes ages 5 and up. Max 20 athletes. First come, first serve.",
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
+      innerText: "Register For Clinic",
+    },
+  },
+  {
+    icon: <img src="/images/camps/silhouette_aerial_cartwheel.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
+    Subject: "Aerial/ Acro Clinic",
+    StartTime: new Date(2026, 2, 21, 15, 0),
+    EndTime: new Date(2026, 2, 21, 16, 30),
+    color: "#f01313",
+    place: "Dauntless Athletics",
+    cost: { amount: 35, label: "per athlete" },
+    description: "Aerial/acro clinic for athletes ages 5 and up. Max 20 athletes. First come, first serve.",
+    link: {
+      href: "https://app.iclasspro.com/portal/dauntlessathletics/camps/19",
+      innerText: "Register For Clinic",
+    },
+  },
 ];
 
 export const dauntlessClasses: DauntlessClass[] = [
