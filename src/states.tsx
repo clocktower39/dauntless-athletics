@@ -485,6 +485,12 @@ export const dauntlessClasses: DauntlessClass[] = [
     icon: <CropFreeIcon sx={{ ...classes.DauntlessClassesIcon, color: "rgb(184, 255, 0)" }} />,
   },
   {
+    title: "Community Open Gym",
+    description:
+      "Ages 6 and up. Sign-up required. Free entry. Donations accepted at the door; proceeds benefit Kids Without A Cause Foundation.",
+    icon: <CropFreeIcon sx={{ ...classes.DauntlessClassesIcon, color: "rgb(184, 255, 0)" }} />,
+  },
+  {
     title: "High School Onsite Training",
     description:
       "We work with several high school teams across the Valley and offer tumbling on a non-spring tumbling floor. They get more tumbling reps on the same apparatus on which they will compete. Additionally, we use the spring floor to help them gain a better understanding of the skills they are learning. All these techniques help us provide them the most optimal tumbling training.",

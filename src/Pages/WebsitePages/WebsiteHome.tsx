@@ -82,6 +82,9 @@ export default function Home() {
     Twisting: <SyncAltOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
     Stunting: <GroupsOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
     "Open Gym": <AccessTimeOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />,
+    "Community Open Gym": (
+      <AccessTimeOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />
+    ),
     "High School Onsite Training": (
       <SchoolOutlinedIcon sx={{ fontSize: "26px", color: "var(--color-accent)" }} />
     ),
