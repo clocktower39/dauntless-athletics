@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { camps, dauntlessClasses, pricingOptions } from "../../states";
 import { Box, Button, Container, Divider, Grid, Stack, Typography } from "@mui/material";
