@@ -467,7 +467,7 @@ const data = [
     description: session.description,
     link: session.link,
   })),
-  ...camps.filter((camp) => camp.includeInSchedule !== false),
+  ...camps,
   ...holidayScheduleEvents,
 ];
 
