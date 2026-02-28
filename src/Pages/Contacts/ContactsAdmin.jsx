@@ -74,7 +74,7 @@ const classes = {
 };
 
 const emptyTeam = {
-  schoolId: "",
+  organizationId: "",
   name: "",
   sport: "",
   level: "",
@@ -114,8 +114,8 @@ export default function ContactsAdmin() {
   const authHeaders = useMemo(() => authHeader(token), [token]);
 
   const loadSchools = useCallback(async () => {
-    const result = await apiRequest("/api/admin/schools", { headers: authHeaders });
-    setSchools(result.schools || []);
+    const result = await apiRequest("/api/admin/organizations", { headers: authHeaders });
+    setSchools(result.organizations || []);
   }, [authHeaders]);
 
   const loadTeams = useCallback(async () => {
@@ -208,7 +208,7 @@ export default function ContactsAdmin() {
           method: "PUT",
           headers: authHeaders,
           body: JSON.stringify({
-            school_id: teamForm.schoolId ? Number(teamForm.schoolId) : null,
+            organization_id: teamForm.organizationId ? Number(teamForm.organizationId) : null,
             name: teamForm.name.trim(),
             sport: teamForm.sport.trim(),
             level: teamForm.level.trim(),
@@ -222,7 +222,7 @@ export default function ContactsAdmin() {
           method: "POST",
           headers: authHeaders,
           body: JSON.stringify({
-            school_id: teamForm.schoolId ? Number(teamForm.schoolId) : null,
+            organization_id: teamForm.organizationId ? Number(teamForm.organizationId) : null,
             name: teamForm.name.trim(),
             sport: teamForm.sport.trim(),
             level: teamForm.level.trim(),
@@ -243,7 +243,7 @@ export default function ContactsAdmin() {
   const handleEditTeam = (team) => {
     setEditingTeamId(team.id);
     setTeamForm({
-      schoolId: team.school_id ? String(team.school_id) : "",
+      organizationId: team.organization_id ? String(team.organization_id) : "",
       name: team.name || "",
       sport: team.sport || "",
       level: team.level || "",
@@ -433,12 +433,14 @@ export default function ContactsAdmin() {
                 <Box sx={{ display: "grid", gap: "12px" }}>
                   <TextField
                     select
-                    label="School (optional)"
-                    value={teamForm.schoolId}
-                    onChange={(event) => setTeamForm((prev) => ({ ...prev, schoolId: event.target.value }))}
+                    label="Organization (optional)"
+                    value={teamForm.organizationId}
+                    onChange={(event) =>
+                      setTeamForm((prev) => ({ ...prev, organizationId: event.target.value }))
+                    }
                     sx={classes.input}
                   >
-                    <MenuItem value="">No school selected</MenuItem>
+                    <MenuItem value="">No organization selected</MenuItem>
                     {schools.map((school) => (
                       <MenuItem key={school.id} value={school.id}>
                         {school.name}
@@ -515,7 +517,7 @@ export default function ContactsAdmin() {
                             {team.name}
                           </Typography>
                           <Typography sx={{ color: "var(--color-muted)", fontSize: "0.9rem" }}>
-                            {team.school_name || "No school"} · {team.contact_count || 0} contacts
+                            {team.organization_name || "No organization"} · {team.contact_count || 0} contacts
                           </Typography>
                         </Box>
                         <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>

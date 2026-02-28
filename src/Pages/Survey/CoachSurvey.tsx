@@ -39,7 +39,7 @@ type Answers = Record<string, AnswerValue>;
 type SurveyStatus = {
   error: string;
   used: boolean;
-  schoolName: string;
+  organizationName: string;
 };
 
 type SubmitState = {
@@ -50,7 +50,7 @@ type SubmitState = {
 
 type SurveyStatusResponse = {
   used: boolean;
-  schoolName?: string;
+  organizationName?: string;
   survey?: {
     id: number;
     title: string;
@@ -157,7 +157,11 @@ export default function CoachSurvey() {
   const { token } = useParams<{ token: string }>();
   const tokenParam = token ?? "";
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState<SurveyStatus>({ error: "", used: false, schoolName: "" });
+  const [status, setStatus] = useState<SurveyStatus>({
+    error: "",
+    used: false,
+    organizationName: "",
+  });
   const [survey, setSurvey] = useState<SurveyStatusResponse["survey"] | null>(null);
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
   const [answers, setAnswers] = useState<Answers>({});
@@ -182,7 +186,7 @@ export default function CoachSurvey() {
     let active = true;
     const fetchStatus = async () => {
       if (!tokenParam) {
-        setStatus({ error: "Invalid survey link.", used: false, schoolName: "" });
+        setStatus({ error: "Invalid survey link.", used: false, organizationName: "" });
         setLoading(false);
         return;
       }
@@ -190,12 +194,16 @@ export default function CoachSurvey() {
       try {
         const result = (await apiRequest(`/api/survey/${tokenParam}`)) as SurveyStatusResponse;
         if (!active) return;
-        setStatus({ error: "", used: result.used, schoolName: result.schoolName || "" });
+        setStatus({
+          error: "",
+          used: result.used,
+          organizationName: result.organizationName || "",
+        });
         setSurvey(result.survey || null);
         setQuestions(result.survey?.questions || []);
       } catch (error) {
         if (!active) return;
-        setStatus({ error: getErrorMessage(error), used: false, schoolName: "" });
+        setStatus({ error: getErrorMessage(error), used: false, organizationName: "" });
         setSurvey(null);
         setQuestions([]);
       } finally {
@@ -262,8 +270,8 @@ export default function CoachSurvey() {
           <Typography sx={{ color: "var(--color-muted)", marginBottom: "24px" }}>
             {survey?.description
               ? survey.description
-              : status.schoolName
-              ? `This confidential survey is for ${status.schoolName}. We appreciate your honest feedback.`
+              : status.organizationName
+              ? `This confidential survey is for ${status.organizationName}. We appreciate your honest feedback.`
               : "This confidential survey helps us improve our coaching experience."}
           </Typography>
 

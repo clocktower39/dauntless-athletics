@@ -46,10 +46,10 @@ router.get("/:token", async (req, res) => {
   const tokenHash = hashToken(req.params.token);
 
   const result = await query(
-    `SELECT invites.used_at, invites.survey_id, schools.name AS school_name,
+    `SELECT invites.used_at, invites.survey_id, organizations.name AS organization_name,
             surveys.title, surveys.description, surveys.comment_prompt
      FROM invites
-     JOIN schools ON schools.id = invites.school_id
+     JOIN organizations ON organizations.id = invites.organization_id
      JOIN surveys ON surveys.id = invites.survey_id
      WHERE invites.token_hash = $1`,
     [tokenHash]
@@ -66,7 +66,7 @@ router.get("/:token", async (req, res) => {
   );
 
   return res.json({
-    schoolName: invite.school_name,
+    organizationName: invite.organization_name,
     used: Boolean(invite.used_at),
     survey: {
       id: invite.survey_id,
@@ -95,7 +95,7 @@ router.post("/:token", async (req, res) => {
     await client.query("BEGIN");
 
     const inviteResult = await client.query(
-      "SELECT id, school_id, used_at FROM invites WHERE token_hash = $1 FOR UPDATE",
+      "SELECT id, organization_id, used_at FROM invites WHERE token_hash = $1 FOR UPDATE",
       [tokenHash]
     );
 
@@ -138,10 +138,10 @@ router.post("/:token", async (req, res) => {
     }
 
     await client.query(
-      "INSERT INTO responses (survey_id, school_id, invite_id, answers, comment) VALUES ($1, $2, $3, $4, $5)",
+      "INSERT INTO responses (survey_id, organization_id, invite_id, answers, comment) VALUES ($1, $2, $3, $4, $5)",
       [
         invite.survey_id,
-        invite.school_id,
+        invite.organization_id,
         invite.id,
         answers,
         comment || null,
