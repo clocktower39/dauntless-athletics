@@ -9,9 +9,9 @@ import Staff from "./Pages/WebsitePages/Staff";
 import Facility from "./Pages/WebsitePages/Facility";
 import Contact from "./Pages/WebsitePages/Contact";
 import NotFoundPage from "./Pages/NotFoundPage";
-import CoachSurvey from "./Pages/Survey/CoachSurvey";
-import SurveyAdmin from "./Pages/Survey/SurveyAdmin";
-import SurveyOwner from "./Pages/Survey/SurveyOwner";
+import CoachSurvey from "./Pages/Dashboard/CoachSurvey";
+import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
+import SurveyOwner from "./Pages/Dashboard/SurveyOwner";
 import ContactsAdmin from "./Pages/Contacts/ContactsAdmin";
 import "./App.css";
 
@@ -63,7 +63,7 @@ function App() {
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
         <Route path="/survey-admin/*" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard/*" element={<SurveyAdmin />} />
+        <Route path="/dashboard/*" element={<AdminDashboard />} />
         <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="/contacts-admin" element={<ContactsAdmin />} />
         <Route path="*" element={<NotFoundPage />} />

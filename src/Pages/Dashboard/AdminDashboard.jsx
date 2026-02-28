@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import {
   Alert,
-  Avatar,
   Box,
   Button,
   Checkbox,
@@ -13,11 +12,6 @@ import {
   DialogTitle,
   Divider,
   Drawer,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   MenuItem,
   Paper,
   Table,
@@ -29,12 +23,21 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import BusinessIcon from "@mui/icons-material/Business";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import DashboardHeader from "../../Components/Dashboard/DashboardHeader";
+import DashboardNav from "../../Components/Dashboard/DashboardNav";
+import OverviewSection from "../../Components/Dashboard/OverviewSection";
+import OrganizationsSection from "../../Components/Dashboard/OrganizationsSection";
+import TeamsSection from "../../Components/Dashboard/TeamsSection";
+import PeopleSection from "../../Components/Dashboard/PeopleSection";
+import SurveysSection from "../../Components/Dashboard/SurveysSection";
+import CampaignsSection from "../../Components/Dashboard/CampaignsSection";
+import ResponsesSection from "../../Components/Dashboard/ResponsesSection";
+import OrganizationDrawer from "../../Components/Dashboard/OrganizationDrawer";
 import { apiRequest, authHeader } from "./surveyApi";
 import { ratingOptions } from "./surveyConfig";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
@@ -356,7 +359,7 @@ const formatDate = (value) => {
   return date.toLocaleString();
 };
 
-export default function SurveyAdmin() {
+export default function AdminDashboard() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
@@ -626,79 +629,15 @@ export default function SurveyAdmin() {
   };
 
   const drawer = (
-    <Box sx={{ display: "grid", gap: "16px", height: "100%" }}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <Avatar
-          src={DauntlessAthleticsLogoDesktopCircleImg}
-          alt="Dauntless Athletics Logo"
-          sx={{ width: 48, height: 48 }}
-        />
-        <Box>
-          <Typography sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
-            Client Management
-          </Typography>
-          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-            Dauntless Athletics
-          </Typography>
-        </Box>
-      </Box>
-      <Divider sx={{ borderColor: "var(--color-border)" }} />
-      {token ? (
-        <List dense sx={{ display: "grid", gap: "6px" }}>
-          {navItems.map((item) => (
-            <ListItemButton
-              key={item.id}
-              component={Link}
-              to={`${basePath}/${item.id}`}
-              onClick={() => setMobileOpen(false)}
-              selected={activeSection === item.id}
-              sx={{
-                borderRadius: "12px",
-                color: "var(--color-text)",
-                paddingY: "10px",
-                "&.Mui-selected": {
-                  backgroundColor: "rgba(215, 38, 56, 0.18)",
-                  border: "1px solid rgba(215, 38, 56, 0.35)",
-                },
-                "&.Mui-selected:hover": {
-                  backgroundColor: "rgba(215, 38, 56, 0.22)",
-                },
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 36,
-                  color: "inherit",
-                  opacity: activeSection === item.id ? 1 : 0.7,
-                }}
-              >
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={item.label}
-                primaryTypographyProps={{ fontSize: "0.95rem", fontWeight: 500 }}
-              />
-            </ListItemButton>
-          ))}
-        </List>
-      ) : (
-        <Typography sx={{ color: "var(--color-muted)" }}>Sign in to access admin tools.</Typography>
-      )}
-      <Box sx={{ marginTop: "auto", display: "grid", gap: "8px" }}>
-        {token && (
-          <>
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={handleLogout}
-              sx={{ color: "var(--color-text)", borderColor: "var(--color-border)", textTransform: "none" }}
-            >
-              Log out
-            </Button>
-          </>
-        )}
-      </Box>
-    </Box>
+    <DashboardNav
+      token={token}
+      navItems={navItems}
+      activeSection={activeSection}
+      basePath={basePath}
+      onNavigate={() => setMobileOpen(false)}
+      onLogout={handleLogout}
+      logoSrc={DauntlessAthleticsLogoDesktopCircleImg}
+    />
   );
 
   const loadSeasons = useCallback(async () => {
@@ -1971,6 +1910,17 @@ export default function SurveyAdmin() {
   const recentInvites = useMemo(() => invites.slice(0, 5), [invites]);
   const recentResponses = useMemo(() => responses.slice(0, 5), [responses]);
 
+  const overviewStats = [
+    { label: "Organizations", value: schools.length },
+    { label: "Teams", value: teams.length },
+    { label: "Coaches", value: coaches.length },
+    { label: "Contacts", value: totalContacts },
+    { label: "Surveys", value: surveys.length },
+    { label: "Campaigns", value: invites.length },
+    { label: "Responses", value: responses.length },
+    { label: "Practices", value: practices.length },
+  ];
+
   const orgReadOnly = orgDrawerMode === "view";
 
 
@@ -1996,63 +1946,15 @@ export default function SurveyAdmin() {
       </Box>
       <Box sx={classes.content}>
         <Container maxWidth="xl" sx={classes.shell}>
-          <Paper sx={classes.headerCard}>
-          <Box sx={classes.headerTop}>
-            <Box sx={classes.headerTitle}>
-              {token && (
-                <IconButton
-                  onClick={handleDrawerToggle}
-                  sx={{ display: { xs: "inline-flex", md: "none" }, color: "var(--color-text)" }}
-                >
-                  <MenuIcon />
-                </IconButton>
-              )}
-              <Avatar
-                src={DauntlessAthleticsLogoDesktopCircleImg}
-                alt="Dauntless Athletics Logo"
-                sx={{ width: 48, height: 48 }}
-              />
-              <Box>
-                <Typography
-                  sx={{ fontFamily: "var(--font-display)", fontSize: "1.3rem", color: "var(--color-text)" }}
-                >
-                  Client Management
-                </Typography>
-                <Typography sx={{ color: "var(--color-muted)" }}>
-                  {token ? `${activeLabel} Dashboard` : "Sign in to continue"}
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.9rem" }}>
-            Internal workspace for managing client relationships, team schedules, and survey operations.
-          </Typography>
-          {token && (
-            <>
-              <Divider sx={{ borderColor: "var(--color-border)" }} />
-              <Box sx={classes.headerMeta}>
-                {headerMetaItems.map((item) => (
-                  <Box key={item.label} sx={classes.headerMetaItem}>
-                    <Typography sx={{ color: "var(--color-muted)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                      {item.label}
-                    </Typography>
-                    <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {item.value}
-                    </Typography>
-                  </Box>
-                ))}
-              </Box>
-              <Box sx={classes.kpiRow}>
-                {kpiStats.map((stat) => (
-                  <Box key={stat.label} sx={classes.kpiCard}>
-                    <Typography sx={classes.kpiLabel}>{stat.label}</Typography>
-                    <Typography sx={classes.kpiValue}>{stat.value}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            </>
-          )}
-          </Paper>
+          <DashboardHeader
+            token={token}
+            activeLabel={activeLabel}
+            headerMetaItems={headerMetaItems}
+            kpiStats={kpiStats}
+            onMenuToggle={handleDrawerToggle}
+            classes={classes}
+            logoSrc={DauntlessAthleticsLogoDesktopCircleImg}
+          />
 
           {!token && (
             <Box component="form" onSubmit={handleLogin} sx={classes.section}>
@@ -2081,1384 +1983,227 @@ export default function SurveyAdmin() {
             <>
               {dataError && <Alert severity="error">{dataError}</Alert>}
               {activeSection === "overview" && (
-                <Box sx={{ display: "grid", gap: "16px" }}>
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>Overview</Typography>
-                        <Typography sx={classes.breadcrumb}>Dashboard / Overview</Typography>
-                      </Box>
-                      <Box sx={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{ color: "var(--color-text)", borderColor: "var(--color-border)" }}
-                          onClick={() => openOrganizationDrawer(null, "create")}
-                        >
-                          New Organization
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{ color: "var(--color-text)", borderColor: "var(--color-border)" }}
-                          onClick={() => {
-                            setEditingTeamId(null);
-                            setTeamForm({
-                              ...emptyTeam,
-                              seasonId: activeSeason?.id ? String(activeSeason.id) : "",
-                            });
-                            setTeamModalOpen(true);
-                          }}
-                        >
-                          Add Team
-                        </Button>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          sx={classes.button}
-                          onClick={() => setSurveyCreateOpen(true)}
-                        >
-                          Create Survey
-                        </Button>
-                      </Box>
-                    </Box>
-                    <Divider sx={{ borderColor: "var(--color-border)" }} />
-                    <Box
-                      sx={{
-                        display: "grid",
-                        gap: "12px",
-                        gridTemplateColumns: { xs: "1fr", md: "repeat(4, minmax(0, 1fr))" },
-                      }}
-                    >
-                      {[
-                        { label: "Organizations", value: schools.length },
-                        { label: "Teams", value: teams.length },
-                        { label: "Coaches", value: coaches.length },
-                        { label: "Contacts", value: totalContacts },
-                        { label: "Surveys", value: surveys.length },
-                        { label: "Campaigns", value: invites.length },
-                        { label: "Responses", value: responses.length },
-                        { label: "Practices", value: practices.length },
-                      ].map((stat) => (
-                        <Box key={stat.label} sx={classes.statCard}>
-                          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
-                            {stat.label}
-                          </Typography>
-                          <Typography sx={{ color: "var(--color-text)", fontSize: "1.35rem", fontWeight: 700 }}>
-                            {stat.value}
-                          </Typography>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: "grid", gap: "16px", gridTemplateColumns: { xs: "1fr", md: "1.2fr 1fr" } }}>
-                    <Box sx={classes.section}>
-                      <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Alerts & Recommendations</Typography>
-                      <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-                        Actionable items to keep operations on track.
-                      </Typography>
-                      <Box sx={{ display: "grid", gap: "8px" }}>
-                        {overviewAlerts.length === 0 ? (
-                          <Alert severity="success">All systems look healthy right now.</Alert>
-                        ) : (
-                          overviewAlerts.map((alert, index) => (
-                            <Alert key={`${alert.title}-${index}`} severity="warning">
-                              <strong>{alert.title}</strong> — {alert.body}
-                            </Alert>
-                          ))
-                        )}
-                      </Box>
-                    </Box>
-
-                    <Box sx={classes.section}>
-                      <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Quick Actions</Typography>
-                      <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-                        Jump into the next step without hunting through menus.
-                      </Typography>
-                      <Box sx={{ display: "grid", gap: "10px" }}>
-                        <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => openOrganizationDrawer(null, "create")}>
-                          Add organization
-                        </Button>
-                        <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => setInviteModalOpen(true)} disabled={schools.length === 0 || surveys.length === 0}>
-                          Generate invite links
-                        </Button>
-                        <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => setCoachModalOpen(true)}>
-                          Add coach
-                        </Button>
-                        <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => setContactModalOpen(true)} disabled={teams.length === 0}>
-                          Add contact
-                        </Button>
-                      </Box>
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: "grid", gap: "16px", gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 1fr))" } }}>
-                    <Box sx={classes.section}>
-                      <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Recent Invites</Typography>
-                      {recentInvites.length === 0 ? (
-                        <Typography sx={{ color: "var(--color-muted)" }}>No invite activity yet.</Typography>
-                      ) : (
-                        <TableContainer component={Paper} sx={classes.tablePaper}>
-                          <Table size="small">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
-                                <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                                <TableCell sx={classes.tableHeadCell}>Status</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {recentInvites.map((invite) => (
-                                <TableRow key={invite.id} hover>
-                                  <TableCell sx={{ color: "var(--color-text)" }}>
-                                    {invite.organization_name}
-                                  </TableCell>
-                                  <TableCell sx={{ color: "var(--color-text)" }}>
-                                    {invite.survey_title || "—"}
-                                  </TableCell>
-                                  <TableCell sx={{ color: invite.used_at ? "var(--color-accent)" : "var(--color-muted)" }}>
-                                    {invite.used_at ? "Used" : "Unused"}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      )}
-                    </Box>
-
-                    <Box sx={classes.section}>
-                      <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Recent Responses</Typography>
-                      {recentResponses.length === 0 ? (
-                        <Typography sx={{ color: "var(--color-muted)" }}>No responses yet.</Typography>
-                      ) : (
-                        <TableContainer component={Paper} sx={classes.tablePaper}>
-                          <Table size="small">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
-                                <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                                <TableCell sx={classes.tableHeadCell}>Date</TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {recentResponses.map((response) => (
-                                <TableRow key={response.id} hover>
-                                  <TableCell sx={{ color: "var(--color-text)" }}>
-                                    {response.organization_name}
-                                  </TableCell>
-                                  <TableCell sx={{ color: "var(--color-text)" }}>
-                                    {response.survey_title || "—"}
-                                  </TableCell>
-                                  <TableCell sx={{ color: "var(--color-text)" }}>
-                                    {formatDate(response.created_at)}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      )}
-                    </Box>
-                  </Box>
-                </Box>
+                <OverviewSection
+                  classes={classes}
+                  stats={overviewStats}
+                  alerts={overviewAlerts}
+                  onNewOrganization={() => openOrganizationDrawer(null, "create")}
+                  onAddTeam={() => {
+                    setEditingTeamId(null);
+                    setTeamForm({
+                      ...emptyTeam,
+                      seasonId: activeSeason?.id ? String(activeSeason.id) : "",
+                    });
+                    setTeamModalOpen(true);
+                  }}
+                  onCreateSurvey={() => {
+                    setNewSurveyTitle("");
+                    setNewSurveyDescription("");
+                    setNewSurveyCommentPrompt("");
+                    setNewSurveyQuestions([{ text: "" }]);
+                    setSurveyCreateOpen(true);
+                  }}
+                  onGenerateInvites={() => setInviteModalOpen(true)}
+                  onAddCoach={() => handleOpenCoachModal()}
+                  onAddContact={() => {
+                    setEditingContactId(null);
+                    setContactForm((prev) => ({ ...emptyContact, teamId: prev.teamId || selectedTeamId || "" }));
+                    setContactModalOpen(true);
+                  }}
+                  inviteDisabled={schools.length === 0 || surveys.length === 0}
+                  contactDisabled={teams.length === 0}
+                  recentInvites={recentInvites}
+                  recentResponses={recentResponses}
+                  formatDate={formatDate}
+                />
               )}
 
               {activeSection === "clients" && (
-                <Box sx={{ display: "grid", gap: "16px" }}>
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>Organizations</Typography>
-                        <Typography sx={classes.breadcrumb}>Dashboard / Organizations</Typography>
-                      </Box>
-                      <Button variant="contained" sx={classes.button} onClick={() => openOrganizationDrawer(null, "create")}>
-                        New Organization
-                      </Button>
-                    </Box>
-                    <Divider sx={{ borderColor: "var(--color-border)" }} />
-                    <Box sx={classes.filterBar}>
-                      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                        <TextField
-                          label="Search organizations"
-                          value={organizationSearch}
-                          onChange={(event) => setOrganizationSearch(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "220px" }}
-                        />
-                        <TextField
-                          select
-                          label="Type"
-                          value={organizationTypeFilter}
-                          onChange={(event) => setOrganizationTypeFilter(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "180px" }}
-                        >
-                          <MenuItem value="all">All types</MenuItem>
-                          {organizationTypeOptions.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                        <TextField
-                          select
-                          label="Parent"
-                          value={organizationParentFilter}
-                          onChange={(event) => setOrganizationParentFilter(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "180px" }}
-                        >
-                          <MenuItem value="all">All parents</MenuItem>
-                          <MenuItem value="none">Top-level only</MenuItem>
-                          {districts.map((org) => (
-                            <MenuItem key={org.id} value={String(org.id)}>
-                              {org.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                        <TextField
-                          select
-                          label="Status"
-                          value={organizationStatusFilter}
-                          onChange={(event) => setOrganizationStatusFilter(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "160px" }}
-                        >
-                          <MenuItem value="all">All statuses</MenuItem>
-                          <MenuItem value="active">Active</MenuItem>
-                          <MenuItem value="inactive">Inactive</MenuItem>
-                        </TextField>
-                      </Box>
-                    </Box>
-
-                    {selectedOrganizationIds.length > 0 && (
-                      <Box sx={classes.bulkBar}>
-                        <Typography sx={{ color: "var(--color-text)" }}>
-                          {selectedOrganizationIds.length} selected
-                        </Typography>
-                        <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            sx={{ color: "var(--color-text)" }}
-                            onClick={handleBulkArchiveOrganizations}
-                          >
-                            Archive
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            sx={{ color: "var(--color-text)" }}
-                            onClick={() => setSelectedOrganizationIds([])}
-                          >
-                            Clear
-                          </Button>
-                        </Box>
-                      </Box>
-                    )}
-
-                    {filteredOrganizations.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>
-                        No organizations match the current filters.
-                      </Typography>
-                    ) : (
-                      <TableContainer component={Paper} sx={classes.tablePaper}>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={classes.tableHeadCell}>
-                                <Checkbox
-                                  checked={allOrganizationsSelected}
-                                  onChange={handleToggleAllOrganizations}
-                                  sx={{ color: "var(--color-muted)", "&.Mui-checked": { color: "var(--color-accent)" } }}
-                                />
-                              </TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Type</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Parent</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Teams</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Status</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Created</TableCell>
-                              <TableCell sx={classes.tableHeadCell} align="right">
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {filteredOrganizations.map((org) => (
-                              <TableRow key={org.id} hover>
-                                <TableCell>
-                                  <Checkbox
-                                    checked={selectedOrganizationIds.includes(org.id)}
-                                    onChange={() => toggleOrganizationSelection(org.id)}
-                                    sx={{ color: "var(--color-muted)", "&.Mui-checked": { color: "var(--color-accent)" } }}
-                                  />
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                  {org.name}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {organizationTypeMap.get(org.type) || org.type || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {districtMap.get(String(org.parent_id)) || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {teamCountByOrg[org.id] || 0}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {org.status || "active"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {formatDate(org.created_at)}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => openOrganizationDrawer(org, "view")}
-                                    >
-                                      View
-                                    </Button>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => openOrganizationDrawer(org, "edit")}
-                                    >
-                                      Edit
-                                    </Button>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleDeleteOrganization(org.id)}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Box>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    )}
-                  </Box>
-                </Box>
+                <OrganizationsSection
+                  classes={classes}
+                  organizationSearch={organizationSearch}
+                  onOrganizationSearchChange={setOrganizationSearch}
+                  organizationTypeFilter={organizationTypeFilter}
+                  onOrganizationTypeFilterChange={setOrganizationTypeFilter}
+                  organizationParentFilter={organizationParentFilter}
+                  onOrganizationParentFilterChange={setOrganizationParentFilter}
+                  organizationStatusFilter={organizationStatusFilter}
+                  onOrganizationStatusFilterChange={setOrganizationStatusFilter}
+                  organizationTypeOptions={organizationTypeOptions}
+                  districts={districts}
+                  filteredOrganizations={filteredOrganizations}
+                  selectedOrganizationIds={selectedOrganizationIds}
+                  allOrganizationsSelected={allOrganizationsSelected}
+                  onToggleAllOrganizations={handleToggleAllOrganizations}
+                  onToggleOrganizationSelection={toggleOrganizationSelection}
+                  onBulkArchive={handleBulkArchiveOrganizations}
+                  onClearSelection={() => setSelectedOrganizationIds([])}
+                  onNewOrganization={() => openOrganizationDrawer(null, "create")}
+                  onViewOrganization={(org) => openOrganizationDrawer(org, "view")}
+                  onEditOrganization={(org) => openOrganizationDrawer(org, "edit")}
+                  onDeleteOrganization={handleDeleteOrganization}
+                  teamCountByOrg={teamCountByOrg}
+                  districtMap={districtMap}
+                  organizationTypeMap={organizationTypeMap}
+                  formatDate={formatDate}
+                />
               )}
 
               {activeSection === "teams" && (
-                <Box sx={{ display: "grid", gap: "16px" }}>
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>Teams</Typography>
-                        <Typography sx={classes.breadcrumb}>Dashboard / Teams</Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        sx={classes.button}
-                        onClick={() => {
-                          setEditingTeamId(null);
-                          setTeamForm({
-                            ...emptyTeam,
-                            seasonId: activeSeason?.id ? String(activeSeason.id) : "",
-                          });
-                          setTeamModalOpen(true);
-                        }}
-                      >
-                        Add Team
-                      </Button>
-                    </Box>
-                    <Divider sx={{ borderColor: "var(--color-border)" }} />
-                    <Box sx={classes.filterBar}>
-                      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                        <TextField
-                          label="Search teams"
-                          value={teamSearch}
-                          onChange={(event) => setTeamSearch(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "220px" }}
-                        />
-                        <TextField
-                          select
-                          label="Organization"
-                          value={teamOrgFilter}
-                          onChange={(event) => setTeamOrgFilter(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "200px" }}
-                        >
-                          <MenuItem value="all">All organizations</MenuItem>
-                          {schools.map((org) => (
-                            <MenuItem key={org.id} value={String(org.id)}>
-                              {org.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                        <TextField
-                          select
-                          label="Season"
-                          value={teamSeasonFilter}
-                          onChange={(event) => setTeamSeasonFilter(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "180px" }}
-                        >
-                          <MenuItem value="all">All seasons</MenuItem>
-                          {seasons.map((season) => (
-                            <MenuItem key={season.id} value={String(season.id)}>
-                              {season.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </Box>
-                    </Box>
-                    {filteredTeams.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>No teams match the current filters.</Typography>
-                    ) : (
-                      <TableContainer component={Paper} sx={classes.tablePaper}>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={classes.tableHeadCell}>Team</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Season</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Contacts</TableCell>
-                              <TableCell sx={classes.tableHeadCell} align="right">
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {filteredTeams.map((team) => (
-                              <TableRow key={team.id} hover>
-                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                  {team.name}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {team.organization_name || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {team.season_name || seasonMap.get(String(team.season_id)) || team.season || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {team.contact_count || 0}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleEditTeam(team)}
-                                    >
-                                      Edit
-                                    </Button>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleDeleteTeam(team.id)}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Box>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    )}
-                  </Box>
-
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Practice Schedule</Typography>
-                        <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-                          Maintain team practice blocks.
-                        </Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        sx={classes.button}
-                        onClick={() => {
-                          setEditingPracticeId(null);
-                          setPracticeForm((prev) => ({ ...emptyPractice, teamId: prev.teamId || selectedTeamId || "" }));
-                          setPracticeModalOpen(true);
-                        }}
-                        disabled={teams.length === 0}
-                      >
-                        Add Practice
-                      </Button>
-                    </Box>
-                    {teams.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>
-                        Add a team first to create a practice schedule.
-                      </Typography>
-                    ) : (
-                      <>
-                        <TextField
-                          select
-                          label="Team"
-                          value={selectedTeamId}
-                          onChange={(event) => setSelectedTeamId(event.target.value)}
-                          sx={{ ...classes.input, maxWidth: "320px" }}
-                        >
-                          {teams.map((team) => (
-                            <MenuItem key={team.id} value={team.id}>
-                              {team.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                        {practices.length === 0 ? (
-                          <Typography sx={{ color: "var(--color-muted)" }}>No practices scheduled yet.</Typography>
-                        ) : (
-                          <TableContainer component={Paper} sx={classes.tablePaper}>
-                            <Table size="small">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell sx={classes.tableHeadCell}>Day</TableCell>
-                                  <TableCell sx={classes.tableHeadCell}>Time</TableCell>
-                                  <TableCell sx={classes.tableHeadCell}>Coach</TableCell>
-                                  <TableCell sx={classes.tableHeadCell}>Location</TableCell>
-                                  <TableCell sx={classes.tableHeadCell} align="right">
-                                    Actions
-                                  </TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {practices.map((practice) => (
-                                  <TableRow key={practice.id} hover>
-                                    <TableCell sx={{ color: "var(--color-text)" }}>
-                                      {dayOptions.find((day) => day.value === practice.day_of_week)?.label || "—"}
-                                    </TableCell>
-                                    <TableCell sx={{ color: "var(--color-text)" }}>
-                                      {practice.start_time?.slice(0, 5)} - {practice.end_time?.slice(0, 5)}
-                                    </TableCell>
-                                    <TableCell sx={{ color: "var(--color-text)" }}>
-                                      {practice.contact_name || "—"}
-                                    </TableCell>
-                                    <TableCell sx={{ color: "var(--color-text)" }}>
-                                      {practice.location || "—"}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                        <Button
-                                          variant="outlined"
-                                          size="small"
-                                          sx={{ color: "var(--color-text)" }}
-                                          onClick={() => handleEditPractice(practice)}
-                                        >
-                                          Edit
-                                        </Button>
-                                        <Button
-                                          variant="outlined"
-                                          size="small"
-                                          sx={{ color: "var(--color-text)" }}
-                                          onClick={() => handleDeletePractice(practice.id)}
-                                        >
-                                          Delete
-                                        </Button>
-                                      </Box>
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        )}
-                      </>
-                    )}
-                  </Box>
-
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Seasons</Typography>
-                        <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-                          Manage active seasons for team assignments.
-                        </Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        sx={classes.button}
-                        onClick={() => {
-                          setEditingSeasonId(null);
-                          setEditingSeasonName("");
-                          setEditingSeasonStart("");
-                          setEditingSeasonEnd("");
-                          setEditingSeasonActive(false);
-                          setNewSeasonName("");
-                          setNewSeasonStart("");
-                          setNewSeasonEnd("");
-                          setNewSeasonActive(false);
-                          setSeasonModalOpen(true);
-                        }}
-                      >
-                        Add Season
-                      </Button>
-                    </Box>
-                    {seasons.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>No seasons yet.</Typography>
-                    ) : (
-                      <TableContainer component={Paper} sx={classes.tablePaper}>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={classes.tableHeadCell}>Season</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Dates</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Active</TableCell>
-                              <TableCell sx={classes.tableHeadCell} align="right">
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {seasons.map((season) => (
-                              <TableRow key={season.id} hover>
-                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                  {season.name}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {season.start_date ? String(season.start_date).slice(0, 10) : "—"}{" "}
-                                  {season.end_date ? `→ ${String(season.end_date).slice(0, 10)}` : ""}
-                                </TableCell>
-                                <TableCell sx={{ color: season.is_active ? "var(--color-accent)" : "var(--color-muted)" }}>
-                                  {season.is_active ? "Active" : "Inactive"}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleEditSeason(season)}
-                                    >
-                                      Edit
-                                    </Button>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleDeleteSeason(season.id)}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Box>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    )}
-                  </Box>
-                </Box>
+                <TeamsSection
+                  classes={classes}
+                  onAddTeam={() => {
+                    setEditingTeamId(null);
+                    setTeamForm({
+                      ...emptyTeam,
+                      seasonId: activeSeason?.id ? String(activeSeason.id) : "",
+                    });
+                    setTeamModalOpen(true);
+                  }}
+                  teamSearch={teamSearch}
+                  onTeamSearchChange={setTeamSearch}
+                  teamOrgFilter={teamOrgFilter}
+                  onTeamOrgFilterChange={setTeamOrgFilter}
+                  teamSeasonFilter={teamSeasonFilter}
+                  onTeamSeasonFilterChange={setTeamSeasonFilter}
+                  schools={schools}
+                  seasons={seasons}
+                  filteredTeams={filteredTeams}
+                  onEditTeam={handleEditTeam}
+                  onDeleteTeam={handleDeleteTeam}
+                  seasonMap={seasonMap}
+                  teams={teams}
+                  practices={practices}
+                  selectedTeamId={selectedTeamId}
+                  onSelectedTeamChange={setSelectedTeamId}
+                  dayOptions={dayOptions}
+                  onAddPractice={() => {
+                    setEditingPracticeId(null);
+                    setPracticeForm((prev) => ({ ...emptyPractice, teamId: prev.teamId || selectedTeamId || "" }));
+                    setPracticeModalOpen(true);
+                  }}
+                  onEditPractice={handleEditPractice}
+                  onDeletePractice={handleDeletePractice}
+                  onAddSeason={() => {
+                    setEditingSeasonId(null);
+                    setEditingSeasonName("");
+                    setEditingSeasonStart("");
+                    setEditingSeasonEnd("");
+                    setEditingSeasonActive(false);
+                    setNewSeasonName("");
+                    setNewSeasonStart("");
+                    setNewSeasonEnd("");
+                    setNewSeasonActive(false);
+                    setSeasonModalOpen(true);
+                  }}
+                  onEditSeason={handleEditSeason}
+                  onDeleteSeason={handleDeleteSeason}
+                />
               )}
 
               {activeSection === "people" && (
-                <Box sx={{ display: "grid", gap: "16px" }}>
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>People</Typography>
-                        <Typography sx={classes.breadcrumb}>Dashboard / People</Typography>
-                      </Box>
-                      <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-                        <Button
-                          variant={peopleView === "coaches" ? "contained" : "outlined"}
-                          size="small"
-                          sx={peopleView === "coaches" ? classes.button : { color: "var(--color-text)" }}
-                          onClick={() => setPeopleView("coaches")}
-                        >
-                          Coaches
-                        </Button>
-                        <Button
-                          variant={peopleView === "contacts" ? "contained" : "outlined"}
-                          size="small"
-                          sx={peopleView === "contacts" ? classes.button : { color: "var(--color-text)" }}
-                          onClick={() => setPeopleView("contacts")}
-                        >
-                          Contacts
-                        </Button>
-                      </Box>
-                    </Box>
-                    <Divider sx={{ borderColor: "var(--color-border)" }} />
-                    <Box sx={classes.filterBar}>
-                      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-                        <TextField
-                          label="Search"
-                          value={peopleSearch}
-                          onChange={(event) => setPeopleSearch(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "220px" }}
-                        />
-                        {peopleView === "contacts" && (
-                          <TextField
-                            select
-                            label="Team"
-                            value={selectedTeamId}
-                            onChange={(event) => setSelectedTeamId(event.target.value)}
-                            sx={{ ...classes.input, minWidth: "220px" }}
-                          >
-                            {teams.map((team) => (
-                              <MenuItem key={team.id} value={team.id}>
-                                {team.name}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-                        )}
-                        <Box sx={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
-                          {peopleView === "coaches" ? (
-                            <Button variant="contained" sx={classes.button} onClick={() => handleOpenCoachModal()}>
-                              Add Coach
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="contained"
-                              sx={classes.button}
-                              onClick={() => {
-                                setEditingContactId(null);
-                                setContactForm((prev) => ({ ...emptyContact, teamId: prev.teamId || selectedTeamId || "" }));
-                                setContactModalOpen(true);
-                              }}
-                              disabled={teams.length === 0}
-                            >
-                              Add Contact
-                            </Button>
-                          )}
-                        </Box>
-                      </Box>
-                    </Box>
-
-                    {peopleView === "coaches" ? (
-                      <>
-                        {filteredCoaches.length === 0 ? (
-                          <Typography sx={{ color: "var(--color-muted)" }}>No coaches yet.</Typography>
-                        ) : (
-                          <TableContainer component={Paper} sx={classes.tablePaper}>
-                            <Table size="small">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell sx={classes.tableHeadCell}>Coach</TableCell>
-                                  <TableCell sx={classes.tableHeadCell}>Email</TableCell>
-                                  <TableCell sx={classes.tableHeadCell}>Phone</TableCell>
-                                  <TableCell sx={classes.tableHeadCell}>Teams</TableCell>
-                                  <TableCell sx={classes.tableHeadCell} align="right">
-                                    Actions
-                                  </TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {filteredCoaches.map((coach) => (
-                                  <TableRow key={coach.id} hover>
-                                    <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                      {coach.name}
-                                    </TableCell>
-                                    <TableCell sx={{ color: "var(--color-text)" }}>
-                                      {coach.email || "—"}
-                                    </TableCell>
-                                    <TableCell sx={{ color: "var(--color-text)" }}>
-                                      {coach.phone || "—"}
-                                    </TableCell>
-                                    <TableCell sx={{ color: "var(--color-text)" }}>
-                                      {coach.team_count || 0}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                        <Button
-                                          variant="outlined"
-                                          size="small"
-                                          sx={{ color: "var(--color-text)" }}
-                                          onClick={() => handleOpenAssignCoach(coach)}
-                                        >
-                                          Assign
-                                        </Button>
-                                        <Button
-                                          variant="outlined"
-                                          size="small"
-                                          sx={{ color: "var(--color-text)" }}
-                                          onClick={() => handleOpenCoachModal(coach)}
-                                        >
-                                          Edit
-                                        </Button>
-                                        <Button
-                                          variant="outlined"
-                                          size="small"
-                                          sx={{ color: "var(--color-text)" }}
-                                          onClick={() => handleDeleteCoach(coach.id)}
-                                        >
-                                          Delete
-                                        </Button>
-                                      </Box>
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        )}
-                      </>
-                    ) : teams.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>
-                        Add a team first to start collecting contacts.
-                      </Typography>
-                    ) : filteredContacts.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>No contacts yet.</Typography>
-                    ) : (
-                      <TableContainer component={Paper} sx={classes.tablePaper}>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={classes.tableHeadCell}>Name</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Role</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Audience</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Email</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Phone</TableCell>
-                              <TableCell sx={classes.tableHeadCell} align="right">
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {filteredContacts.map((contact) => (
-                              <TableRow key={contact.id} hover>
-                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                  {contact.name}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {contact.role || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {contact.audience || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {contact.email || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {contact.phone || "—"}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleEditContact(contact)}
-                                    >
-                                      Edit
-                                    </Button>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleDeleteContact(contact.id)}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Box>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    )}
-                  </Box>
-                </Box>
+                <PeopleSection
+                  classes={classes}
+                  peopleView={peopleView}
+                  onPeopleViewChange={setPeopleView}
+                  peopleSearch={peopleSearch}
+                  onPeopleSearchChange={setPeopleSearch}
+                  teams={teams}
+                  selectedTeamId={selectedTeamId}
+                  onSelectedTeamChange={setSelectedTeamId}
+                  onAddCoach={() => handleOpenCoachModal()}
+                  onAddContact={() => {
+                    setEditingContactId(null);
+                    setContactForm((prev) => ({ ...emptyContact, teamId: prev.teamId || selectedTeamId || "" }));
+                    setContactModalOpen(true);
+                  }}
+                  filteredCoaches={filteredCoaches}
+                  filteredContacts={filteredContacts}
+                  onAssignCoach={handleOpenAssignCoach}
+                  onEditCoach={handleOpenCoachModal}
+                  onDeleteCoach={handleDeleteCoach}
+                  onEditContact={handleEditContact}
+                  onDeleteContact={handleDeleteContact}
+                />
               )}
 
               {activeSection === "surveys" && (
-                <Box sx={{ display: "grid", gap: "16px" }}>
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>Survey Templates</Typography>
-                        <Typography sx={classes.breadcrumb}>Dashboard / Surveys</Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        sx={classes.button}
-                        onClick={() => {
-                          setNewSurveyTitle("");
-                          setNewSurveyDescription("");
-                          setNewSurveyCommentPrompt("");
-                          setNewSurveyQuestions([{ text: "" }]);
-                          setSurveyCreateOpen(true);
-                        }}
-                      >
-                        Create Survey
-                      </Button>
-                    </Box>
-                    <Divider sx={{ borderColor: "var(--color-border)" }} />
-                    <Box sx={classes.filterBar}>
-                      <TextField
-                        label="Search surveys"
-                        value={surveySearch}
-                        onChange={(event) => setSurveySearch(event.target.value)}
-                        sx={{ ...classes.input, minWidth: "220px" }}
-                      />
-                    </Box>
-                    {filteredSurveys.length > 0 ? (
-                      <TableContainer component={Paper} sx={classes.tablePaper}>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Questions</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Status</TableCell>
-                              <TableCell sx={classes.tableHeadCell} align="right">
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {filteredSurveys.map((survey) => (
-                              <TableRow key={survey.id} hover>
-                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                  {survey.title}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {survey.questions?.length || 0}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {survey.isActive ? "Active" : "Inactive"}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleStartEditSurvey(survey)}
-                                    >
-                                      Edit
-                                    </Button>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleToggleSurveyActive(survey)}
-                                    >
-                                      {survey.isActive ? "Deactivate" : "Activate"}
-                                    </Button>
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleDeleteSurvey(survey.id)}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Box>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    ) : (
-                      <Typography sx={{ color: "var(--color-muted)" }}>
-                        No surveys yet. Create one to get started.
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
+                <SurveysSection
+                  classes={classes}
+                  surveySearch={surveySearch}
+                  onSurveySearchChange={setSurveySearch}
+                  filteredSurveys={filteredSurveys}
+                  onCreateSurvey={() => {
+                    setNewSurveyTitle("");
+                    setNewSurveyDescription("");
+                    setNewSurveyCommentPrompt("");
+                    setNewSurveyQuestions([{ text: "" }]);
+                    setSurveyCreateOpen(true);
+                  }}
+                  onEditSurvey={handleStartEditSurvey}
+                  onToggleSurveyActive={handleToggleSurveyActive}
+                  onDeleteSurvey={handleDeleteSurvey}
+                />
               )}
 
               {activeSection === "campaigns" && (
-                <Box sx={{ display: "grid", gap: "16px" }}>
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>Campaigns</Typography>
-                        <Typography sx={classes.breadcrumb}>Dashboard / Campaigns</Typography>
-                      </Box>
-                      <Button
-                        variant="contained"
-                        sx={classes.button}
-                        onClick={() => setInviteModalOpen(true)}
-                        disabled={schools.length === 0 || surveys.length === 0}
-                      >
-                        Generate Links
-                      </Button>
-                    </Box>
-                    <Divider sx={{ borderColor: "var(--color-border)" }} />
-                    <Box sx={classes.filterBar}>
-                      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                        <TextField
-                          select
-                          label="Survey"
-                          value={selectedSurveyId}
-                          onChange={(event) => setSelectedSurveyId(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "220px" }}
-                        >
-                          {inviteSurveyOptions.map((survey) => (
-                            <MenuItem key={survey.id} value={survey.id}>
-                              {survey.title}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                        <TextField
-                          select
-                          label="Organization"
-                          value={selectedSchoolId}
-                          onChange={(event) => setSelectedSchoolId(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "220px" }}
-                        >
-                          {inviteSchoolOptions.map((school) => (
-                            <MenuItem key={school.id} value={school.id}>
-                              {school.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </Box>
-                    </Box>
-
-                    {latestInvites.length > 0 && (
-                      <Box sx={{ display: "grid", gap: "10px" }}>
-                        <Box sx={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
-                          <Checkbox
-                            checked={allInvitesSelected}
-                            onChange={handleToggleAllInvites}
-                            sx={{
-                              color: "var(--color-muted)",
-                              "&.Mui-checked": { color: "var(--color-accent)" },
-                            }}
-                          />
-                          <Typography sx={{ color: "var(--color-text)" }}>Select all</Typography>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            sx={{ color: "var(--color-text)" }}
-                            onClick={handleCopySelectedInvites}
-                          >
-                            Copy selected
-                          </Button>
-                        </Box>
-                        <TableContainer component={Paper} sx={classes.tablePaper}>
-                          <Table size="small">
-                            <TableHead>
-                              <TableRow>
-                                <TableCell sx={classes.tableHeadCell} />
-                                <TableCell sx={classes.tableHeadCell}>Invite Link</TableCell>
-                                <TableCell sx={classes.tableHeadCell} align="right">
-                                  Action
-                                </TableCell>
-                              </TableRow>
-                            </TableHead>
-                            <TableBody>
-                              {latestInvites.map((invite) => {
-                                const inviteText = getInviteText(invite);
-                                return (
-                                  <TableRow key={invite.id} hover>
-                                    <TableCell>
-                                      <Checkbox
-                                        checked={selectedInviteIds.includes(invite.id)}
-                                        onChange={() => toggleInviteSelection(invite.id)}
-                                        sx={{
-                                          color: "var(--color-muted)",
-                                          "&.Mui-checked": { color: "var(--color-accent)" },
-                                        }}
-                                      />
-                                    </TableCell>
-                                    <TableCell sx={{ color: "var(--color-text)", fontFamily: "monospace" }}>
-                                      {inviteText}
-                                    </TableCell>
-                                    <TableCell align="right">
-                                      <Button
-                                        variant="outlined"
-                                        size="small"
-                                        sx={{ color: "var(--color-text)" }}
-                                        onClick={() => copyToClipboard(inviteText)}
-                                      >
-                                        Copy
-                                      </Button>
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </Box>
-                    )}
-                  </Box>
-
-                  <Box sx={classes.section}>
-                    <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Invite Status</Typography>
-                    {invites.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>No invite links yet.</Typography>
-                    ) : (
-                      <TableContainer component={Paper} sx={classes.tablePaper}>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Status</TableCell>
-                              <TableCell sx={classes.tableHeadCell} align="right">
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {invites.map((invite) => (
-                              <TableRow key={invite.id} hover>
-                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                  {invite.organization_name}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {invite.survey_title || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: invite.used_at ? "var(--color-accent)" : "var(--color-muted)" }}>
-                                  {invite.used_at ? `Used ${formatDate(invite.used_at)}` : "Unused"}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                                    {!invite.used_at && (
-                                      <Button
-                                        variant="outlined"
-                                        size="small"
-                                        sx={{ color: "var(--color-text)" }}
-                                        onClick={() => handleRegenerateInvite(invite.id)}
-                                      >
-                                        Resend
-                                      </Button>
-                                    )}
-                                    {invite.used_at && (
-                                      <Button
-                                        variant="outlined"
-                                        size="small"
-                                        sx={{ color: "var(--color-text)" }}
-                                        onClick={() => handleReopenInvite(invite.id)}
-                                      >
-                                        Reopen
-                                      </Button>
-                                    )}
-                                    <Button
-                                      variant="outlined"
-                                      size="small"
-                                      sx={{ color: "var(--color-text)" }}
-                                      onClick={() => handleDeleteInvite(invite.id)}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Box>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    )}
-                  </Box>
-                </Box>
+                <CampaignsSection
+                  classes={classes}
+                  selectedSurveyId={selectedSurveyId}
+                  onSelectedSurveyChange={setSelectedSurveyId}
+                  selectedSchoolId={selectedSchoolId}
+                  onSelectedSchoolChange={setSelectedSchoolId}
+                  inviteSurveyOptions={inviteSurveyOptions}
+                  inviteSchoolOptions={inviteSchoolOptions}
+                  onGenerateLinks={() => setInviteModalOpen(true)}
+                  generateDisabled={schools.length === 0 || surveys.length === 0}
+                  latestInvites={latestInvites}
+                  allInvitesSelected={allInvitesSelected}
+                  selectedInviteIds={selectedInviteIds}
+                  onToggleAllInvites={handleToggleAllInvites}
+                  onToggleInvite={toggleInviteSelection}
+                  onCopySelected={handleCopySelectedInvites}
+                  getInviteText={getInviteText}
+                  onCopyInvite={copyToClipboard}
+                  invites={invites}
+                  formatDate={formatDate}
+                  onRegenerateInvite={handleRegenerateInvite}
+                  onReopenInvite={handleReopenInvite}
+                  onDeleteInvite={handleDeleteInvite}
+                />
               )}
 
               {activeSection === "responses" && (
-                <Box sx={{ display: "grid", gap: "16px" }}>
-                  <Box sx={classes.section}>
-                    <Box sx={classes.workspaceHeader}>
-                      <Box>
-                        <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>Responses</Typography>
-                        <Typography sx={classes.breadcrumb}>Dashboard / Responses</Typography>
-                      </Box>
-                    </Box>
-                    <Divider sx={{ borderColor: "var(--color-border)" }} />
-                    <Box sx={classes.filterBar}>
-                      <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-                        <TextField
-                          select
-                          label="Survey"
-                          value={selectedSurveyId}
-                          onChange={(event) => setSelectedSurveyId(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "220px" }}
-                        >
-                          {inviteSurveyOptions.map((survey) => (
-                            <MenuItem key={survey.id} value={survey.id}>
-                              {survey.title}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                        <TextField
-                          select
-                          label="Organization"
-                          value={selectedSchoolId}
-                          onChange={(event) => setSelectedSchoolId(event.target.value)}
-                          sx={{ ...classes.input, minWidth: "220px" }}
-                        >
-                          {inviteSchoolOptions.map((school) => (
-                            <MenuItem key={school.id} value={school.id}>
-                              {school.name}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      </Box>
-                    </Box>
-                    {!selectedSurveyId ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>
-                        Select a survey above to view question-by-question responses.
-                      </Typography>
-                    ) : responses.length === 0 ? (
-                      <Typography sx={{ color: "var(--color-muted)" }}>No responses yet.</Typography>
-                    ) : (
-                      <TableContainer component={Paper} sx={classes.tablePaper}>
-                        <Table size="small">
-                          <TableHead>
-                            <TableRow>
-                              <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Date</TableCell>
-                              <TableCell sx={classes.tableHeadCell}>Comment</TableCell>
-                              <TableCell sx={classes.tableHeadCell} align="right">
-                                Actions
-                              </TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {responses.map((response) => (
-                              <TableRow key={response.id} hover>
-                                <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                                  {response.organization_name}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {response.survey_title || "—"}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {formatDate(response.created_at)}
-                                </TableCell>
-                                <TableCell sx={{ color: "var(--color-text)" }}>
-                                  {response.comment
-                                    ? response.comment.length > 60
-                                      ? `${response.comment.slice(0, 60)}...`
-                                      : response.comment
-                                    : "—"}
-                                </TableCell>
-                                <TableCell align="right">
-                                  <Button
-                                    variant="outlined"
-                                    size="small"
-                                    sx={{ color: "var(--color-text)" }}
-                                    onClick={() => setResponseDetail(response)}
-                                  >
-                                    View
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    )}
-                  </Box>
-                </Box>
+                <ResponsesSection
+                  classes={classes}
+                  selectedSurveyId={selectedSurveyId}
+                  onSelectedSurveyChange={setSelectedSurveyId}
+                  selectedSchoolId={selectedSchoolId}
+                  onSelectedSchoolChange={setSelectedSchoolId}
+                  inviteSurveyOptions={inviteSurveyOptions}
+                  inviteSchoolOptions={inviteSchoolOptions}
+                  responses={responses}
+                  onViewResponse={setResponseDetail}
+                  formatDate={formatDate}
+                />
               )}
             </>
           )}
         </Container>
 
-        <Drawer
-          anchor="right"
+        <OrganizationDrawer
           open={orgDrawerOpen}
           onClose={() => setOrgDrawerOpen(false)}
-          PaperProps={{ sx: classes.drawerPaper }}
-        >
-          <Box sx={{ display: "grid", gap: "16px", padding: "20px", height: "100%" }}>
-            <Box>
-              <Typography sx={classes.breadcrumb}>Organizations</Typography>
-              <Typography sx={{ fontWeight: 700, color: "var(--color-text)", fontSize: "1.2rem" }}>
-                {orgDrawerMode === "create"
-                  ? "New Organization"
-                  : orgDrawerMode === "edit"
-                  ? "Edit Organization"
-                  : "Organization Details"}
-              </Typography>
-            </Box>
-            <Divider sx={{ borderColor: "var(--color-border)" }} />
-            <TextField
-              label="Organization name"
-              value={orgDraft.name}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, name: event.target.value }))}
-              sx={classes.input}
-              disabled={orgReadOnly}
-            />
-            <TextField
-              select
-              label="Type"
-              value={orgDraft.type}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, type: event.target.value }))}
-              sx={classes.input}
-              disabled={orgReadOnly}
-            >
-              {organizationTypeOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Parent organization"
-              value={orgDraft.parentId}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, parentId: event.target.value }))}
-              sx={classes.input}
-              disabled={orgReadOnly}
-            >
-              <MenuItem value="">No parent</MenuItem>
-              {districts.map((org) => (
-                <MenuItem key={org.id} value={String(org.id)}>
-                  {org.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Status"
-              value={orgDraft.status}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, status: event.target.value }))}
-              sx={classes.input}
-              disabled={orgReadOnly}
-            >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
-            </TextField>
-
-            <Box sx={{ marginTop: "auto", display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-              {orgReadOnly ? (
-                <>
-                  <Button
-                    variant="outlined"
-                    sx={{ color: "var(--color-text)" }}
-                    onClick={() => setOrgDrawerOpen(false)}
-                  >
-                    Close
-                  </Button>
-                  {orgDraft.id && (
-                    <Button
-                      variant="contained"
-                      sx={classes.button}
-                      onClick={() => setOrgDrawerMode("edit")}
-                    >
-                      Edit
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant="outlined"
-                    sx={{ color: "var(--color-text)" }}
-                    onClick={() => setOrgDrawerOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button variant="contained" sx={classes.button} onClick={handleSaveOrganization}>
-                    Save
-                  </Button>
-                </>
-              )}
-            </Box>
-          </Box>
-        </Drawer>
+          classes={classes}
+          orgDrawerMode={orgDrawerMode}
+          orgDraft={orgDraft}
+          onDraftChange={setOrgDraft}
+          organizationTypeOptions={organizationTypeOptions}
+          districts={districts}
+          readOnly={orgReadOnly}
+          onSave={handleSaveOrganization}
+          onEdit={() => setOrgDrawerMode("edit")}
+        />
 
         <Dialog
           open={districtModalOpen}

@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { apiRequest, authHeader } from "../Survey/surveyApi";
+import { apiRequest, authHeader } from "../Dashboard/surveyApi";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
 const TOKEN_KEY = "dauntlessSurveyAdminToken";
