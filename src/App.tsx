@@ -12,6 +12,13 @@ import NotFoundPage from "./Pages/NotFoundPage";
 import CoachSurvey from "./Pages/Dashboard/CoachSurvey";
 import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
 import SurveyOwner from "./Pages/Dashboard/SurveyOwner";
+import OverviewPage from "./Pages/Dashboard/pages/OverviewPage";
+import OrganizationsPage from "./Pages/Dashboard/pages/OrganizationsPage";
+import TeamsPage from "./Pages/Dashboard/pages/TeamsPage";
+import PeoplePage from "./Pages/Dashboard/pages/PeoplePage";
+import SurveysPage from "./Pages/Dashboard/pages/SurveysPage";
+import CampaignsPage from "./Pages/Dashboard/pages/CampaignsPage";
+import ResponsesPage from "./Pages/Dashboard/pages/ResponsesPage";
 import ContactsAdmin from "./Pages/Contacts/ContactsAdmin";
 import "./App.css";
 
@@ -63,7 +70,17 @@ function App() {
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
         <Route path="/survey-admin/*" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard/*" element={<AdminDashboard />} />
+        <Route path="/dashboard" element={<AdminDashboard />}>
+          <Route index element={<OverviewPage />} />
+          <Route path="overview" element={<OverviewPage />} />
+          <Route path="clients" element={<Navigate to="/dashboard/organizations" replace />} />
+          <Route path="organizations" element={<OrganizationsPage />} />
+          <Route path="teams" element={<TeamsPage />} />
+          <Route path="people" element={<PeoplePage />} />
+          <Route path="surveys" element={<SurveysPage />} />
+          <Route path="campaigns" element={<CampaignsPage />} />
+          <Route path="responses" element={<ResponsesPage />} />
+        </Route>
         <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="/contacts-admin" element={<ContactsAdmin />} />
         <Route path="*" element={<NotFoundPage />} />

@@ -22,7 +22,7 @@ export default function DashboardHeader({
     <Paper sx={classes.headerCard}>
       <Box sx={classes.headerTop}>
         <Box sx={classes.headerTitle}>
-          {token && (
+          {token && onMenuToggle && (
             <IconButton
               onClick={onMenuToggle}
               sx={{ display: { xs: "inline-flex", md: "none" }, color: "var(--color-text)" }}
