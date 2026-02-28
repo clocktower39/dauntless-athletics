@@ -15,15 +15,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import OrganizationTeamMultiSelect from "./OrganizationTeamMultiSelect";
 
 export default function CampaignsSection({
   classes,
   selectedSurveyId,
   onSelectedSurveyChange,
-  selectedSchoolId,
-  onSelectedSchoolChange,
+  selectedOrganizationIds,
+  onSelectedOrganizationsChange,
+  selectedTeamIds = [],
+  teamsByOrganization = {},
+  onToggleTeam = () => {},
   inviteSurveyOptions,
-  inviteSchoolOptions,
+  organizationOptions,
   onGenerateLinks,
   generateDisabled,
   latestInvites,
@@ -53,8 +57,8 @@ export default function CampaignsSection({
           </Button>
         </Box>
         <Divider sx={{ borderColor: "var(--color-border)" }} />
-        <Box sx={classes.filterBar}>
-          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+      <Box sx={classes.filterBar}>
+        <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <TextField
               select
               label="Survey"
@@ -68,19 +72,17 @@ export default function CampaignsSection({
                 </MenuItem>
               ))}
             </TextField>
-            <TextField
-              select
-              label="Organization"
-              value={selectedSchoolId}
-              onChange={(event) => onSelectedSchoolChange(event.target.value)}
-              sx={{ ...classes.input, minWidth: "220px" }}
-            >
-              {inviteSchoolOptions.map((school) => (
-                <MenuItem key={school.id} value={school.id}>
-                  {school.name}
-                </MenuItem>
-              ))}
-            </TextField>
+            <OrganizationTeamMultiSelect
+              classes={classes}
+              label="Organizations"
+              minWidth="260px"
+              organizationOptions={organizationOptions}
+              teamsByOrganization={teamsByOrganization}
+              selectedOrganizationIds={selectedOrganizationIds}
+              onOrganizationsChange={onSelectedOrganizationsChange}
+              selectedTeamIds={selectedTeamIds}
+              onToggleTeam={onToggleTeam}
+            />
           </Box>
         </Box>
 

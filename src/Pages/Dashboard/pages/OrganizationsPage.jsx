@@ -80,6 +80,17 @@ export default function OrganizationsPage() {
     }, {});
   }, [teams]);
 
+  const teamsByOrganization = useMemo(() => {
+    return teams.reduce((acc, team) => {
+      if (team.organization_id) {
+        const key = String(team.organization_id);
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(team);
+      }
+      return acc;
+    }, {});
+  }, [teams]);
+
   const allOrganizationsSelected =
     filteredOrganizations.length > 0 && selectedOrganizationIds.length === filteredOrganizations.length;
 
@@ -246,6 +257,7 @@ export default function OrganizationsPage() {
         onEditOrganization={(org) => openOrganizationDrawer(org, "edit")}
         onDeleteOrganization={handleDeleteOrganization}
         teamCountByOrg={teamCountByOrg}
+        teamsByOrganization={teamsByOrganization}
         districtMap={districtMap}
         organizationTypeMap={organizationTypeMap}
         formatDate={formatDate}

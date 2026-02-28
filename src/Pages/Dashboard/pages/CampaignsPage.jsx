@@ -17,7 +17,8 @@ import CampaignsSection from "../../../Components/Dashboard/CampaignsSection";
 import classes from "../dashboardStyles";
 import { formatDate } from "../dashboardUtils";
 import { apiRequest, authHeader } from "../surveyApi";
-import { setInvites, setOrganizations, setSurveys } from "../../../store/dashboardSlice";
+import { setInvites, setOrganizations, setSurveys, setTeams } from "../../../store/dashboardSlice";
+import OrganizationTeamMultiSelect from "../../../Components/Dashboard/OrganizationTeamMultiSelect";
 
 export default function CampaignsPage() {
   const dispatch = useDispatch();
@@ -25,9 +26,11 @@ export default function CampaignsPage() {
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
   const surveys = useSelector((state) => state.dashboard.surveys);
+  const teams = useSelector((state) => state.dashboard.teams);
   const invites = useSelector((state) => state.dashboard.invites);
   const [dataError, setDataError] = useState("");
-  const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
+  const [selectedOrganizationIds, setSelectedOrganizationIds] = useState([]);
+  const [selectedTeamIds, setSelectedTeamIds] = useState([]);
   const [selectedSurveyId, setSelectedSurveyId] = useState("");
   const [inviteCount, setInviteCount] = useState(1);
   const [latestInvites, setLatestInvites] = useState([]);
@@ -36,20 +39,33 @@ export default function CampaignsPage() {
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
 
-  const inviteSchoolOptions = useMemo(() => [{ id: "", name: "Select organization" }, ...organizations], [organizations]);
+  const organizationOptions = useMemo(() => organizations, [organizations]);
   const inviteSurveyOptions = useMemo(() => [{ id: "", title: "Select survey" }, ...surveys], [surveys]);
+  const teamsByOrganization = useMemo(
+    () =>
+      teams.reduce((acc, team) => {
+        const orgId = team.organization_id ? String(team.organization_id) : "";
+        if (!orgId) return acc;
+        if (!acc[orgId]) acc[orgId] = [];
+        acc[orgId].push(team);
+        return acc;
+      }, {}),
+    [teams]
+  );
 
   useEffect(() => {
     if (!token) return;
     const load = async () => {
       try {
         setDataError("");
-        const [orgRes, surveyRes] = await Promise.all([
+        const [orgRes, surveyRes, teamRes] = await Promise.all([
           apiRequest("/api/admin/organizations", { headers: authHeaders }),
           apiRequest("/api/admin/surveys", { headers: authHeaders }),
+          apiRequest("/api/admin/teams", { headers: authHeaders }),
         ]);
         dispatch(setOrganizations(orgRes.organizations || []));
         dispatch(setSurveys(surveyRes.surveys || []));
+        dispatch(setTeams(teamRes.teams || []));
       } catch (error) {
         setDataError(error.message);
       }
@@ -59,8 +75,8 @@ export default function CampaignsPage() {
 
   useEffect(() => {
     if (!token) return;
-    loadInvites(selectedOrganizationId, selectedSurveyId);
-  }, [token, selectedOrganizationId, selectedSurveyId, authHeaders]);
+    loadInvites(selectedSurveyId);
+  }, [token, selectedSurveyId, authHeaders]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -69,10 +85,9 @@ export default function CampaignsPage() {
     }
   }, [location.search]);
 
-  const loadInvites = async (organizationId, surveyId) => {
+  const loadInvites = async (surveyId) => {
     try {
       const params = [];
-      if (organizationId) params.push(`organization_id=${organizationId}`);
       if (surveyId) params.push(`survey_id=${surveyId}`);
       const query = params.length > 0 ? `?${params.join("&")}` : "";
       const result = await apiRequest(`/api/admin/invites${query}`, { headers: authHeaders });
@@ -140,8 +155,8 @@ export default function CampaignsPage() {
   };
 
   const handleCreateInvites = async () => {
-    if (!selectedOrganizationId) {
-      setDataError("Select an organization before generating invite links.");
+    if (selectedOrganizationIds.length === 0) {
+      setDataError("Select at least one organization before generating invite links.");
       return;
     }
     if (!selectedSurveyId) {
@@ -150,19 +165,24 @@ export default function CampaignsPage() {
     }
     try {
       setDataError("");
-      const result = await apiRequest("/api/admin/invites", {
-        method: "POST",
-        headers: authHeaders,
-        body: JSON.stringify({
-          organization_id: Number(selectedOrganizationId),
-          survey_id: Number(selectedSurveyId),
-          count: Number(inviteCount),
-        }),
-      });
-      setLatestInvites(result.invites || []);
+      const results = await Promise.all(
+        selectedOrganizationIds.map((orgId) =>
+          apiRequest("/api/admin/invites", {
+            method: "POST",
+            headers: authHeaders,
+            body: JSON.stringify({
+              organization_id: Number(orgId),
+              survey_id: Number(selectedSurveyId),
+              count: Number(inviteCount),
+            }),
+          })
+        )
+      );
+      const createdInvites = results.flatMap((result) => result.invites || []);
+      setLatestInvites(createdInvites);
       setSelectedInviteIds([]);
       setInviteModalOpen(false);
-      await loadInvites(selectedOrganizationId, selectedSurveyId);
+      await loadInvites(selectedSurveyId);
     } catch (error) {
       setDataError(error.message);
     }
@@ -177,7 +197,7 @@ export default function CampaignsPage() {
       });
       setLatestInvites(result.invites || []);
       setSelectedInviteIds([]);
-      await loadInvites(selectedOrganizationId, selectedSurveyId);
+      await loadInvites(selectedSurveyId);
     } catch (error) {
       setDataError(error.message);
     }
@@ -190,7 +210,7 @@ export default function CampaignsPage() {
         method: "DELETE",
         headers: authHeaders,
       });
-      await loadInvites(selectedOrganizationId, selectedSurveyId);
+      await loadInvites(selectedSurveyId);
     } catch (error) {
       setDataError(error.message);
     }
@@ -203,9 +223,46 @@ export default function CampaignsPage() {
         method: "POST",
         headers: authHeaders,
       });
-      await loadInvites(selectedOrganizationId, selectedSurveyId);
+      await loadInvites(selectedSurveyId);
     } catch (error) {
       setDataError(error.message);
+    }
+  };
+
+  const filteredInvites = useMemo(() => {
+    let items = invites;
+    if (selectedOrganizationIds.length > 0) {
+      items = items.filter((invite) =>
+        selectedOrganizationIds.includes(String(invite.organization_id))
+      );
+    }
+    return items;
+  }, [invites, selectedOrganizationIds]);
+
+  const handleOrganizationsChange = (orgIds) => {
+    setSelectedOrganizationIds(orgIds);
+    if (orgIds.length === 0) {
+      setSelectedTeamIds([]);
+      return;
+    }
+    setSelectedTeamIds((prev) =>
+      prev.filter((teamId) => {
+        const team = teams.find((item) => String(item.id) === String(teamId));
+        return team && orgIds.includes(String(team.organization_id));
+      })
+    );
+  };
+
+  const handleToggleTeam = (team) => {
+    const teamId = String(team.id);
+    const orgId = String(team.organization_id || "");
+    setSelectedTeamIds((prev) =>
+      prev.includes(teamId) ? prev.filter((id) => id !== teamId) : [...prev, teamId]
+    );
+    if (orgId) {
+      setSelectedOrganizationIds((prev) =>
+        prev.includes(orgId) ? prev : [...prev, orgId]
+      );
     }
   };
 
@@ -216,10 +273,13 @@ export default function CampaignsPage() {
         classes={classes}
         selectedSurveyId={selectedSurveyId}
         onSelectedSurveyChange={setSelectedSurveyId}
-        selectedSchoolId={selectedOrganizationId}
-        onSelectedSchoolChange={setSelectedOrganizationId}
+        selectedOrganizationIds={selectedOrganizationIds}
+        onSelectedOrganizationsChange={handleOrganizationsChange}
+        selectedTeamIds={selectedTeamIds}
+        teamsByOrganization={teamsByOrganization}
+        onToggleTeam={handleToggleTeam}
         inviteSurveyOptions={inviteSurveyOptions}
-        inviteSchoolOptions={inviteSchoolOptions}
+        organizationOptions={organizationOptions}
         onGenerateLinks={() => setInviteModalOpen(true)}
         generateDisabled={organizations.length === 0 || surveys.length === 0}
         latestInvites={latestInvites}
@@ -230,7 +290,7 @@ export default function CampaignsPage() {
         onCopySelected={handleCopySelectedInvites}
         getInviteText={getInviteText}
         onCopyInvite={copyToClipboard}
-        invites={invites}
+        invites={filteredInvites}
         formatDate={formatDate}
         onRegenerateInvite={handleRegenerateInvite}
         onReopenInvite={handleReopenInvite}
@@ -261,19 +321,16 @@ export default function CampaignsPage() {
               </MenuItem>
             ))}
           </TextField>
-          <TextField
-            select
-            label="Organization"
-            value={selectedOrganizationId}
-            onChange={(event) => setSelectedOrganizationId(event.target.value)}
-            sx={classes.input}
-          >
-            {inviteSchoolOptions.map((org) => (
-              <MenuItem key={org.id} value={org.id}>
-                {org.name}
-              </MenuItem>
-            ))}
-          </TextField>
+          <OrganizationTeamMultiSelect
+            classes={classes}
+            label="Organizations"
+            organizationOptions={organizationOptions}
+            teamsByOrganization={teamsByOrganization}
+            selectedOrganizationIds={selectedOrganizationIds}
+            onOrganizationsChange={handleOrganizationsChange}
+            selectedTeamIds={selectedTeamIds}
+            onToggleTeam={handleToggleTeam}
+          />
           <TextField
             label="Count"
             type="number"
@@ -294,7 +351,7 @@ export default function CampaignsPage() {
             variant="contained"
             sx={classes.button}
             onClick={handleCreateInvites}
-            disabled={!selectedOrganizationId || !selectedSurveyId}
+            disabled={selectedOrganizationIds.length === 0 || !selectedSurveyId}
           >
             Generate Links
           </Button>
