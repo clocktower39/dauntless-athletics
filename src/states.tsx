@@ -69,6 +69,24 @@ type PricingOption = {
 
 export const camps: Camp[] = [
   {
+    poster: "/images/camps/peak_performance_sundevil_2026.png",
+    Subject: "Peak Performance Camp",
+    StartTime: new Date(2026, 5, 12, 9, 0),
+    EndTime: new Date(2026, 5, 13, 16, 0),
+    color: "#d72638",
+    place: "Sun Devil Fitness Complex",
+    cost: { amount: 345, label: "per athlete (not staying overnight) / $430 per athlete (2 night stay)" },
+    description:
+      "A focused team experience designed to sharpen performance, elevate technique, and bring competition-ready energy. Coaches should complete the team intake form to secure placement and receive the official schedule.",
+    link: {
+      href: "/peak-performance-camp/#",
+      innerText: "Team Intake Form",
+    },
+    showDetailsButton: true,
+    dateText: "June 12-13, 2026",
+    timeText: "TBD",
+  },
+  {
     icon: <img src="/images/camps/silhouette_skeleton_toe_touch.png" style={{ ...classes.DauntlessCampIcon, borderRadius: '50%', }} />,
     Subject: "October Tumbling Camp",
     StartTime: new Date(2025, 9, 19, 13, 0),

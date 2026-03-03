@@ -158,7 +158,7 @@ export default function SurveyOwner() {
         const list = result?.surveys || [];
         setSurveys(list);
         if (!selectedSurveyId && list.length > 0) {
-          const activeSurvey = list.find((survey) => survey.is_active);
+          const activeSurvey = list.find((survey: any) => survey.is_active);
           setSelectedSurveyId(String((activeSurvey || list[0]).id));
         }
       } catch (error: unknown) {

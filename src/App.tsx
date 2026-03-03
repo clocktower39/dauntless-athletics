@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router";
 import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
 import Camps from "./Pages/WebsitePages/Camps";
+import PeakPerformanceCamp from "./Pages/WebsitePages/PeakPerformanceCamp";
 import CollegeCombine from "./Pages/WebsitePages/CollegeCombine";
 import ClassSchedule from "./Pages/WebsitePages/ClassSchedule";
 import Services from "./Pages/WebsitePages/Services";
@@ -58,6 +59,7 @@ function App() {
           <>
             <Route path="/" element={<WebsiteHome />} />
             <Route path="/camps" element={<Camps />} />
+            <Route path="/peak-performance-camp" element={<PeakPerformanceCamp />} />
             <Route path="/college-combine" element={<CollegeCombine />} />
             <Route path="/class-schedule" element={<ClassSchedule />} />
             <Route path="/services" element={<Services />} />

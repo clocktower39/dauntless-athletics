@@ -190,7 +190,14 @@ export default function WebsiteNavbar() {
         { name: "Tuition", link: "/#tuition-section" },
       ],
     },
-    { name: "Camps", link: "/camps/#" },
+    {
+      name: "Camps",
+      link: "/camps/#",
+      submenu: [
+        { name: "All Camps", link: "/camps/#" },
+        { name: "Peak Performance Camp", link: "/peak-performance-camp/#" },
+      ],
+    },
     { name: "Combine", link: "/college-combine/#" },
     { name: "Schedule", link: "/class-schedule/#" },
     { name: "Services", link: "/services/#" },
