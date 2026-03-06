@@ -526,7 +526,7 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
           backgroundColor: "rgba(255, 255, 255, 0.06)",
           border: "1px solid var(--color-border)",
           borderRadius: "999px",
-          fontSize: { xs: "9px", md: "13px" },
+          fontSize: { xs: "9px", md: "11px" },
           borderColor: isActive(item.link) ? "var(--color-accent)" : "var(--color-border)",
           boxShadow: isActive(item.link) ? "0 0 18px var(--color-glow)" : "none",
           "&:hover": {
