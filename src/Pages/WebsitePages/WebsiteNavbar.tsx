@@ -29,6 +29,7 @@ import {
   Facebook,
   Instagram,
   YouTube,
+  Opacity,
 } from "@mui/icons-material";
 import { holidayScheduleEvents } from "./ClassSchedule";
 import useWindowWidth from "../../Hooks/WindowWidth";
@@ -55,6 +56,7 @@ const classes = {
   BottomDivider: {
     backgroundColor: "var(--color-border)",
     borderBottomWidth: 1,
+    borderColor: 'gray',
   },
   Toolbar: {
     backgroundColor: "rgba(11, 13, 16, 0.9)",
