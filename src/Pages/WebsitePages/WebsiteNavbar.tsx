@@ -29,7 +29,6 @@ import {
   Facebook,
   Instagram,
   YouTube,
-  Opacity,
 } from "@mui/icons-material";
 import { holidayScheduleEvents } from "./ClassSchedule";
 import useWindowWidth from "../../Hooks/WindowWidth";
@@ -205,7 +204,7 @@ export default function WebsiteNavbar() {
     { name: "Services", link: "/services/#" },
     { name: "Staff", link: "/staff/#" },
     { name: "Facility", link: "/facility/#" },
-    { name: "Contact Us", link: "/contact-us/#" },
+    { name: "Contact\u00A0Us", link: "/contact-us/#" },
     {
       name: "Login",
       link: "https://app.iclasspro.com/portal/dauntlessathletics/login?showLogin=1",
@@ -532,6 +531,7 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
           "&:hover": {
             backgroundColor: "rgba(215, 38, 56, 0.18)",
           },
+          whiteSpace: "nowrap",
         }}
         variant="contained"
         size="small"
