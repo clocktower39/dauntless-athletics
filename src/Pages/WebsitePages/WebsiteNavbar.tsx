@@ -55,6 +55,7 @@ const classes = {
   BottomDivider: {
     backgroundColor: "var(--color-border)",
     borderBottomWidth: 1,
+    borderColor: 'gray',
   },
   Toolbar: {
     backgroundColor: "rgba(11, 13, 16, 0.9)",
@@ -190,13 +191,20 @@ export default function WebsiteNavbar() {
         { name: "Tuition", link: "/#tuition-section" },
       ],
     },
-    { name: "Camps", link: "/camps/#" },
+    {
+      name: "Camps",
+      link: "/camps/#",
+      submenu: [
+        { name: "All Camps", link: "/camps/#" },
+        { name: "Peak Performance Camp", link: "/peak-performance-camp/#" },
+      ],
+    },
     { name: "Combine", link: "/college-combine/#" },
     { name: "Schedule", link: "/class-schedule/#" },
     { name: "Services", link: "/services/#" },
     { name: "Staff", link: "/staff/#" },
     { name: "Facility", link: "/facility/#" },
-    { name: "Contact Us", link: "/contact-us/#" },
+    { name: "Contact\u00A0Us", link: "/contact-us/#" },
     {
       name: "Login",
       link: "https://app.iclasspro.com/portal/dauntlessathletics/login?showLogin=1",
@@ -517,12 +525,13 @@ const SubMenuItem = ({ item, isActive, isTouchDevice, hasAnnouncement, dismissed
           backgroundColor: "rgba(255, 255, 255, 0.06)",
           border: "1px solid var(--color-border)",
           borderRadius: "999px",
-          fontSize: { xs: "9px", md: "13px" },
+          fontSize: { xs: "9px", md: "11px" },
           borderColor: isActive(item.link) ? "var(--color-accent)" : "var(--color-border)",
           boxShadow: isActive(item.link) ? "0 0 18px var(--color-glow)" : "none",
           "&:hover": {
             backgroundColor: "rgba(215, 38, 56, 0.18)",
           },
+          whiteSpace: "nowrap",
         }}
         variant="contained"
         size="small"

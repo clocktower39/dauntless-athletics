@@ -9,7 +9,7 @@ import adminRoutes from "./routes/admin.js";
 import ownerRoutes from "./routes/owner.js";
 
 const app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8089;
 
 app.set("trust proxy", 1);
 app.use(helmet());

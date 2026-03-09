@@ -28,6 +28,6 @@ NGINX proxy (example)
   }
 
 Survey workflow
-- Create schools in the admin dashboard or via POST /api/admin/schools.
+- Create organizations in the admin dashboard or via POST /api/admin/organizations.
 - Generate invite links via POST /api/admin/invites.
 - Send each link to a coach. Each link can be used once.

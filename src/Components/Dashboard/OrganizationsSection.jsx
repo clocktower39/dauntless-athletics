@@ -1,0 +1,289 @@
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Collapse,
+  Divider,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  MenuItem,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+
+export default function OrganizationsSection({
+  classes,
+  organizationSearch,
+  onOrganizationSearchChange,
+  organizationTypeFilter,
+  onOrganizationTypeFilterChange,
+  organizationParentFilter,
+  onOrganizationParentFilterChange,
+  organizationStatusFilter,
+  onOrganizationStatusFilterChange,
+  organizationTypeOptions,
+  districts,
+  filteredOrganizations,
+  selectedOrganizationIds,
+  allOrganizationsSelected,
+  onToggleAllOrganizations,
+  onToggleOrganizationSelection,
+  onBulkArchive,
+  onClearSelection,
+  onNewOrganization,
+  onViewOrganization,
+  onEditOrganization,
+  onDeleteOrganization,
+  teamCountByOrg,
+  teamsByOrganization,
+  districtMap,
+  organizationTypeMap,
+  formatDate,
+}) {
+  const [expandedOrganizationIds, setExpandedOrganizationIds] = useState([]);
+
+  const toggleExpanded = (orgId) => {
+    setExpandedOrganizationIds((prev) =>
+      prev.includes(orgId) ? prev.filter((id) => id !== orgId) : [...prev, orgId]
+    );
+  };
+
+  return (
+    <Box sx={{ display: "grid", gap: "16px" }}>
+      <Box sx={classes.section}>
+        <Box sx={classes.workspaceHeader}>
+          <Box>
+            <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>Organizations</Typography>
+            <Typography sx={classes.breadcrumb}>Dashboard / Organizations</Typography>
+          </Box>
+          <Button variant="contained" sx={classes.button} onClick={onNewOrganization}>
+            New Organization
+          </Button>
+        </Box>
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+        <Box sx={classes.filterBar}>
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <TextField
+              label="Search organizations"
+              value={organizationSearch}
+              onChange={(event) => onOrganizationSearchChange(event.target.value)}
+              sx={{ ...classes.input, minWidth: "220px" }}
+            />
+            <TextField
+              select
+              label="Type"
+              value={organizationTypeFilter}
+              onChange={(event) => onOrganizationTypeFilterChange(event.target.value)}
+              sx={{ ...classes.input, minWidth: "180px" }}
+            >
+              <MenuItem value="all">All types</MenuItem>
+              {organizationTypeOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              select
+              label="Parent"
+              value={organizationParentFilter}
+              onChange={(event) => onOrganizationParentFilterChange(event.target.value)}
+              sx={{ ...classes.input, minWidth: "180px" }}
+            >
+              <MenuItem value="all">All parents</MenuItem>
+              <MenuItem value="none">Top-level only</MenuItem>
+              {districts.map((org) => (
+                <MenuItem key={org.id} value={String(org.id)}>
+                  {org.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              select
+              label="Status"
+              value={organizationStatusFilter}
+              onChange={(event) => onOrganizationStatusFilterChange(event.target.value)}
+              sx={{ ...classes.input, minWidth: "160px" }}
+            >
+              <MenuItem value="all">All statuses</MenuItem>
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+            </TextField>
+          </Box>
+        </Box>
+
+        {selectedOrganizationIds.length > 0 && (
+          <Box sx={classes.bulkBar}>
+            <Typography sx={{ color: "var(--color-text)" }}>
+              {selectedOrganizationIds.length} selected
+            </Typography>
+            <Box sx={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={onBulkArchive}>
+                Archive
+              </Button>
+              <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={onClearSelection}>
+                Clear
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        {filteredOrganizations.length === 0 ? (
+          <Typography sx={{ color: "var(--color-muted)" }}>
+            No organizations match the current filters.
+          </Typography>
+        ) : (
+          <TableContainer component={Paper} sx={classes.tablePaper}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={classes.tableHeadCell}>
+                    <Checkbox
+                      checked={allOrganizationsSelected}
+                      onChange={onToggleAllOrganizations}
+                      sx={{ color: "var(--color-muted)", "&.Mui-checked": { color: "var(--color-accent)" } }}
+                    />
+                  </TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Type</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Parent</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Teams</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Status</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Created</TableCell>
+                  <TableCell sx={classes.tableHeadCell} align="right">
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredOrganizations.map((org) => {
+                  const orgId = String(org.id);
+                  const orgTeams = teamsByOrganization[orgId] || [];
+                  const isExpanded = expandedOrganizationIds.includes(orgId);
+
+                  return (
+                    <React.Fragment key={org.id}>
+                      <TableRow hover>
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedOrganizationIds.includes(org.id)}
+                            onChange={() => onToggleOrganizationSelection(org.id)}
+                            sx={{ color: "var(--color-muted)", "&.Mui-checked": { color: "var(--color-accent)" } }}
+                          />
+                        </TableCell>
+                        <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+                          {org.name}
+                        </TableCell>
+                        <TableCell sx={{ color: "var(--color-text)" }}>
+                          {organizationTypeMap.get(org.type) || org.type || "—"}
+                        </TableCell>
+                        <TableCell sx={{ color: "var(--color-text)" }}>
+                          {districtMap.get(String(org.parent_id)) || "—"}
+                        </TableCell>
+                        <TableCell sx={{ color: "var(--color-text)" }}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                            <Typography sx={{ color: "var(--color-text)" }}>{teamCountByOrg[org.id] || 0}</Typography>
+                            <IconButton
+                              size="small"
+                              onClick={() => toggleExpanded(orgId)}
+                              disabled={orgTeams.length === 0}
+                              sx={{ color: "var(--color-muted)", "&.Mui-disabled": { color: "var(--color-border)" } }}
+                            >
+                              {isExpanded ? <KeyboardArrowUp fontSize="small" /> : <KeyboardArrowDown fontSize="small" />}
+                            </IconButton>
+                          </Box>
+                        </TableCell>
+                        <TableCell sx={{ color: "var(--color-text)" }}>
+                          {org.status || "active"}
+                        </TableCell>
+                        <TableCell sx={{ color: "var(--color-text)" }}>
+                          {formatDate(org.created_at)}
+                        </TableCell>
+                        <TableCell align="right">
+                          <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
+                            <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onViewOrganization(org)}>
+                              View
+                            </Button>
+                            <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onEditOrganization(org)}>
+                              Edit
+                            </Button>
+                            <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onDeleteOrganization(org.id)}>
+                              Delete
+                            </Button>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell colSpan={8} sx={{ padding: 0, borderBottom: isExpanded ? "none" : undefined }}>
+                          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                            <Box
+                              sx={{
+                                padding: "12px 16px 16px",
+                                borderTop: "1px solid var(--color-border)",
+                                backgroundColor: "var(--color-surface-3)",
+                              }}
+                            >
+                              <Typography sx={{ color: "var(--color-text)", fontWeight: 600, marginBottom: "8px" }}>
+                                Teams under {org.name}
+                              </Typography>
+                              {orgTeams.length === 0 ? (
+                                <Typography sx={{ color: "var(--color-muted)" }}>
+                                  No teams assigned yet.
+                                </Typography>
+                              ) : (
+                                <FormGroup
+                                  sx={{
+                                    display: "grid",
+                                    gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 1fr))", lg: "repeat(3, minmax(0, 1fr))" },
+                                    gap: "4px 12px",
+                                  }}
+                                >
+                                  {orgTeams.map((team) => (
+                                    <FormControlLabel
+                                      key={team.id}
+                                      control={
+                                        <Checkbox
+                                          checked
+                                          onChange={() => {}}
+                                          disableRipple
+                                          sx={{
+                                            color: "var(--color-muted)",
+                                            "&.Mui-checked": { color: "var(--color-accent)" },
+                                          }}
+                                        />
+                                      }
+                                      label={
+                                        <Typography sx={{ color: "var(--color-text)", fontSize: "0.85rem" }}>
+                                          {team.name}
+                                        </Typography>
+                                      }
+                                      sx={{ marginLeft: 0 }}
+                                    />
+                                  ))}
+                                </FormGroup>
+                              )}
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Box>
+    </Box>
+  );
+}

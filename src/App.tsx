@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router";
 import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
 import Camps from "./Pages/WebsitePages/Camps";
+import PeakPerformanceCamp from "./Pages/WebsitePages/PeakPerformanceCamp";
 import CollegeCombine from "./Pages/WebsitePages/CollegeCombine";
 import ClassSchedule from "./Pages/WebsitePages/ClassSchedule";
 import Services from "./Pages/WebsitePages/Services";
@@ -9,9 +10,17 @@ import Staff from "./Pages/WebsitePages/Staff";
 import Facility from "./Pages/WebsitePages/Facility";
 import Contact from "./Pages/WebsitePages/Contact";
 import NotFoundPage from "./Pages/NotFoundPage";
-import CoachSurvey from "./Pages/Survey/CoachSurvey";
-import SurveyAdmin from "./Pages/Survey/SurveyAdmin";
-import SurveyOwner from "./Pages/Survey/SurveyOwner";
+import CoachSurvey from "./Pages/Dashboard/CoachSurvey";
+import AdminDashboard from "./Pages/Dashboard/AdminDashboard";
+import SurveyOwner from "./Pages/Dashboard/SurveyOwner";
+import OverviewPage from "./Pages/Dashboard/pages/OverviewPage";
+import OrganizationsPage from "./Pages/Dashboard/pages/OrganizationsPage";
+import TeamsPage from "./Pages/Dashboard/pages/TeamsPage";
+import PeoplePage from "./Pages/Dashboard/pages/PeoplePage";
+import SurveysPage from "./Pages/Dashboard/pages/SurveysPage";
+import CampaignsPage from "./Pages/Dashboard/pages/CampaignsPage";
+import ResponsesPage from "./Pages/Dashboard/pages/ResponsesPage";
+import ContactsAdmin from "./Pages/Contacts/ContactsAdmin";
 import "./App.css";
 
 function App() {
@@ -50,6 +59,7 @@ function App() {
           <>
             <Route path="/" element={<WebsiteHome />} />
             <Route path="/camps" element={<Camps />} />
+            <Route path="/peak-performance-camp" element={<PeakPerformanceCamp />} />
             <Route path="/college-combine" element={<CollegeCombine />} />
             <Route path="/class-schedule" element={<ClassSchedule />} />
             <Route path="/services" element={<Services />} />
@@ -61,8 +71,20 @@ function App() {
           <> {/* App */}</>
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
-        <Route path="/survey-admin" element={<SurveyAdmin />} />
+        <Route path="/survey-admin/*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<AdminDashboard />}>
+          <Route index element={<OverviewPage />} />
+          <Route path="overview" element={<OverviewPage />} />
+          <Route path="clients" element={<Navigate to="/dashboard/organizations" replace />} />
+          <Route path="organizations" element={<OrganizationsPage />} />
+          <Route path="teams" element={<TeamsPage />} />
+          <Route path="people" element={<PeoplePage />} />
+          <Route path="surveys" element={<SurveysPage />} />
+          <Route path="campaigns" element={<CampaignsPage />} />
+          <Route path="responses" element={<ResponsesPage />} />
+        </Route>
         <Route path="/survey-owner" element={<SurveyOwner />} />
+        <Route path="/contacts-admin" element={<ContactsAdmin />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

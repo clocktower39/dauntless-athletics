@@ -18,13 +18,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ratingOptions, surveyQuestions } from "./surveyConfig";
+import { ratingOptions } from "./surveyConfig";
 import { apiRequest } from "./surveyApi";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 
 type SurveyQuestion = {
-  key: string;
+  id: number;
   text: string;
+  order: number;
 };
 
 type RatingOption = {
@@ -38,7 +39,7 @@ type Answers = Record<string, AnswerValue>;
 type SurveyStatus = {
   error: string;
   used: boolean;
-  schoolName: string;
+  organizationName: string;
 };
 
 type SubmitState = {
@@ -49,10 +50,16 @@ type SubmitState = {
 
 type SurveyStatusResponse = {
   used: boolean;
-  schoolName?: string;
+  organizationName?: string;
+  survey?: {
+    id: number;
+    title: string;
+    description?: string;
+    commentPrompt?: string;
+    questions: SurveyQuestion[];
+  };
 };
 
-const questions = surveyQuestions as SurveyQuestion[];
 const ratings = ratingOptions as RatingOption[];
 
 const classes = {
@@ -138,7 +145,7 @@ const classes = {
 
 const buildInitialAnswers = (items: SurveyQuestion[]): Answers => {
   return items.reduce<Answers>((acc, question) => {
-    acc[question.key] = "";
+    acc[String(question.id)] = "";
     return acc;
   }, {});
 };
@@ -150,8 +157,14 @@ export default function CoachSurvey() {
   const { token } = useParams<{ token: string }>();
   const tokenParam = token ?? "";
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState<SurveyStatus>({ error: "", used: false, schoolName: "" });
-  const [answers, setAnswers] = useState<Answers>(() => buildInitialAnswers(questions));
+  const [status, setStatus] = useState<SurveyStatus>({
+    error: "",
+    used: false,
+    organizationName: "",
+  });
+  const [survey, setSurvey] = useState<SurveyStatusResponse["survey"] | null>(null);
+  const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
+  const [answers, setAnswers] = useState<Answers>({});
   const [comment, setComment] = useState("");
   const [submitState, setSubmitState] = useState<SubmitState>({
     submitting: false,
@@ -161,14 +174,19 @@ export default function CoachSurvey() {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const missingAnswers = useMemo(() => {
-    return questions.filter((question) => answers[question.key] === "");
-  }, [answers]);
+    return questions.filter((question) => answers[String(question.id)] === "");
+  }, [answers, questions]);
+
+  useEffect(() => {
+    if (questions.length === 0) return;
+    setAnswers(buildInitialAnswers(questions));
+  }, [questions]);
 
   useEffect(() => {
     let active = true;
     const fetchStatus = async () => {
       if (!tokenParam) {
-        setStatus({ error: "Invalid survey link.", used: false, schoolName: "" });
+        setStatus({ error: "Invalid survey link.", used: false, organizationName: "" });
         setLoading(false);
         return;
       }
@@ -176,10 +194,18 @@ export default function CoachSurvey() {
       try {
         const result = (await apiRequest(`/api/survey/${tokenParam}`)) as SurveyStatusResponse;
         if (!active) return;
-        setStatus({ error: "", used: result.used, schoolName: result.schoolName || "" });
+        setStatus({
+          error: "",
+          used: result.used,
+          organizationName: result.organizationName || "",
+        });
+        setSurvey(result.survey || null);
+        setQuestions(result.survey?.questions || []);
       } catch (error) {
         if (!active) return;
-        setStatus({ error: getErrorMessage(error), used: false, schoolName: "" });
+        setStatus({ error: getErrorMessage(error), used: false, organizationName: "" });
+        setSurvey(null);
+        setQuestions([]);
       } finally {
         if (active) setLoading(false);
       }
@@ -191,8 +217,8 @@ export default function CoachSurvey() {
     };
   }, [tokenParam]);
 
-  const handleAnswerChange = (key: string, value: number) => {
-    setAnswers((prev) => ({ ...prev, [key]: value }));
+  const handleAnswerChange = (questionId: number, value: number) => {
+    setAnswers((prev) => ({ ...prev, [String(questionId)]: value }));
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -213,7 +239,7 @@ export default function CoachSurvey() {
       await apiRequest(`/api/survey/${tokenParam}`, {
         method: "POST",
         body: JSON.stringify({
-          ...answers,
+          answers,
           comment,
         }),
       });
@@ -235,13 +261,17 @@ export default function CoachSurvey() {
               sx={{ width: 72, height: 72 }}
             />
           </Box>
-          <Typography sx={classes.headerEyebrow}>High School Coaching Survey</Typography>
+          <Typography sx={classes.headerEyebrow}>
+            {survey?.title ? "Survey" : "High School Coaching Survey"}
+          </Typography>
           <Typography sx={classes.title} gutterBottom>
-            Dauntless Athletics
+            {survey?.title || "Dauntless Athletics"}
           </Typography>
           <Typography sx={{ color: "var(--color-muted)", marginBottom: "24px" }}>
-            {status.schoolName
-              ? `This confidential survey is for ${status.schoolName}. We appreciate your honest feedback.`
+            {survey?.description
+              ? survey.description
+              : status.organizationName
+              ? `This confidential survey is for ${status.organizationName}. We appreciate your honest feedback.`
               : "This confidential survey helps us improve our coaching experience."}
           </Typography>
 
@@ -260,14 +290,14 @@ export default function CoachSurvey() {
           {!loading && !status.error && !status.used && !submitState.success && (
             <Box component="form" onSubmit={handleSubmit} sx={{ display: "grid", gap: "20px" }}>
               {questions.map((question, index) => (
-                <Box key={question.key} sx={classes.questionCard}>
+                <Box key={question.id} sx={classes.questionCard}>
                   <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
                     {index + 1}. {question.text}
                   </Typography>
                   <RadioGroup
                     row
-                    value={answers[question.key]}
-                    onChange={(event) => handleAnswerChange(question.key, Number(event.target.value))}
+                    value={answers[String(question.id)]}
+                    onChange={(event) => handleAnswerChange(question.id, Number(event.target.value))}
                   >
                     {ratings.map((option) => (
                       <FormControlLabel
@@ -284,8 +314,9 @@ export default function CoachSurvey() {
 
               <Box sx={classes.questionCard}>
                 <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>
-                  6. Is there anything we can do better with our coaching approach? Anything you would like
-                  changed moving forward?
+                  {questions.length + 1}.{" "}
+                  {survey?.commentPrompt ||
+                    "Is there anything we can do better with our coaching approach? Anything you would like changed moving forward?"}
                 </Typography>
                 <TextField
                   multiline
