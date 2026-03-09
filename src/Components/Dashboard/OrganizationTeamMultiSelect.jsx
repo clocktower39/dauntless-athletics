@@ -15,19 +15,43 @@ export default function OrganizationTeamMultiSelect({
   const selectedOptions = organizationOptions.filter((org) =>
     selectedOrganizationIds.includes(String(org.id))
   );
+  const allOrganizationIds = organizationOptions.map((org) => String(org.id));
+  const allSelected =
+    allOrganizationIds.length > 0 &&
+    allOrganizationIds.every((orgId) => selectedOrganizationIds.includes(orgId));
+  const selectAllOption = {
+    id: "__all__",
+    name: allSelected ? "Clear all" : "Select all",
+    _isSelectAll: true,
+  };
+  const optionsWithSelectAll = [selectAllOption, ...organizationOptions];
 
   return (
     <Autocomplete
       multiple
       disableCloseOnSelect
       disablePortal
-      options={organizationOptions}
+      options={optionsWithSelectAll}
       value={selectedOptions}
-      onChange={(_event, value) =>
-        onOrganizationsChange(value.map((org) => String(org.id)))
-      }
-      getOptionLabel={(option) => option.name || ""}
+      onChange={(_event, value) => {
+        const hasSelectAll = value.some((option) => option?._isSelectAll);
+        if (hasSelectAll) {
+          onOrganizationsChange(allSelected ? [] : allOrganizationIds);
+          return;
+        }
+        onOrganizationsChange(value.map((org) => String(org.id)));
+      }}
+      getOptionLabel={(option) => option?.name || ""}
       isOptionEqualToValue={(option, value) => String(option.id) === String(value.id)}
+      renderTags={(value, getTagProps) =>
+        value
+          .filter((option) => !option?._isSelectAll)
+          .map((option, index) => (
+            <span key={String(option.id)} {...getTagProps({ index })}>
+              {option.name}
+            </span>
+          ))
+      }
       slotProps={{
         paper: {
           sx: {
@@ -70,6 +94,26 @@ export default function OrganizationTeamMultiSelect({
         "& .MuiChip-label": { color: "var(--color-text, #f7f9fc)" },
       }}
       renderOption={(props, option, { selected }) => {
+        if (option?._isSelectAll) {
+          return (
+            <li {...props}>
+              <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
+                <Checkbox
+                  checked={allSelected}
+                  indeterminate={!allSelected && selectedOrganizationIds.length > 0}
+                  sx={{
+                    color: "var(--color-muted, #a9b4c3)",
+                    "&.Mui-checked": { color: "var(--color-accent, #d72638)" },
+                    marginRight: "8px",
+                  }}
+                />
+                <Typography sx={{ color: "var(--color-text, #f7f9fc)", fontWeight: 600 }}>
+                  {option.name}
+                </Typography>
+              </Box>
+            </li>
+          );
+        }
         const orgId = String(option.id);
         const orgTeams = teamsByOrganization[orgId] || [];
         return (

@@ -21,9 +21,12 @@ export default function PeopleSection({
   onPeopleViewChange,
   peopleSearch,
   onPeopleSearchChange,
-  teams,
-  selectedTeamId,
-  onSelectedTeamChange,
+  organizations = [],
+  contactOrgFilter = "all",
+  onContactOrgFilterChange,
+  contactTeamFilter = "all",
+  onContactTeamFilterChange,
+  contactTeamOptions = [],
   onAddCoach,
   onAddContact,
   filteredCoaches,
@@ -71,19 +74,37 @@ export default function PeopleSection({
               sx={{ ...classes.input, minWidth: "220px" }}
             />
             {peopleView === "contacts" && (
-              <TextField
-                select
-                label="Team"
-                value={selectedTeamId}
-                onChange={(event) => onSelectedTeamChange(event.target.value)}
-                sx={{ ...classes.input, minWidth: "220px" }}
-              >
-                {teams.map((team) => (
-                  <MenuItem key={team.id} value={team.id}>
-                    {team.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <>
+                <TextField
+                  select
+                  label="Organization"
+                  value={contactOrgFilter}
+                  onChange={(event) => onContactOrgFilterChange(event.target.value)}
+                  sx={{ ...classes.input, minWidth: "220px" }}
+                >
+                  <MenuItem value="all">All organizations</MenuItem>
+                  {organizations.map((org) => (
+                    <MenuItem key={org.id} value={String(org.id)}>
+                      {org.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  select
+                  label="Team"
+                  value={contactTeamFilter}
+                  onChange={(event) => onContactTeamFilterChange(event.target.value)}
+                  sx={{ ...classes.input, minWidth: "220px" }}
+                >
+                  <MenuItem value="all">All teams</MenuItem>
+                  <MenuItem value="unassigned">Unassigned</MenuItem>
+                  {contactTeamOptions.map((team) => (
+                    <MenuItem key={team.id} value={String(team.id)}>
+                      {team.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </>
             )}
             <Box sx={{ marginLeft: "auto", display: "flex", gap: "8px" }}>
               {peopleView === "coaches" ? (
@@ -91,7 +112,7 @@ export default function PeopleSection({
                   Add Coach
                 </Button>
               ) : (
-                <Button variant="contained" sx={classes.button} onClick={onAddContact} disabled={teams.length === 0}>
+                <Button variant="contained" sx={classes.button} onClick={onAddContact}>
                   Add Contact
                 </Button>
               )}
@@ -152,10 +173,6 @@ export default function PeopleSection({
               </TableContainer>
             )}
           </>
-        ) : teams.length === 0 ? (
-          <Typography sx={{ color: "var(--color-muted)" }}>
-            Add a team first to start collecting contacts.
-          </Typography>
         ) : filteredContacts.length === 0 ? (
           <Typography sx={{ color: "var(--color-muted)" }}>No contacts yet.</Typography>
         ) : (
@@ -166,6 +183,8 @@ export default function PeopleSection({
                   <TableCell sx={classes.tableHeadCell}>Name</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Role</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Audience</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Team</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Email</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Phone</TableCell>
                   <TableCell sx={classes.tableHeadCell} align="right">
@@ -184,6 +203,12 @@ export default function PeopleSection({
                     </TableCell>
                     <TableCell sx={{ color: "var(--color-text)" }}>
                       {contact.audience || "—"}
+                    </TableCell>
+                    <TableCell sx={{ color: "var(--color-text)" }}>
+                      {contact.organization_name || "—"}
+                    </TableCell>
+                    <TableCell sx={{ color: "var(--color-text)" }}>
+                      {contact.team_name || "Unassigned"}
                     </TableCell>
                     <TableCell sx={{ color: "var(--color-text)" }}>
                       {contact.email || "—"}

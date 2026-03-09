@@ -97,7 +97,8 @@ CREATE TABLE IF NOT EXISTS teams (
 
 CREATE TABLE IF NOT EXISTS contacts (
   id BIGSERIAL PRIMARY KEY,
-  team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+  team_id BIGINT REFERENCES teams(id) ON DELETE SET NULL,
+  organization_id BIGINT REFERENCES organizations(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   role TEXT,
   audience TEXT,
@@ -108,6 +109,7 @@ CREATE TABLE IF NOT EXISTS contacts (
 );
 
 CREATE INDEX IF NOT EXISTS contacts_team_id_idx ON contacts (team_id);
+CREATE INDEX IF NOT EXISTS contacts_organization_id_idx ON contacts (organization_id);
 
 CREATE TABLE IF NOT EXISTS practices (
   id BIGSERIAL PRIMARY KEY,

@@ -17,7 +17,7 @@ import PeopleSection from "../../../Components/Dashboard/PeopleSection";
 import classes from "../dashboardStyles";
 import { audienceOptions, emptyContact } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
-import { setCoaches, setContacts, setSeasons, setTeams } from "../../../store/dashboardSlice";
+import { setCoaches, setContacts, setOrganizations, setSeasons, setTeams } from "../../../store/dashboardSlice";
 
 const emptyCoach = { name: "", email: "", phone: "" };
 
@@ -25,6 +25,7 @@ export default function PeoplePage() {
   const dispatch = useDispatch();
   const location = useLocation();
   const token = useSelector((state) => state.auth.token);
+  const organizations = useSelector((state) => state.dashboard.organizations);
   const teams = useSelector((state) => state.dashboard.teams);
   const seasons = useSelector((state) => state.dashboard.seasons);
   const coaches = useSelector((state) => state.dashboard.coaches);
@@ -32,7 +33,8 @@ export default function PeoplePage() {
   const [dataError, setDataError] = useState("");
   const [peopleView, setPeopleView] = useState("coaches");
   const [peopleSearch, setPeopleSearch] = useState("");
-  const [selectedTeamId, setSelectedTeamId] = useState("");
+  const [contactOrgFilter, setContactOrgFilter] = useState("all");
+  const [contactTeamFilter, setContactTeamFilter] = useState("all");
   const [coachModalOpen, setCoachModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [assignCoachModalOpen, setAssignCoachModalOpen] = useState(false);
@@ -47,6 +49,12 @@ export default function PeoplePage() {
   const [coachAssignments, setCoachAssignments] = useState([]);
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
+  const teamMap = useMemo(() => new Map(teams.map((team) => [String(team.id), team])), [teams]);
+
+  const contactTeamOptions = useMemo(() => {
+    if (contactOrgFilter === "all") return teams;
+    return teams.filter((team) => String(team.organization_id) === contactOrgFilter);
+  }, [teams, contactOrgFilter]);
 
   const filteredCoaches = useMemo(() => {
     const term = peopleSearch.trim().toLowerCase();
@@ -62,7 +70,15 @@ export default function PeoplePage() {
     const term = peopleSearch.trim().toLowerCase();
     if (!term) return contacts;
     return contacts.filter((contact) =>
-      [contact.name, contact.role, contact.audience, contact.email, contact.phone]
+      [
+        contact.name,
+        contact.role,
+        contact.audience,
+        contact.email,
+        contact.phone,
+        contact.organization_name,
+        contact.team_name,
+      ]
         .some((field) => String(field || "").toLowerCase().includes(term))
     );
   }, [contacts, peopleSearch]);
@@ -72,14 +88,16 @@ export default function PeoplePage() {
     const load = async () => {
       try {
         setDataError("");
-        const [coachRes, teamRes, seasonRes] = await Promise.all([
+        const [coachRes, teamRes, seasonRes, orgRes] = await Promise.all([
           apiRequest("/api/admin/coaches", { headers: authHeaders }),
           apiRequest("/api/admin/teams", { headers: authHeaders }),
           apiRequest("/api/admin/seasons", { headers: authHeaders }),
+          apiRequest("/api/admin/organizations", { headers: authHeaders }),
         ]);
         dispatch(setCoaches(coachRes.coaches || []));
         dispatch(setTeams(teamRes.teams || []));
         dispatch(setSeasons(seasonRes.seasons || []));
+        dispatch(setOrganizations(orgRes.organizations || []));
       } catch (error) {
         setDataError(error.message);
       }
@@ -88,28 +106,36 @@ export default function PeoplePage() {
   }, [token, authHeaders, dispatch]);
 
   useEffect(() => {
-    if (!selectedTeamId && teams.length > 0) {
-      setSelectedTeamId(String(teams[0].id));
+    if (contactOrgFilter !== "all" && contactTeamFilter !== "all" && contactTeamFilter !== "unassigned") {
+      const stillValid = contactTeamOptions.some((team) => String(team.id) === contactTeamFilter);
+      if (!stillValid) {
+        setContactTeamFilter("all");
+      }
     }
-  }, [selectedTeamId, teams]);
+  }, [contactOrgFilter, contactTeamFilter, contactTeamOptions]);
 
   useEffect(() => {
-    if (!selectedTeamId) {
-      dispatch(setContacts([]));
-      return;
-    }
+    if (!token || peopleView !== "contacts") return;
     const loadContacts = async () => {
       try {
-        const result = await apiRequest(`/api/admin/contacts?team_id=${selectedTeamId}`, {
-          headers: authHeaders,
-        });
+        const params = new URLSearchParams();
+        if (contactTeamFilter === "unassigned") {
+          params.set("unassigned", "1");
+        } else if (contactTeamFilter !== "all") {
+          params.set("team_id", contactTeamFilter);
+        }
+        if (contactOrgFilter !== "all") {
+          params.set("organization_id", contactOrgFilter);
+        }
+        const query = params.toString() ? `?${params.toString()}` : "";
+        const result = await apiRequest(`/api/admin/contacts${query}`, { headers: authHeaders });
         dispatch(setContacts(result.contacts || []));
       } catch (error) {
         setDataError(error.message);
       }
     };
     loadContacts();
-  }, [selectedTeamId, authHeaders, dispatch]);
+  }, [token, peopleView, contactOrgFilter, contactTeamFilter, authHeaders, dispatch]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -188,9 +214,16 @@ export default function PeoplePage() {
 
   const handleOpenContactModal = (contact = null) => {
     if (contact) {
+      const resolvedOrgId =
+        contact.organization_id
+          ? String(contact.organization_id)
+          : contact.team_id
+            ? String(teamMap.get(String(contact.team_id))?.organization_id || "")
+            : "";
       setEditingContactId(contact.id);
       setContactForm({
         teamId: contact.team_id ? String(contact.team_id) : "",
+        organizationId: resolvedOrgId,
         name: contact.name || "",
         role: contact.role || "",
         audience: contact.audience || "Coach",
@@ -200,16 +233,25 @@ export default function PeoplePage() {
       });
     } else {
       setEditingContactId(null);
-      setContactForm((prev) => ({ ...emptyContact, teamId: prev.teamId || selectedTeamId || "" }));
+      const defaultOrgId = contactOrgFilter !== "all" ? contactOrgFilter : "";
+      const defaultTeamId =
+        contactTeamFilter !== "all" && contactTeamFilter !== "unassigned"
+          ? contactTeamFilter
+          : "";
+      const resolvedOrgId =
+        defaultTeamId && teamMap.get(String(defaultTeamId))?.organization_id
+          ? String(teamMap.get(String(defaultTeamId))?.organization_id)
+          : defaultOrgId;
+      setContactForm({
+        ...emptyContact,
+        teamId: defaultTeamId,
+        organizationId: resolvedOrgId,
+      });
     }
     setContactModalOpen(true);
   };
 
   const handleSaveContact = async () => {
-    if (!contactForm.teamId) {
-      setDataError("Select a team for this contact.");
-      return;
-    }
     if (!contactForm.name.trim()) {
       setDataError("Contact name is required.");
       return;
@@ -217,7 +259,8 @@ export default function PeoplePage() {
     try {
       setDataError("");
       const payload = {
-        team_id: Number(contactForm.teamId),
+        team_id: contactForm.teamId ? Number(contactForm.teamId) : null,
+        organization_id: contactForm.organizationId ? Number(contactForm.organizationId) : null,
         name: contactForm.name.trim(),
         role: contactForm.role.trim(),
         audience: contactForm.audience,
@@ -238,9 +281,17 @@ export default function PeoplePage() {
           body: JSON.stringify(payload),
         });
       }
-      const result = await apiRequest(`/api/admin/contacts?team_id=${contactForm.teamId}`, {
-        headers: authHeaders,
-      });
+      const params = new URLSearchParams();
+      if (contactTeamFilter === "unassigned") {
+        params.set("unassigned", "1");
+      } else if (contactTeamFilter !== "all") {
+        params.set("team_id", contactTeamFilter);
+      }
+      if (contactOrgFilter !== "all") {
+        params.set("organization_id", contactOrgFilter);
+      }
+      const query = params.toString() ? `?${params.toString()}` : "";
+      const result = await apiRequest(`/api/admin/contacts${query}`, { headers: authHeaders });
       dispatch(setContacts(result.contacts || []));
       setContactModalOpen(false);
     } catch (error) {
@@ -255,12 +306,18 @@ export default function PeoplePage() {
         method: "DELETE",
         headers: authHeaders,
       });
-      if (selectedTeamId) {
-        const result = await apiRequest(`/api/admin/contacts?team_id=${selectedTeamId}`, {
-          headers: authHeaders,
-        });
-        dispatch(setContacts(result.contacts || []));
+      const params = new URLSearchParams();
+      if (contactTeamFilter === "unassigned") {
+        params.set("unassigned", "1");
+      } else if (contactTeamFilter !== "all") {
+        params.set("team_id", contactTeamFilter);
       }
+      if (contactOrgFilter !== "all") {
+        params.set("organization_id", contactOrgFilter);
+      }
+      const query = params.toString() ? `?${params.toString()}` : "";
+      const result = await apiRequest(`/api/admin/contacts${query}`, { headers: authHeaders });
+      dispatch(setContacts(result.contacts || []));
     } catch (error) {
       setDataError(error.message);
     }
@@ -337,9 +394,12 @@ export default function PeoplePage() {
         onPeopleViewChange={setPeopleView}
         peopleSearch={peopleSearch}
         onPeopleSearchChange={setPeopleSearch}
-        teams={teams}
-        selectedTeamId={selectedTeamId}
-        onSelectedTeamChange={setSelectedTeamId}
+        organizations={organizations}
+        contactOrgFilter={contactOrgFilter}
+        onContactOrgFilterChange={setContactOrgFilter}
+        contactTeamFilter={contactTeamFilter}
+        onContactTeamFilterChange={setContactTeamFilter}
+        contactTeamOptions={contactTeamOptions}
         onAddCoach={() => handleOpenCoachModal()}
         onAddContact={() => handleOpenContactModal()}
         filteredCoaches={filteredCoaches}
@@ -508,12 +568,52 @@ export default function PeoplePage() {
         <DialogContent sx={{ display: "grid", gap: "12px" }}>
           <TextField
             select
-            label="Team"
-            value={contactForm.teamId}
-            onChange={(event) => setContactForm((prev) => ({ ...prev, teamId: event.target.value }))}
+            label="Organization (optional)"
+            value={contactForm.organizationId}
+            onChange={(event) => {
+              const nextOrg = event.target.value;
+              setContactForm((prev) => {
+                const nextTeamId =
+                  nextOrg && prev.teamId
+                    ? String(teamMap.get(String(prev.teamId))?.organization_id || "") === nextOrg
+                      ? prev.teamId
+                      : ""
+                    : prev.teamId;
+                return { ...prev, organizationId: nextOrg, teamId: nextTeamId };
+              });
+            }}
             sx={classes.input}
           >
-            {teams.map((team) => (
+            <MenuItem value="">Unassigned</MenuItem>
+            {organizations.map((org) => (
+              <MenuItem key={org.id} value={String(org.id)}>
+                {org.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Team (optional)"
+            value={contactForm.teamId}
+            onChange={(event) => {
+              const nextTeamId = event.target.value;
+              setContactForm((prev) => {
+                const nextOrgId =
+                  nextTeamId && teamMap.get(String(nextTeamId))?.organization_id
+                    ? String(teamMap.get(String(nextTeamId))?.organization_id)
+                    : prev.organizationId;
+                return { ...prev, teamId: nextTeamId, organizationId: nextOrgId };
+              });
+            }}
+            sx={classes.input}
+          >
+            <MenuItem value="">Unassigned</MenuItem>
+            {(contactForm.organizationId
+              ? teams.filter(
+                  (team) => String(team.organization_id) === String(contactForm.organizationId)
+                )
+              : teams
+            ).map((team) => (
               <MenuItem key={team.id} value={team.id}>
                 {team.name}
               </MenuItem>
