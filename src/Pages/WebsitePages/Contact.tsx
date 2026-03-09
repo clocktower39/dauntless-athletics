@@ -261,7 +261,7 @@ export default function Contact() {
           <Grid container spacing={1}>
             <Grid
               container
-              size={{ xs: 12, sm:6, md: 3 }}
+              size={{ xs: 12, sm:6, md: 6, lg: 3}}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
@@ -316,7 +316,7 @@ export default function Contact() {
 
             <Grid
               container
-              size={{ xs: 12, sm:6, md: 3 }}
+              size={{ xs: 12, sm:6, md: 6, lg: 3}}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
@@ -356,7 +356,7 @@ export default function Contact() {
 
             <Grid
               container
-              size={{ xs: 12, sm:6, md: 3 }}
+              size={{ xs: 12, sm:6, md: 6, lg: 3}}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
@@ -386,7 +386,7 @@ export default function Contact() {
 
             <Grid
               container
-              size={{ xs: 12, sm:6, md: 3 }}
+              size={{ xs: 12, sm:6, md: 6, lg: 3}}
               sx={{
                 backgroundColor: "var(--color-surface-2)",
                 border: "1px solid var(--color-border)",
