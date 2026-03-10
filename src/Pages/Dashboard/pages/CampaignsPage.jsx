@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
 import CampaignsSection from "../../../Components/Dashboard/CampaignsSection";
 import classes from "../dashboardStyles";
@@ -22,6 +23,7 @@ import OrganizationTeamMultiSelect from "../../../Components/Dashboard/Organizat
 
 export default function CampaignsPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
@@ -265,6 +267,7 @@ export default function CampaignsPage() {
         onRegenerateInvite={handleRegenerateInvite}
         onReopenInvite={handleReopenInvite}
         onDeleteInvite={handleDeleteInvite}
+        onViewInvite={(invite) => navigate(`/dashboard/campaigns/${invite.id}`)}
       />
 
       <Dialog

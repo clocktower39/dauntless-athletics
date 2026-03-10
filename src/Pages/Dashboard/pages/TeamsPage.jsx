@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
 import TeamsSection from "../../../Components/Dashboard/TeamsSection";
 import classes from "../dashboardStyles";
@@ -22,6 +23,7 @@ import { setContacts, setPractices, setSeasons, setTeams, setOrganizations } fro
 
 export default function TeamsPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
@@ -128,12 +130,7 @@ export default function TeamsPage() {
   }, [location.search]);
 
   const handleOpenTeamModal = () => {
-    setEditingTeamId(null);
-    setTeamForm((prev) => ({
-      ...emptyTeam,
-      seasonId: prev.seasonId || "",
-    }));
-    setTeamModalOpen(true);
+    navigate("/dashboard/teams/new");
   };
 
   const handleSaveTeam = async () => {
@@ -177,18 +174,8 @@ export default function TeamsPage() {
   };
 
   const handleEditTeam = (team) => {
-    setEditingTeamId(team.id);
-    setTeamForm({
-      organizationId: team.organization_id ? String(team.organization_id) : "",
-      seasonId: team.season_id ? String(team.season_id) : "",
-      name: team.name || "",
-      sport: team.sport || "",
-      level: team.level || "",
-      season: team.season || "",
-      location: team.location || "",
-      notes: team.notes || "",
-    });
-    setTeamModalOpen(true);
+    if (!team?.id) return;
+    navigate(`/dashboard/teams/${team.id}?edit=1`);
   };
 
   const handleCancelTeamEdit = () => {

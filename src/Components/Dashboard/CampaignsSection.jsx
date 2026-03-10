@@ -35,6 +35,7 @@ export default function CampaignsSection({
   onRegenerateInvite,
   onReopenInvite,
   onDeleteInvite,
+  onViewInvite,
 }) {
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
@@ -197,6 +198,14 @@ export default function CampaignsSection({
                 filterable: false,
                 renderCell: (params) => (
                   <Box sx={{ display: "flex", gap: "8px" }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onViewInvite(params.row)}
+                    >
+                      View
+                    </Button>
                     {!params.row.used_at && (
                       <Button
                         variant="outlined"

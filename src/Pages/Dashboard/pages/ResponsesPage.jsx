@@ -1,26 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import ResponsesSection from "../../../Components/Dashboard/ResponsesSection";
 import classes from "../dashboardStyles";
-import { formatDate, ratingLabelMap } from "../dashboardUtils";
+import { formatDate } from "../dashboardUtils";
 import { apiRequest, authHeader } from "../surveyApi";
 import { setOrganizations, setResponses, setSurveys } from "../../../store/dashboardSlice";
 
 export default function ResponsesPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
   const surveys = useSelector((state) => state.dashboard.surveys);
@@ -28,17 +18,11 @@ export default function ResponsesPage() {
   const [dataError, setDataError] = useState("");
   const [selectedOrganizationId, setSelectedOrganizationId] = useState("");
   const [selectedSurveyId, setSelectedSurveyId] = useState("");
-  const [responseDetail, setResponseDetail] = useState(null);
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
 
   const inviteSchoolOptions = useMemo(() => [{ id: "", name: "Select organization" }, ...organizations], [organizations]);
   const inviteSurveyOptions = useMemo(() => [{ id: "", title: "Select survey" }, ...surveys], [surveys]);
-
-  const selectedSurvey = useMemo(
-    () => surveys.find((survey) => String(survey.id) === String(selectedSurveyId)) || null,
-    [surveys, selectedSurveyId]
-  );
 
   useEffect(() => {
     if (!token) return;
@@ -87,63 +71,9 @@ export default function ResponsesPage() {
         inviteSurveyOptions={inviteSurveyOptions}
         inviteSchoolOptions={inviteSchoolOptions}
         responses={responses}
-        onViewResponse={setResponseDetail}
+        onViewResponse={(response) => navigate(`/dashboard/responses/${response.id}`)}
         formatDate={formatDate}
       />
-
-      <Dialog
-        open={Boolean(responseDetail)}
-        onClose={() => setResponseDetail(null)}
-        fullWidth
-        maxWidth="md"
-        PaperProps={{ sx: { backgroundColor: "var(--color-surface)", color: "var(--color-text)" } }}
-      >
-        <DialogTitle sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
-          Response Details
-        </DialogTitle>
-        <DialogContent sx={{ display: "grid", gap: "12px", color: "var(--color-muted)" }}>
-          {responseDetail && (
-            <>
-              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {responseDetail.team_name || responseDetail.organization_name || "—"}
-                {responseDetail.team_name && responseDetail.organization_name && (
-                  <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
-                    {responseDetail.organization_name}
-                  </Typography>
-                )}
-              </Typography>
-              {responseDetail.survey_title && (
-                <Typography sx={{ color: "var(--color-muted)" }}>{responseDetail.survey_title}</Typography>
-              )}
-              <Typography sx={{ color: "var(--color-muted)" }}>
-                {formatDate(responseDetail.created_at)}
-              </Typography>
-              <Divider sx={{ borderColor: "var(--color-border)" }} />
-              {(selectedSurvey?.questions || []).map((question) => (
-                <Box key={question.id} sx={{ display: "grid", gap: "4px" }}>
-                  <Typography sx={{ color: "var(--color-text)" }}>{question.text}</Typography>
-                  <Typography sx={{ color: "var(--color-accent)" }}>
-                    {ratingLabelMap[responseDetail?.answers?.[question.id]] ||
-                      responseDetail?.answers?.[question.id] ||
-                      "n/a"}
-                  </Typography>
-                </Box>
-              ))}
-              {responseDetail.comment && (
-                <Box>
-                  <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>Comments</Typography>
-                  <Typography sx={{ color: "var(--color-muted)" }}>{responseDetail.comment}</Typography>
-                </Box>
-              )}
-            </>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => setResponseDetail(null)}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 }

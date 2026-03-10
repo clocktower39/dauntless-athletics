@@ -1,26 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Alert, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import OrganizationsSection from "../../../Components/Dashboard/OrganizationsSection";
-import OrganizationDrawer from "../../../Components/Dashboard/OrganizationDrawer";
 import classes from "../dashboardStyles";
 import { organizationTypeOptions } from "../dashboardConstants";
 import { formatDate } from "../dashboardUtils";
 import { apiRequest, authHeader } from "../surveyApi";
 import { setOrganizations, setTeams } from "../../../store/dashboardSlice";
 
-const initialDraft = {
-  id: null,
-  name: "",
-  type: "school",
-  parentId: "",
-  status: "active",
-};
-
 export default function OrganizationsPage() {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
   const teams = useSelector((state) => state.dashboard.teams);
@@ -30,9 +21,6 @@ export default function OrganizationsPage() {
   const [organizationParentFilter, setOrganizationParentFilter] = useState("all");
   const [organizationStatusFilter, setOrganizationStatusFilter] = useState("all");
   const [selectedOrganizationIds, setSelectedOrganizationIds] = useState([]);
-  const [orgDrawerOpen, setOrgDrawerOpen] = useState(false);
-  const [orgDrawerMode, setOrgDrawerMode] = useState("view");
-  const [orgDraft, setOrgDraft] = useState(initialDraft);
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
 
@@ -116,67 +104,6 @@ export default function OrganizationsPage() {
     }
   }, [organizationSearch, organizationTypeFilter, organizationParentFilter, organizationStatusFilter]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.get("new") === "1") {
-      openOrganizationDrawer(null, "create");
-    }
-  }, [location.search]);
-
-  const openOrganizationDrawer = (org = null, mode = "view") => {
-    setOrgDraft({
-      id: org?.id || null,
-      name: org?.name || "",
-      type: org?.type || "school",
-      parentId: org?.parent_id ? String(org.parent_id) : "",
-      status: org?.status || "active",
-    });
-    setOrgDrawerMode(mode);
-    setOrgDrawerOpen(true);
-  };
-
-  const handleSaveOrganization = async () => {
-    if (!orgDraft.name.trim()) {
-      setDataError("Organization name is required.");
-      return;
-    }
-    if (!orgDraft.type) {
-      setDataError("Organization type is required.");
-      return;
-    }
-
-    try {
-      setDataError("");
-      if (orgDrawerMode === "create") {
-        await apiRequest("/api/admin/organizations", {
-          method: "POST",
-          headers: authHeaders,
-          body: JSON.stringify({
-            name: orgDraft.name.trim(),
-            type: orgDraft.type,
-            parent_id: orgDraft.parentId ? Number(orgDraft.parentId) : null,
-            status: orgDraft.status || "active",
-          }),
-        });
-      } else if (orgDraft.id) {
-        await apiRequest(`/api/admin/organizations/${orgDraft.id}`, {
-          method: "PUT",
-          headers: authHeaders,
-          body: JSON.stringify({
-            name: orgDraft.name.trim(),
-            type: orgDraft.type,
-            parent_id: orgDraft.parentId ? Number(orgDraft.parentId) : null,
-            status: orgDraft.status || "active",
-          }),
-        });
-      }
-      const result = await apiRequest("/api/admin/organizations", { headers: authHeaders });
-      dispatch(setOrganizations(result.organizations || []));
-      setOrgDrawerOpen(false);
-    } catch (error) {
-      setDataError(error.message);
-    }
-  };
 
   const handleDeleteOrganization = async (organizationId) => {
     try {
@@ -212,7 +139,6 @@ export default function OrganizationsPage() {
     }
   };
 
-  const orgReadOnly = orgDrawerMode === "view";
 
   const handleSelectedOrganizationIdsChange = (selection) => {
     if (Array.isArray(selection)) {
@@ -246,9 +172,9 @@ export default function OrganizationsPage() {
         onSelectedOrganizationIdsChange={handleSelectedOrganizationIdsChange}
         onBulkArchive={handleBulkArchiveOrganizations}
         onClearSelection={() => setSelectedOrganizationIds([])}
-        onNewOrganization={() => openOrganizationDrawer(null, "create")}
-        onViewOrganization={(org) => openOrganizationDrawer(org, "view")}
-        onEditOrganization={(org) => openOrganizationDrawer(org, "edit")}
+        onNewOrganization={() => navigate("/dashboard/organizations/new")}
+        onViewOrganization={(org) => navigate(`/dashboard/organizations/${org.id}`)}
+        onEditOrganization={(org) => navigate(`/dashboard/organizations/${org.id}?edit=1`)}
         onDeleteOrganization={handleDeleteOrganization}
         teamCountByOrg={teamCountByOrg}
         teamsByOrganization={teamsByOrganization}
@@ -257,19 +183,6 @@ export default function OrganizationsPage() {
         formatDate={formatDate}
       />
 
-      <OrganizationDrawer
-        open={orgDrawerOpen}
-        onClose={() => setOrgDrawerOpen(false)}
-        classes={classes}
-        orgDrawerMode={orgDrawerMode}
-        orgDraft={orgDraft}
-        onDraftChange={setOrgDraft}
-        organizationTypeOptions={organizationTypeOptions}
-        districts={districts}
-        readOnly={orgReadOnly}
-        onSave={handleSaveOrganization}
-        onEdit={() => setOrgDrawerMode("edit")}
-      />
     </Box>
   );
 }
