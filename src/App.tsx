@@ -26,7 +26,6 @@ import CampaignsPage from "./Pages/Dashboard/pages/CampaignsPage";
 import CampaignProfilePage from "./Pages/Dashboard/pages/CampaignProfilePage";
 import ResponsesPage from "./Pages/Dashboard/pages/ResponsesPage";
 import ResponseProfilePage from "./Pages/Dashboard/pages/ResponseProfilePage";
-import ContactsAdmin from "./Pages/Contacts/ContactsAdmin";
 import "./App.css";
 
 function App() {
@@ -96,7 +95,6 @@ function App() {
           <Route path="responses/:responseId" element={<ResponseProfilePage />} />
         </Route>
         <Route path="/survey-owner" element={<SurveyOwner />} />
-        <Route path="/contacts-admin" element={<ContactsAdmin />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
