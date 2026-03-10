@@ -4,12 +4,15 @@ import {
   Button,
   Checkbox,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import OrganizationTeamMultiSelect from "./OrganizationTeamMultiSelect";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink } from "react-router-dom";
+import RowActionsMenu from "./RowActionsMenu";
 
 export default function CampaignsSection({
   classes,
@@ -37,6 +40,7 @@ export default function CampaignsSection({
   onDeleteInvite,
   onViewInvite,
 }) {
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       <Box sx={classes.section}>
@@ -134,14 +138,12 @@ export default function CampaignsSection({
                     renderCell: (params) => {
                       const inviteText = getInviteText(params.row);
                       return (
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{ color: "var(--color-text)" }}
-                          onClick={() => onCopyInvite(inviteText)}
-                        >
-                          Copy
-                        </Button>
+                        <RowActionsMenu
+                          actions={[
+                            { label: "Copy Link", onClick: () => onCopyInvite(inviteText) },
+                            { label: "View", onClick: () => onViewInvite(params.row) },
+                          ]}
+                        />
                       );
                     },
                   },
@@ -175,6 +177,22 @@ export default function CampaignsSection({
                 flex: 1,
                 minWidth: 220,
                 valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+                renderCell: (params) =>
+                  params.row.team_id ? (
+                    <Link component={RouterLink} to={`/dashboard/teams/${params.row.team_id}`} sx={linkSx}>
+                      {params.value}
+                    </Link>
+                  ) : params.row.organization_id ? (
+                    <Link
+                      component={RouterLink}
+                      to={`/dashboard/organizations/${params.row.organization_id}`}
+                      sx={linkSx}
+                    >
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "survey_title",
@@ -182,6 +200,14 @@ export default function CampaignsSection({
                 flex: 1,
                 minWidth: 200,
                 valueGetter: (_value, row) => row?.survey_title || "—",
+                renderCell: (params) =>
+                  params.row.survey_id ? (
+                    <Link component={RouterLink} to={`/dashboard/surveys/${params.row.survey_id}`} sx={linkSx}>
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "status",
@@ -193,48 +219,18 @@ export default function CampaignsSection({
               {
                 field: "actions",
                 headerName: "Actions",
-                minWidth: 220,
+                minWidth: 160,
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
-                  <Box sx={{ display: "flex", gap: "8px" }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onViewInvite(params.row)}
-                    >
-                      View
-                    </Button>
-                    {!params.row.used_at && (
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{ color: "var(--color-text)" }}
-                        onClick={() => onRegenerateInvite(params.row.id)}
-                      >
-                        Resend
-                      </Button>
-                    )}
-                    {params.row.used_at && (
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{ color: "var(--color-text)" }}
-                        onClick={() => onReopenInvite(params.row.id)}
-                      >
-                        Reopen
-                      </Button>
-                    )}
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onDeleteInvite(params.row.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
+                  <RowActionsMenu
+                    actions={[
+                      { label: "View", onClick: () => onViewInvite(params.row) },
+                      !params.row.used_at && { label: "Resend", onClick: () => onRegenerateInvite(params.row.id) },
+                      params.row.used_at && { label: "Reopen", onClick: () => onReopenInvite(params.row.id) },
+                      { label: "Delete", onClick: () => onDeleteInvite(params.row.id), color: "danger" },
+                    ].filter(Boolean)}
+                  />
                 ),
               },
             ]}

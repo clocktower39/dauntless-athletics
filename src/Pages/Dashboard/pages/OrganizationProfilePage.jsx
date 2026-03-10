@@ -5,16 +5,19 @@ import {
   Box,
   Button,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink } from "react-router-dom";
 import classes from "../dashboardStyles";
 import { organizationTypeOptions } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
 import { setOrganizations, setTeams } from "../../../store/dashboardSlice";
+import RowActionsMenu from "../../../Components/Dashboard/RowActionsMenu";
 
 const emptyOrg = {
   id: null,
@@ -155,6 +158,7 @@ export default function OrganizationProfilePage() {
     orgDraft.parentId && districtMap.get(String(orgDraft.parentId))
       ? districtMap.get(String(orgDraft.parentId))
       : "No parent";
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
 
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
@@ -277,10 +281,35 @@ export default function OrganizationProfilePage() {
             <DataGrid
               rows={teamsForOrg}
               columns={[
-                { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
+                {
+                  field: "name",
+                  headerName: "Team",
+                  flex: 1,
+                  minWidth: 200,
+                  renderCell: (params) => (
+                    <Link component={RouterLink} to={`/dashboard/teams/${params.row.id}`} sx={linkSx}>
+                      {params.value}
+                    </Link>
+                  ),
+                },
                 { field: "level", headerName: "Level", width: 140 },
                 { field: "season_name", headerName: "Season", width: 160 },
                 { field: "location", headerName: "Location", flex: 1, minWidth: 180 },
+                {
+                  field: "actions",
+                  headerName: "Actions",
+                  minWidth: 120,
+                  sortable: false,
+                  filterable: false,
+                  renderCell: (params) => (
+                    <RowActionsMenu
+                      actions={[
+                        { label: "View", onClick: () => navigate(`/dashboard/teams/${params.row.id}`) },
+                        { label: "Edit", onClick: () => navigate(`/dashboard/teams/${params.row.id}?edit=1`) },
+                      ]}
+                    />
+                  ),
+                },
               ]}
               autoHeight
               density="compact"

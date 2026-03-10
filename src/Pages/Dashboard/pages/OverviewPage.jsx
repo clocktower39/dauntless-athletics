@@ -158,11 +158,11 @@ export default function OverviewPage() {
         classes={classes}
         stats={overviewStats}
         alerts={overviewAlerts}
-        onNewOrganization={() => navigate("/dashboard/organizations?new=1")}
-        onAddTeam={() => navigate("/dashboard/teams?new=1")}
-        onCreateSurvey={() => navigate("/dashboard/surveys?new=1")}
+        onNewOrganization={() => navigate("/dashboard/organizations/new")}
+        onAddTeam={() => navigate("/dashboard/teams/new")}
+        onCreateSurvey={() => navigate("/dashboard/surveys/new")}
         onGenerateInvites={() => navigate("/dashboard/campaigns?new=1")}
-        onAddContact={() => navigate("/dashboard/people?new=contact")}
+        onAddContact={() => navigate("/dashboard/people/new")}
         inviteDisabled={organizations.length === 0 || surveys.length === 0}
         contactDisabled={teams.length === 0}
         recentInvites={recentInvites}

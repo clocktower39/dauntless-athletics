@@ -5,16 +5,19 @@ import {
   Box,
   Button,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink } from "react-router-dom";
 import classes from "../dashboardStyles";
 import { emptyTeam } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
 import { setContacts, setOrganizations, setSeasons, setTeams } from "../../../store/dashboardSlice";
+import RowActionsMenu from "../../../Components/Dashboard/RowActionsMenu";
 
 export default function TeamProfilePage() {
   const { teamId } = useParams();
@@ -159,6 +162,7 @@ export default function TeamProfilePage() {
     ? orgMap.get(String(teamForm.organizationId))?.name || "—"
     : "Unassigned";
   const seasonLabel = teamForm.seasonId ? seasonMap.get(String(teamForm.seasonId))?.name || "—" : "—";
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
 
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
@@ -304,10 +308,35 @@ export default function TeamProfilePage() {
             <DataGrid
               rows={contactsForTeam}
               columns={[
-                { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
+                {
+                  field: "name",
+                  headerName: "Name",
+                  flex: 1,
+                  minWidth: 200,
+                  renderCell: (params) => (
+                    <Link component={RouterLink} to={`/dashboard/people/${params.row.id}`} sx={linkSx}>
+                      {params.value}
+                    </Link>
+                  ),
+                },
                 { field: "role", headerName: "Role", width: 160 },
                 { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
                 { field: "phone", headerName: "Phone", width: 160 },
+                {
+                  field: "actions",
+                  headerName: "Actions",
+                  minWidth: 120,
+                  sortable: false,
+                  filterable: false,
+                  renderCell: (params) => (
+                    <RowActionsMenu
+                      actions={[
+                        { label: "View", onClick: () => navigate(`/dashboard/people/${params.row.id}`) },
+                        { label: "Edit", onClick: () => navigate(`/dashboard/people/${params.row.id}?edit=1`) },
+                      ]}
+                    />
+                  ),
+                },
               ]}
               autoHeight
               density="compact"

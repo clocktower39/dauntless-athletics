@@ -4,9 +4,11 @@ import {
   Box,
   Button,
   Divider,
+  Link,
   Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink } from "react-router-dom";
 
 export default function OverviewSection({
   classes,
@@ -23,6 +25,7 @@ export default function OverviewSection({
   recentResponses,
   formatDate,
 }) {
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       <Box sx={classes.section}>
@@ -142,6 +145,22 @@ export default function OverviewSection({
                   flex: 1,
                   minWidth: 220,
                   valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+                  renderCell: (params) =>
+                    params.row.team_id ? (
+                      <Link component={RouterLink} to={`/dashboard/teams/${params.row.team_id}`} sx={linkSx}>
+                        {params.value}
+                      </Link>
+                    ) : params.row.organization_id ? (
+                      <Link
+                        component={RouterLink}
+                        to={`/dashboard/organizations/${params.row.organization_id}`}
+                        sx={linkSx}
+                      >
+                        {params.value}
+                      </Link>
+                    ) : (
+                      params.value
+                    ),
                 },
                 {
                   field: "survey_title",
@@ -149,6 +168,14 @@ export default function OverviewSection({
                   flex: 1,
                   minWidth: 200,
                   valueGetter: (_value, row) => row?.survey_title || "—",
+                  renderCell: (params) =>
+                    params.row.survey_id ? (
+                      <Link component={RouterLink} to={`/dashboard/surveys/${params.row.survey_id}`} sx={linkSx}>
+                        {params.value}
+                      </Link>
+                    ) : (
+                      params.value
+                    ),
                 },
                 {
                   field: "status",
@@ -185,6 +212,22 @@ export default function OverviewSection({
                   flex: 1,
                   minWidth: 220,
                   valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+                  renderCell: (params) =>
+                    params.row.team_id ? (
+                      <Link component={RouterLink} to={`/dashboard/teams/${params.row.team_id}`} sx={linkSx}>
+                        {params.value}
+                      </Link>
+                    ) : params.row.organization_id ? (
+                      <Link
+                        component={RouterLink}
+                        to={`/dashboard/organizations/${params.row.organization_id}`}
+                        sx={linkSx}
+                      >
+                        {params.value}
+                      </Link>
+                    ) : (
+                      params.value
+                    ),
                 },
                 {
                   field: "survey_title",
@@ -192,6 +235,14 @@ export default function OverviewSection({
                   flex: 1,
                   minWidth: 200,
                   valueGetter: (_value, row) => row?.survey_title || "—",
+                  renderCell: (params) =>
+                    params.row.survey_id ? (
+                      <Link component={RouterLink} to={`/dashboard/surveys/${params.row.survey_id}`} sx={linkSx}>
+                        {params.value}
+                      </Link>
+                    ) : (
+                      params.value
+                    ),
                 },
                 {
                   field: "created_at",

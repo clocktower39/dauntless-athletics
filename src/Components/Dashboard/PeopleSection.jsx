@@ -3,11 +3,14 @@ import {
   Box,
   Button,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import RowActionsMenu from "./RowActionsMenu";
 
 export default function PeopleSection({
   classes,
@@ -25,6 +28,8 @@ export default function PeopleSection({
   onDeleteContact,
 }) {
   const resolveRow = (value, row) => row ?? value?.row ?? value;
+  const navigate = useNavigate();
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
 
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
@@ -86,7 +91,17 @@ export default function PeopleSection({
           <DataGrid
             rows={filteredContacts}
             columns={[
-              { field: "name", headerName: "Name", flex: 1, minWidth: 180 },
+              {
+                field: "name",
+                headerName: "Name",
+                flex: 1,
+                minWidth: 180,
+                renderCell: (params) => (
+                  <Link component={RouterLink} to={`/dashboard/people/${params.row.id}`} sx={linkSx}>
+                    {params.value}
+                  </Link>
+                ),
+              },
               {
                 field: "role",
                 headerName: "Role",
@@ -107,6 +122,18 @@ export default function PeopleSection({
                 flex: 1,
                 minWidth: 180,
                 valueGetter: (value, row) => resolveRow(value, row)?.organization_name || "—",
+                renderCell: (params) =>
+                  params.row.organization_id ? (
+                    <Link
+                      component={RouterLink}
+                      to={`/dashboard/organizations/${params.row.organization_id}`}
+                      sx={linkSx}
+                    >
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "team_name",
@@ -114,6 +141,14 @@ export default function PeopleSection({
                 flex: 1,
                 minWidth: 180,
                 valueGetter: (value, row) => resolveRow(value, row)?.team_name || "Unassigned",
+                renderCell: (params) =>
+                  params.row.team_id ? (
+                    <Link component={RouterLink} to={`/dashboard/teams/${params.row.team_id}`} sx={linkSx}>
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "email",
@@ -132,28 +167,17 @@ export default function PeopleSection({
               {
                 field: "actions",
                 headerName: "Actions",
-                minWidth: 160,
+                minWidth: 120,
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
-                  <Box sx={{ display: "flex", gap: "8px" }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onEditContact(params.row)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onDeleteContact(params.row.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
+                  <RowActionsMenu
+                    actions={[
+                      { label: "View", onClick: () => navigate(`/dashboard/people/${params.row.id}`) },
+                      { label: "Edit", onClick: () => onEditContact(params.row) },
+                      { label: "Delete", onClick: () => onDeleteContact(params.row.id), color: "danger" },
+                    ]}
+                  />
                 ),
               },
             ]}

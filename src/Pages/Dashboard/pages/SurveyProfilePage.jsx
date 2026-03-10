@@ -224,79 +224,153 @@ export default function SurveyProfilePage() {
             {surveyDraft.description || "No description added yet."}
           </Typography>
         </Box>
-
-        <Divider sx={{ borderColor: "var(--color-border)" }} />
-
-        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
-          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Questions</Typography>
-          {surveyDraft.questions.map((question, index) => (
-            <Box key={`question-${index}`} sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        {isNew ? (
+          <>
+            <Divider sx={{ borderColor: "var(--color-border)" }} />
+            <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Details</Typography>
               <TextField
-                label={`Question ${index + 1}`}
-                value={question.text}
-                onChange={(event) => updateQuestionText(index, event.target.value)}
-                sx={{ ...classes.input, flex: 1 }}
+                label="Survey title"
+                value={surveyDraft.title}
+                onChange={(event) => setSurveyDraft((prev) => ({ ...prev, title: event.target.value }))}
+                sx={classes.input}
                 disabled={mode === "view"}
               />
-              {mode === "edit" && surveyDraft.questions.length > 1 && (
-                <Button
-                  variant="outlined"
-                  sx={{ color: "var(--color-text)" }}
-                  onClick={() => removeQuestion(index)}
-                >
-                  Remove
+              <TextField
+                label="Description"
+                value={surveyDraft.description}
+                onChange={(event) => setSurveyDraft((prev) => ({ ...prev, description: event.target.value }))}
+                sx={classes.input}
+                multiline
+                minRows={2}
+                disabled={mode === "view"}
+              />
+              <TextField
+                label="Comment prompt"
+                value={surveyDraft.commentPrompt}
+                onChange={(event) => setSurveyDraft((prev) => ({ ...prev, commentPrompt: event.target.value }))}
+                sx={classes.input}
+                disabled={mode === "view"}
+              />
+              <TextField
+                select
+                label="Status"
+                value={surveyDraft.isActive ? "active" : "inactive"}
+                onChange={(event) =>
+                  setSurveyDraft((prev) => ({ ...prev, isActive: event.target.value === "active" }))
+                }
+                sx={classes.input}
+                disabled={mode === "view"}
+              >
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </TextField>
+            </Box>
+
+            <Divider sx={{ borderColor: "var(--color-border)" }} />
+            <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Questions</Typography>
+              {surveyDraft.questions.map((question, index) => (
+                <Box key={`question-${index}`} sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <TextField
+                    label={`Question ${index + 1}`}
+                    value={question.text}
+                    onChange={(event) => updateQuestionText(index, event.target.value)}
+                    sx={{ ...classes.input, flex: 1 }}
+                    disabled={mode === "view"}
+                  />
+                  {mode === "edit" && surveyDraft.questions.length > 1 && (
+                    <Button
+                      variant="outlined"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => removeQuestion(index)}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </Box>
+              ))}
+              {mode === "edit" && (
+                <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={addQuestion}>
+                  Add Question
                 </Button>
               )}
             </Box>
-          ))}
-          {mode === "edit" && (
-            <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={addQuestion}>
-              Add Question
-            </Button>
-          )}
-        </Box>
+          </>
+        ) : (
+          <>
+            <Divider sx={{ borderColor: "var(--color-border)" }} />
+            <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Questions</Typography>
+              {surveyDraft.questions.map((question, index) => (
+                <Box key={`question-${index}`} sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                  <TextField
+                    label={`Question ${index + 1}`}
+                    value={question.text}
+                    onChange={(event) => updateQuestionText(index, event.target.value)}
+                    sx={{ ...classes.input, flex: 1 }}
+                    disabled={mode === "view"}
+                  />
+                  {mode === "edit" && surveyDraft.questions.length > 1 && (
+                    <Button
+                      variant="outlined"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => removeQuestion(index)}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </Box>
+              ))}
+              {mode === "edit" && (
+                <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={addQuestion}>
+                  Add Question
+                </Button>
+              )}
+            </Box>
 
-        <Divider sx={{ borderColor: "var(--color-border)" }} />
-
-        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
-          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Settings</Typography>
-          <TextField
-            label="Survey title"
-            value={surveyDraft.title}
-            onChange={(event) => setSurveyDraft((prev) => ({ ...prev, title: event.target.value }))}
-            sx={classes.input}
-            disabled={mode === "view"}
-          />
-          <TextField
-            label="Description"
-            value={surveyDraft.description}
-            onChange={(event) => setSurveyDraft((prev) => ({ ...prev, description: event.target.value }))}
-            sx={classes.input}
-            multiline
-            minRows={2}
-            disabled={mode === "view"}
-          />
-          <TextField
-            label="Comment prompt"
-            value={surveyDraft.commentPrompt}
-            onChange={(event) => setSurveyDraft((prev) => ({ ...prev, commentPrompt: event.target.value }))}
-            sx={classes.input}
-            disabled={mode === "view"}
-          />
-          <TextField
-            select
-            label="Status"
-            value={surveyDraft.isActive ? "active" : "inactive"}
-            onChange={(event) =>
-              setSurveyDraft((prev) => ({ ...prev, isActive: event.target.value === "active" }))
-            }
-            sx={classes.input}
-            disabled={mode === "view"}
-          >
-            <MenuItem value="active">Active</MenuItem>
-            <MenuItem value="inactive">Inactive</MenuItem>
-          </TextField>
-        </Box>
+            <Divider sx={{ borderColor: "var(--color-border)" }} />
+            <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Details</Typography>
+              <TextField
+                label="Survey title"
+                value={surveyDraft.title}
+                onChange={(event) => setSurveyDraft((prev) => ({ ...prev, title: event.target.value }))}
+                sx={classes.input}
+                disabled={mode === "view"}
+              />
+              <TextField
+                label="Description"
+                value={surveyDraft.description}
+                onChange={(event) => setSurveyDraft((prev) => ({ ...prev, description: event.target.value }))}
+                sx={classes.input}
+                multiline
+                minRows={2}
+                disabled={mode === "view"}
+              />
+              <TextField
+                label="Comment prompt"
+                value={surveyDraft.commentPrompt}
+                onChange={(event) => setSurveyDraft((prev) => ({ ...prev, commentPrompt: event.target.value }))}
+                sx={classes.input}
+                disabled={mode === "view"}
+              />
+              <TextField
+                select
+                label="Status"
+                value={surveyDraft.isActive ? "active" : "inactive"}
+                onChange={(event) =>
+                  setSurveyDraft((prev) => ({ ...prev, isActive: event.target.value === "active" }))
+                }
+                sx={classes.input}
+                disabled={mode === "view"}
+              >
+                <MenuItem value="active">Active</MenuItem>
+                <MenuItem value="inactive">Inactive</MenuItem>
+              </TextField>
+            </Box>
+          </>
+        )}
       </Box>
     </Box>
   );

@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { useLocation } from "react-router";
 import TeamsSection from "../../../Components/Dashboard/TeamsSection";
 import classes from "../dashboardStyles";
 import { dayOptions, emptyPractice, emptyTeam } from "../dashboardConstants";
@@ -24,7 +23,6 @@ import { setContacts, setPractices, setSeasons, setTeams, setOrganizations } fro
 export default function TeamsPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
   const teams = useSelector((state) => state.dashboard.teams);
@@ -121,13 +119,6 @@ export default function TeamsPage() {
     };
     loadTeamDetail();
   }, [selectedTeamId, authHeaders, dispatch]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.get("new") === "1") {
-      handleOpenTeamModal();
-    }
-  }, [location.search]);
 
   const handleOpenTeamModal = () => {
     navigate("/dashboard/teams/new");

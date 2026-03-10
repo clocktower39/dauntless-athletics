@@ -3,11 +3,14 @@ import {
   Box,
   Button,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import RowActionsMenu from "./RowActionsMenu";
 
 export default function TeamsSection({
   classes,
@@ -36,6 +39,8 @@ export default function TeamsSection({
   onEditSeason,
   onDeleteSeason,
 }) {
+  const navigate = useNavigate();
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       <Box sx={classes.section}>
@@ -93,13 +98,35 @@ export default function TeamsSection({
           <DataGrid
             rows={filteredTeams}
             columns={[
-              { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
+              {
+                field: "name",
+                headerName: "Team",
+                flex: 1,
+                minWidth: 200,
+                renderCell: (params) => (
+                  <Link component={RouterLink} to={`/dashboard/teams/${params.row.id}`} sx={linkSx}>
+                    {params.value}
+                  </Link>
+                ),
+              },
               {
                 field: "organization_name",
                 headerName: "Organization",
                 flex: 1,
                 minWidth: 200,
                 valueGetter: (_value, row) => row?.organization_name || "—",
+                renderCell: (params) =>
+                  params.row.organization_id ? (
+                    <Link
+                      component={RouterLink}
+                      to={`/dashboard/organizations/${params.row.organization_id}`}
+                      sx={linkSx}
+                    >
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "season_name",
@@ -121,28 +148,17 @@ export default function TeamsSection({
               {
                 field: "actions",
                 headerName: "Actions",
-                minWidth: 160,
+                minWidth: 120,
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
-                  <Box sx={{ display: "flex", gap: "8px" }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onEditTeam(params.row)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onDeleteTeam(params.row.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
+                  <RowActionsMenu
+                    actions={[
+                      { label: "View", onClick: () => navigate(`/dashboard/teams/${params.row.id}`) },
+                      { label: "Edit", onClick: () => onEditTeam(params.row) },
+                      { label: "Delete", onClick: () => onDeleteTeam(params.row.id), color: "danger" },
+                    ]}
+                  />
                 ),
               },
             ]}
@@ -224,6 +240,14 @@ export default function TeamsSection({
                     flex: 1,
                     minWidth: 160,
                     valueGetter: (_value, row) => row?.contact_name || "—",
+                    renderCell: (params) =>
+                      params.row.contact_id ? (
+                        <Link component={RouterLink} to={`/dashboard/people/${params.row.contact_id}`} sx={linkSx}>
+                          {params.value}
+                        </Link>
+                      ) : (
+                        params.value
+                      ),
                   },
                   {
                     field: "location",
@@ -239,24 +263,12 @@ export default function TeamsSection({
                     sortable: false,
                     filterable: false,
                     renderCell: (params) => (
-                      <Box sx={{ display: "flex", gap: "8px" }}>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{ color: "var(--color-text)" }}
-                          onClick={() => onEditPractice(params.row)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          size="small"
-                          sx={{ color: "var(--color-text)" }}
-                          onClick={() => onDeletePractice(params.row.id)}
-                        >
-                          Delete
-                        </Button>
-                      </Box>
+                      <RowActionsMenu
+                        actions={[
+                          { label: "Edit", onClick: () => onEditPractice(params.row) },
+                          { label: "Delete", onClick: () => onDeletePractice(params.row.id), color: "danger" },
+                        ]}
+                      />
                     ),
                   },
                 ]}
@@ -319,24 +331,12 @@ export default function TeamsSection({
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
-                  <Box sx={{ display: "flex", gap: "8px" }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onEditSeason(params.row)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onDeleteSeason(params.row.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
+                  <RowActionsMenu
+                    actions={[
+                      { label: "Edit", onClick: () => onEditSeason(params.row) },
+                      { label: "Delete", onClick: () => onDeleteSeason(params.row.id), color: "danger" },
+                    ]}
+                  />
                 ),
               },
             ]}

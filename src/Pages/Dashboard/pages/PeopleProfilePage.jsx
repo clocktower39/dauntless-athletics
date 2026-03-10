@@ -5,16 +5,19 @@ import {
   Box,
   Button,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink } from "react-router-dom";
 import classes from "../dashboardStyles";
 import { audienceOptions, emptyContact } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
 import { setContacts, setOrganizations, setTeams } from "../../../store/dashboardSlice";
+import RowActionsMenu from "../../../Components/Dashboard/RowActionsMenu";
 
 export default function PeopleProfilePage() {
   const { contactId } = useParams();
@@ -92,6 +95,7 @@ export default function PeopleProfilePage() {
     if (!contactForm.organizationId) return teams;
     return teams.filter((team) => String(team.organization_id) === String(contactForm.organizationId));
   }, [teams, contactForm.organizationId]);
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
 
   const handleSave = async () => {
     try {
@@ -321,14 +325,39 @@ export default function PeopleProfilePage() {
               </MenuItem>
             ))}
           </TextField>
-          {contactForm.teamId && (
-            <DataGrid
-              rows={relatedTeams.filter((team) => String(team.id) === String(contactForm.teamId))}
-              columns={[
-                { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
-                { field: "level", headerName: "Level", width: 140 },
-                { field: "season_name", headerName: "Season", width: 160 },
-              ]}
+            {contactForm.teamId && (
+              <DataGrid
+                rows={relatedTeams.filter((team) => String(team.id) === String(contactForm.teamId))}
+                columns={[
+                  {
+                    field: "name",
+                    headerName: "Team",
+                    flex: 1,
+                    minWidth: 200,
+                    renderCell: (params) => (
+                      <Link component={RouterLink} to={`/dashboard/teams/${params.row.id}`} sx={linkSx}>
+                        {params.value}
+                      </Link>
+                    ),
+                  },
+                  { field: "level", headerName: "Level", width: 140 },
+                  { field: "season_name", headerName: "Season", width: 160 },
+                  {
+                    field: "actions",
+                    headerName: "Actions",
+                    minWidth: 120,
+                    sortable: false,
+                    filterable: false,
+                    renderCell: (params) => (
+                      <RowActionsMenu
+                        actions={[
+                          { label: "View", onClick: () => navigate(`/dashboard/teams/${params.row.id}`) },
+                          { label: "Edit", onClick: () => navigate(`/dashboard/teams/${params.row.id}?edit=1`) },
+                        ]}
+                      />
+                    ),
+                  },
+                ]}
               autoHeight
               density="compact"
               disableRowSelectionOnClick

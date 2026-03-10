@@ -3,11 +3,14 @@ import {
   Box,
   Button,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink } from "react-router-dom";
+import RowActionsMenu from "./RowActionsMenu";
 
 export default function OrganizationsSection({
   classes,
@@ -35,6 +38,8 @@ export default function OrganizationsSection({
   organizationTypeMap,
   formatDate,
 }) {
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
+
   const rowSelectionModel = {
     type: "include",
     ids: new Set(selectedOrganizationIds ?? []),
@@ -128,7 +133,17 @@ export default function OrganizationsSection({
           <DataGrid
             rows={filteredOrganizations}
             columns={[
-              { field: "name", headerName: "Organization", flex: 1, minWidth: 220 },
+              {
+                field: "name",
+                headerName: "Organization",
+                flex: 1,
+                minWidth: 220,
+                renderCell: (params) => (
+                  <Link component={RouterLink} to={`/dashboard/organizations/${params.row.id}`} sx={linkSx}>
+                    {params.value}
+                  </Link>
+                ),
+              },
               {
                 field: "type",
                 headerName: "Type",
@@ -141,6 +156,18 @@ export default function OrganizationsSection({
                 flex: 1,
                 minWidth: 180,
                 valueGetter: (_value, row) => districtMap.get(String(row?.parent_id)) || "—",
+                renderCell: (params) =>
+                  params.row.parent_id ? (
+                    <Link
+                      component={RouterLink}
+                      to={`/dashboard/organizations/${params.row.parent_id}`}
+                      sx={linkSx}
+                    >
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "team_count",
@@ -163,36 +190,17 @@ export default function OrganizationsSection({
               {
                 field: "actions",
                 headerName: "Actions",
-                minWidth: 220,
+                minWidth: 140,
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
-                  <Box sx={{ display: "flex", gap: "8px" }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onViewOrganization(params.row)}
-                    >
-                      View
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onEditOrganization(params.row)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      sx={{ color: "var(--color-text)" }}
-                      onClick={() => onDeleteOrganization(params.row.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Box>
+                  <RowActionsMenu
+                    actions={[
+                      { label: "View", onClick: () => onViewOrganization(params.row) },
+                      { label: "Edit", onClick: () => onEditOrganization(params.row) },
+                      { label: "Delete", onClick: () => onDeleteOrganization(params.row.id), color: "danger" },
+                    ]}
+                  />
                 ),
               },
             ]}

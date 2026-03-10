@@ -1,13 +1,15 @@
 import React from "react";
 import {
   Box,
-  Button,
   Divider,
+  Link,
   MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Link as RouterLink } from "react-router-dom";
+import RowActionsMenu from "./RowActionsMenu";
 
 export default function ResponsesSection({
   classes,
@@ -21,6 +23,7 @@ export default function ResponsesSection({
   onViewResponse,
   formatDate,
 }) {
+  const linkSx = { color: "var(--color-text)", fontWeight: 600, textDecoration: "none" };
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       <Box sx={classes.section}>
@@ -77,6 +80,22 @@ export default function ResponsesSection({
                 flex: 1,
                 minWidth: 220,
                 valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+                renderCell: (params) =>
+                  params.row.team_id ? (
+                    <Link component={RouterLink} to={`/dashboard/teams/${params.row.team_id}`} sx={linkSx}>
+                      {params.value}
+                    </Link>
+                  ) : params.row.organization_id ? (
+                    <Link
+                      component={RouterLink}
+                      to={`/dashboard/organizations/${params.row.organization_id}`}
+                      sx={linkSx}
+                    >
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "survey_title",
@@ -84,6 +103,14 @@ export default function ResponsesSection({
                 flex: 1,
                 minWidth: 200,
                 valueGetter: (_value, row) => row?.survey_title || "—",
+                renderCell: (params) =>
+                  params.row.survey_id ? (
+                    <Link component={RouterLink} to={`/dashboard/surveys/${params.row.survey_id}`} sx={linkSx}>
+                      {params.value}
+                    </Link>
+                  ) : (
+                    params.value
+                  ),
               },
               {
                 field: "created_at",
@@ -110,14 +137,11 @@ export default function ResponsesSection({
                 sortable: false,
                 filterable: false,
                 renderCell: (params) => (
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{ color: "var(--color-text)" }}
-                    onClick={() => onViewResponse(params.row)}
-                  >
-                    View
-                  </Button>
+                  <RowActionsMenu
+                    actions={[
+                      { label: "View", onClick: () => onViewResponse(params.row) },
+                    ]}
+                  />
                 ),
               },
             ]}
