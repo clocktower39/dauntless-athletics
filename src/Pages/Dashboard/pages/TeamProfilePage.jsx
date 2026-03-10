@@ -6,8 +6,6 @@ import {
   Button,
   Divider,
   MenuItem,
-  Tab,
-  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
@@ -29,7 +27,6 @@ export default function TeamProfilePage() {
   const seasons = useSelector((state) => state.dashboard.seasons);
   const contacts = useSelector((state) => state.dashboard.contacts);
   const [dataError, setDataError] = useState("");
-  const [tab, setTab] = useState(0);
   const startEdit = searchParams.get("edit") === "1";
   const [mode, setMode] = useState(teamId === "new" || startEdit ? "edit" : "view");
   const [teamForm, setTeamForm] = useState(emptyTeam);
@@ -197,141 +194,132 @@ export default function TeamProfilePage() {
         </Box>
         <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-        <Tabs
-          value={tab}
-          onChange={(_event, value) => setTab(value)}
-          sx={{ "& .MuiTab-root": { color: "var(--color-muted)" }, "& .Mui-selected": { color: "var(--color-text)" } }}
-        >
-          <Tab label="Overview" />
-          <Tab label="Details" />
-          <Tab label="Contacts" />
-        </Tabs>
-
-        {tab === 0 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: "12px" }}>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Organization</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{organizationLabel}</Typography>
-              </Box>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Season</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{seasonLabel}</Typography>
-              </Box>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Contacts</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{contactsForTeam.length}</Typography>
-              </Box>
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Overview</Typography>
+          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: "12px" }}>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Organization</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{organizationLabel}</Typography>
+            </Box>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Season</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{seasonLabel}</Typography>
+            </Box>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Contacts</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{contactsForTeam.length}</Typography>
             </Box>
           </Box>
-        )}
+        </Box>
 
-        {tab === 1 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Details</Typography>
+          <TextField
+            select
+            label="Organization"
+            value={teamForm.organizationId}
+            onChange={(event) => setTeamForm((prev) => ({ ...prev, organizationId: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            <MenuItem value="">Unassigned</MenuItem>
+            {organizations.map((org) => (
+              <MenuItem key={org.id} value={String(org.id)}>
+                {org.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Season"
+            value={teamForm.seasonId}
+            onChange={(event) => setTeamForm((prev) => ({ ...prev, seasonId: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            <MenuItem value="">No season</MenuItem>
+            {seasons.map((season) => (
+              <MenuItem key={season.id} value={String(season.id)}>
+                {season.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            label="Team name"
+            value={teamForm.name}
+            onChange={(event) => setTeamForm((prev) => ({ ...prev, name: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          />
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <TextField
-              select
-              label="Organization"
-              value={teamForm.organizationId}
-              onChange={(event) => setTeamForm((prev) => ({ ...prev, organizationId: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            >
-              <MenuItem value="">Unassigned</MenuItem>
-              {organizations.map((org) => (
-                <MenuItem key={org.id} value={String(org.id)}>
-                  {org.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Season"
-              value={teamForm.seasonId}
-              onChange={(event) => setTeamForm((prev) => ({ ...prev, seasonId: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            >
-              <MenuItem value="">No season</MenuItem>
-              {seasons.map((season) => (
-                <MenuItem key={season.id} value={String(season.id)}>
-                  {season.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Team name"
-              value={teamForm.name}
-              onChange={(event) => setTeamForm((prev) => ({ ...prev, name: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            />
-            <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <TextField
-                label="Sport"
-                value={teamForm.sport}
-                onChange={(event) => setTeamForm((prev) => ({ ...prev, sport: event.target.value }))}
-                sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-                disabled={mode === "view"}
-              />
-              <TextField
-                label="Level"
-                value={teamForm.level}
-                onChange={(event) => setTeamForm((prev) => ({ ...prev, level: event.target.value }))}
-                sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-                disabled={mode === "view"}
-              />
-            </Box>
-            <TextField
-              label="Season label"
-              value={teamForm.season}
-              onChange={(event) => setTeamForm((prev) => ({ ...prev, season: event.target.value }))}
-              sx={classes.input}
+              label="Sport"
+              value={teamForm.sport}
+              onChange={(event) => setTeamForm((prev) => ({ ...prev, sport: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
               disabled={mode === "view"}
             />
             <TextField
-              label="Location"
-              value={teamForm.location}
-              onChange={(event) => setTeamForm((prev) => ({ ...prev, location: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            />
-            <TextField
-              label="Notes"
-              value={teamForm.notes}
-              onChange={(event) => setTeamForm((prev) => ({ ...prev, notes: event.target.value }))}
-              sx={classes.input}
-              multiline
-              minRows={2}
+              label="Level"
+              value={teamForm.level}
+              onChange={(event) => setTeamForm((prev) => ({ ...prev, level: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
               disabled={mode === "view"}
             />
           </Box>
-        )}
+          <TextField
+            label="Season label"
+            value={teamForm.season}
+            onChange={(event) => setTeamForm((prev) => ({ ...prev, season: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          />
+          <TextField
+            label="Location"
+            value={teamForm.location}
+            onChange={(event) => setTeamForm((prev) => ({ ...prev, location: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          />
+          <TextField
+            label="Notes"
+            value={teamForm.notes}
+            onChange={(event) => setTeamForm((prev) => ({ ...prev, notes: event.target.value }))}
+            sx={classes.input}
+            multiline
+            minRows={2}
+            disabled={mode === "view"}
+          />
+        </Box>
 
-        {tab === 2 && (
-          <Box sx={{ paddingTop: "8px" }}>
-            {contactsForTeam.length === 0 ? (
-              <Typography sx={{ color: "var(--color-muted)" }}>No contacts linked yet.</Typography>
-            ) : (
-              <DataGrid
-                rows={contactsForTeam}
-                columns={[
-                  { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
-                  { field: "role", headerName: "Role", width: 160 },
-                  { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
-                  { field: "phone", headerName: "Phone", width: 160 },
-                ]}
-                autoHeight
-                density="compact"
-                disableRowSelectionOnClick
-                pageSizeOptions={[5, 10, 25]}
-                initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
-                sx={classes.dataGrid}
-              />
-            )}
-          </Box>
-        )}
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+
+        <Box sx={{ paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)", marginBottom: "8px" }}>Contacts</Typography>
+          {contactsForTeam.length === 0 ? (
+            <Typography sx={{ color: "var(--color-muted)" }}>No contacts linked yet.</Typography>
+          ) : (
+            <DataGrid
+              rows={contactsForTeam}
+              columns={[
+                { field: "name", headerName: "Name", flex: 1, minWidth: 200 },
+                { field: "role", headerName: "Role", width: 160 },
+                { field: "email", headerName: "Email", flex: 1, minWidth: 200 },
+                { field: "phone", headerName: "Phone", width: 160 },
+              ]}
+              autoHeight
+              density="compact"
+              disableRowSelectionOnClick
+              pageSizeOptions={[5, 10, 25]}
+              initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
+              slots={{ toolbar: GridToolbar }}
+              slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+              sx={classes.dataGrid}
+            />
+          )}
+        </Box>
       </Box>
     </Box>
   );

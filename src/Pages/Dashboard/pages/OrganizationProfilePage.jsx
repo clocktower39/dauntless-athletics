@@ -6,8 +6,6 @@ import {
   Button,
   Divider,
   MenuItem,
-  Tab,
-  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
@@ -35,7 +33,6 @@ export default function OrganizationProfilePage() {
   const organizations = useSelector((state) => state.dashboard.organizations);
   const teams = useSelector((state) => state.dashboard.teams);
   const [dataError, setDataError] = useState("");
-  const [tab, setTab] = useState(0);
   const startEdit = searchParams.get("edit") === "1";
   const [mode, setMode] = useState(organizationId === "new" || startEdit ? "edit" : "view");
   const [orgDraft, setOrgDraft] = useState(emptyOrg);
@@ -193,118 +190,109 @@ export default function OrganizationProfilePage() {
         </Box>
         <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-        <Tabs
-          value={tab}
-          onChange={(_event, value) => setTab(value)}
-          sx={{ "& .MuiTab-root": { color: "var(--color-muted)" }, "& .Mui-selected": { color: "var(--color-text)" } }}
-        >
-          <Tab label="Overview" />
-          <Tab label="Details" />
-          <Tab label="Teams" />
-        </Tabs>
-
-        {tab === 0 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
-            <Box sx={{ display: "grid", gap: "6px" }}>
-              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>Organization</Typography>
-              <Typography sx={{ color: "var(--color-text)", fontSize: "1.2rem", fontWeight: 700 }}>
-                {orgDraft.name || "Unnamed"}
-              </Typography>
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Overview</Typography>
+          <Box sx={{ display: "grid", gap: "6px" }}>
+            <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>Organization</Typography>
+            <Typography sx={{ color: "var(--color-text)", fontSize: "1.2rem", fontWeight: 700 }}>
+              {orgDraft.name || "Unnamed"}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: "12px" }}>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Type</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{orgDraft.type || "—"}</Typography>
             </Box>
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: "12px" }}>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Type</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{orgDraft.type || "—"}</Typography>
-              </Box>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Parent</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{parentLabel}</Typography>
-              </Box>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Teams</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{teamsForOrg.length}</Typography>
-              </Box>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Parent</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{parentLabel}</Typography>
+            </Box>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Teams</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{teamsForOrg.length}</Typography>
             </Box>
           </Box>
-        )}
+        </Box>
 
-        {tab === 1 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "640px" }}>
-            <TextField
-              label="Organization name"
-              value={orgDraft.name}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, name: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "640px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Details</Typography>
+          <TextField
+            label="Organization name"
+            value={orgDraft.name}
+            onChange={(event) => setOrgDraft((prev) => ({ ...prev, name: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          />
+          <TextField
+            select
+            label="Type"
+            value={orgDraft.type}
+            onChange={(event) => setOrgDraft((prev) => ({ ...prev, type: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            {organizationTypeOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Parent organization"
+            value={orgDraft.parentId}
+            onChange={(event) => setOrgDraft((prev) => ({ ...prev, parentId: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            <MenuItem value="">No parent</MenuItem>
+            {organizations.map((item) => (
+              <MenuItem key={item.id} value={String(item.id)}>
+                {item.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Status"
+            value={orgDraft.status}
+            onChange={(event) => setOrgDraft((prev) => ({ ...prev, status: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            <MenuItem value="active">Active</MenuItem>
+            <MenuItem value="inactive">Inactive</MenuItem>
+          </TextField>
+        </Box>
+
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+
+        <Box sx={{ paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)", marginBottom: "8px" }}>Teams</Typography>
+          {teamsForOrg.length === 0 ? (
+            <Typography sx={{ color: "var(--color-muted)" }}>No teams linked yet.</Typography>
+          ) : (
+            <DataGrid
+              rows={teamsForOrg}
+              columns={[
+                { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
+                { field: "level", headerName: "Level", width: 140 },
+                { field: "season_name", headerName: "Season", width: 160 },
+                { field: "location", headerName: "Location", flex: 1, minWidth: 180 },
+              ]}
+              autoHeight
+              density="compact"
+              disableRowSelectionOnClick
+              pageSizeOptions={[5, 10, 25]}
+              initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
+              slots={{ toolbar: GridToolbar }}
+              slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+              sx={classes.dataGrid}
             />
-            <TextField
-              select
-              label="Type"
-              value={orgDraft.type}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, type: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            >
-              {organizationTypeOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Parent organization"
-              value={orgDraft.parentId}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, parentId: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            >
-              <MenuItem value="">No parent</MenuItem>
-              {organizations.map((item) => (
-                <MenuItem key={item.id} value={String(item.id)}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Status"
-              value={orgDraft.status}
-              onChange={(event) => setOrgDraft((prev) => ({ ...prev, status: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
-            </TextField>
-          </Box>
-        )}
-
-        {tab === 2 && (
-          <Box sx={{ paddingTop: "8px" }}>
-            {teamsForOrg.length === 0 ? (
-              <Typography sx={{ color: "var(--color-muted)" }}>No teams linked yet.</Typography>
-            ) : (
-              <DataGrid
-                rows={teamsForOrg}
-                columns={[
-                  { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
-                  { field: "level", headerName: "Level", width: 140 },
-                  { field: "season_name", headerName: "Season", width: 160 },
-                  { field: "location", headerName: "Location", flex: 1, minWidth: 180 },
-                ]}
-                autoHeight
-                density="compact"
-                disableRowSelectionOnClick
-                pageSizeOptions={[5, 10, 25]}
-                initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
-                sx={classes.dataGrid}
-              />
-            )}
-          </Box>
-        )}
+          )}
+        </Box>
       </Box>
     </Box>
   );

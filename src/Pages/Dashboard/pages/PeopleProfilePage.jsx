@@ -6,8 +6,6 @@ import {
   Button,
   Divider,
   MenuItem,
-  Tab,
-  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
@@ -28,7 +26,6 @@ export default function PeopleProfilePage() {
   const teams = useSelector((state) => state.dashboard.teams);
   const contacts = useSelector((state) => state.dashboard.contacts);
   const [dataError, setDataError] = useState("");
-  const [tab, setTab] = useState(0);
   const startEdit = searchParams.get("edit") === "1";
   const [mode, setMode] = useState(contactId === "new" || startEdit ? "edit" : "view");
   const [contactForm, setContactForm] = useState(emptyContact);
@@ -185,172 +182,163 @@ export default function PeopleProfilePage() {
         </Box>
         <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-        <Tabs
-          value={tab}
-          onChange={(_event, value) => setTab(value)}
-          sx={{ "& .MuiTab-root": { color: "var(--color-muted)" }, "& .Mui-selected": { color: "var(--color-text)" } }}
-        >
-          <Tab label="Overview" />
-          <Tab label="Details" />
-          <Tab label="Assignments" />
-        </Tabs>
-
-        {tab === 0 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Overview</Typography>
+          <Box sx={classes.statCard}>
+            <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Role</Typography>
+            <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+              {contactForm.role || "—"}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" }, gap: "12px" }}>
             <Box sx={classes.statCard}>
-              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Role</Typography>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Organization</Typography>
               <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {contactForm.role || "—"}
+                {contactForm.organizationId ? orgMap.get(String(contactForm.organizationId))?.name || "—" : "Unassigned"}
               </Typography>
             </Box>
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" }, gap: "12px" }}>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Organization</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                  {contactForm.organizationId ? orgMap.get(String(contactForm.organizationId))?.name || "—" : "Unassigned"}
-                </Typography>
-              </Box>
-              <Box sx={classes.statCard}>
-                <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Team</Typography>
-                <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                  {contactForm.teamId ? teamMap.get(String(contactForm.teamId))?.name || "—" : "Unassigned"}
-                </Typography>
-              </Box>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Team</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+                {contactForm.teamId ? teamMap.get(String(contactForm.teamId))?.name || "—" : "Unassigned"}
+              </Typography>
             </Box>
           </Box>
-        )}
+        </Box>
 
-        {tab === 1 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Details</Typography>
+          <TextField
+            label="Contact name"
+            value={contactForm.name}
+            onChange={(event) => setContactForm((prev) => ({ ...prev, name: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          />
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <TextField
-              label="Contact name"
-              value={contactForm.name}
-              onChange={(event) => setContactForm((prev) => ({ ...prev, name: event.target.value }))}
-              sx={classes.input}
+              label="Role / Title"
+              value={contactForm.role}
+              onChange={(event) => setContactForm((prev) => ({ ...prev, role: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
               disabled={mode === "view"}
             />
-            <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <TextField
-                label="Role / Title"
-                value={contactForm.role}
-                onChange={(event) => setContactForm((prev) => ({ ...prev, role: event.target.value }))}
-                sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-                disabled={mode === "view"}
-              />
-              <TextField
-                select
-                label="Audience"
-                value={contactForm.audience}
-                onChange={(event) => setContactForm((prev) => ({ ...prev, audience: event.target.value }))}
-                sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-                disabled={mode === "view"}
-              >
-                {audienceOptions.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Box>
-            <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <TextField
-                label="Email"
-                value={contactForm.email}
-                onChange={(event) => setContactForm((prev) => ({ ...prev, email: event.target.value }))}
-                sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-                disabled={mode === "view"}
-              />
-              <TextField
-                label="Phone"
-                value={contactForm.phone}
-                onChange={(event) => setContactForm((prev) => ({ ...prev, phone: event.target.value }))}
-                sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-                disabled={mode === "view"}
-              />
-            </Box>
-            <TextField
-              label="Notes"
-              value={contactForm.notes}
-              onChange={(event) => setContactForm((prev) => ({ ...prev, notes: event.target.value }))}
-              sx={classes.input}
-              multiline
-              minRows={2}
-              disabled={mode === "view"}
-            />
-          </Box>
-        )}
-
-        {tab === 2 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
             <TextField
               select
-              label="Organization (optional)"
-              value={contactForm.organizationId}
-              onChange={(event) => {
-                const nextOrg = event.target.value;
-                setContactForm((prev) => {
-                  const nextTeamId =
-                    nextOrg && prev.teamId
-                      ? String(teamMap.get(String(prev.teamId))?.organization_id || "") === nextOrg
-                        ? prev.teamId
-                        : ""
-                      : prev.teamId;
-                  return { ...prev, organizationId: nextOrg, teamId: nextTeamId };
-                });
-              }}
-              sx={classes.input}
+              label="Audience"
+              value={contactForm.audience}
+              onChange={(event) => setContactForm((prev) => ({ ...prev, audience: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
               disabled={mode === "view"}
             >
-              <MenuItem value="">Unassigned</MenuItem>
-              {organizations.map((org) => (
-                <MenuItem key={org.id} value={String(org.id)}>
-                  {org.name}
+              {audienceOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
                 </MenuItem>
               ))}
             </TextField>
-            <TextField
-              select
-              label="Team (optional)"
-              value={contactForm.teamId}
-              onChange={(event) => {
-                const nextTeamId = event.target.value;
-                setContactForm((prev) => {
-                  const nextOrgId =
-                    nextTeamId && teamMap.get(String(nextTeamId))?.organization_id
-                      ? String(teamMap.get(String(nextTeamId))?.organization_id)
-                      : prev.organizationId;
-                  return { ...prev, teamId: nextTeamId, organizationId: nextOrgId };
-                });
-              }}
-              sx={classes.input}
-              disabled={mode === "view"}
-            >
-              <MenuItem value="">Unassigned</MenuItem>
-              {relatedTeams.map((team) => (
-                <MenuItem key={team.id} value={team.id}>
-                  {team.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            {contactForm.teamId && (
-              <DataGrid
-                rows={relatedTeams.filter((team) => String(team.id) === String(contactForm.teamId))}
-                columns={[
-                  { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
-                  { field: "level", headerName: "Level", width: 140 },
-                  { field: "season_name", headerName: "Season", width: 160 },
-                ]}
-                autoHeight
-                density="compact"
-                disableRowSelectionOnClick
-                hideFooter
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
-                sx={classes.dataGrid}
-              />
-            )}
           </Box>
-        )}
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <TextField
+              label="Email"
+              value={contactForm.email}
+              onChange={(event) => setContactForm((prev) => ({ ...prev, email: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+              disabled={mode === "view"}
+            />
+            <TextField
+              label="Phone"
+              value={contactForm.phone}
+              onChange={(event) => setContactForm((prev) => ({ ...prev, phone: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+              disabled={mode === "view"}
+            />
+          </Box>
+          <TextField
+            label="Notes"
+            value={contactForm.notes}
+            onChange={(event) => setContactForm((prev) => ({ ...prev, notes: event.target.value }))}
+            sx={classes.input}
+            multiline
+            minRows={2}
+            disabled={mode === "view"}
+          />
+        </Box>
+
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Assignments</Typography>
+          <TextField
+            select
+            label="Organization (optional)"
+            value={contactForm.organizationId}
+            onChange={(event) => {
+              const nextOrg = event.target.value;
+              setContactForm((prev) => {
+                const nextTeamId =
+                  nextOrg && prev.teamId
+                    ? String(teamMap.get(String(prev.teamId))?.organization_id || "") === nextOrg
+                      ? prev.teamId
+                      : ""
+                    : prev.teamId;
+                return { ...prev, organizationId: nextOrg, teamId: nextTeamId };
+              });
+            }}
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            <MenuItem value="">Unassigned</MenuItem>
+            {organizations.map((org) => (
+              <MenuItem key={org.id} value={String(org.id)}>
+                {org.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            select
+            label="Team (optional)"
+            value={contactForm.teamId}
+            onChange={(event) => {
+              const nextTeamId = event.target.value;
+              setContactForm((prev) => {
+                const nextOrgId =
+                  nextTeamId && teamMap.get(String(nextTeamId))?.organization_id
+                    ? String(teamMap.get(String(nextTeamId))?.organization_id)
+                    : prev.organizationId;
+                return { ...prev, teamId: nextTeamId, organizationId: nextOrgId };
+              });
+            }}
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            <MenuItem value="">Unassigned</MenuItem>
+            {relatedTeams.map((team) => (
+              <MenuItem key={team.id} value={team.id}>
+                {team.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          {contactForm.teamId && (
+            <DataGrid
+              rows={relatedTeams.filter((team) => String(team.id) === String(contactForm.teamId))}
+              columns={[
+                { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
+                { field: "level", headerName: "Level", width: 140 },
+                { field: "season_name", headerName: "Season", width: 160 },
+              ]}
+              autoHeight
+              density="compact"
+              disableRowSelectionOnClick
+              hideFooter
+              slots={{ toolbar: GridToolbar }}
+              slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+              sx={classes.dataGrid}
+            />
+          )}
+        </Box>
       </Box>
     </Box>
   );

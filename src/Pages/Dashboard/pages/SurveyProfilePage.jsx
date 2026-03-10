@@ -6,8 +6,6 @@ import {
   Button,
   Divider,
   MenuItem,
-  Tab,
-  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
@@ -26,7 +24,6 @@ export default function SurveyProfilePage() {
   const token = useSelector((state) => state.auth.token);
   const surveys = useSelector((state) => state.dashboard.surveys);
   const [dataError, setDataError] = useState("");
-  const [tab, setTab] = useState(0);
   const startEdit = searchParams.get("edit") === "1";
   const [mode, setMode] = useState(surveyId === "new" || startEdit ? "edit" : "view");
   const [surveyDraft, setSurveyDraft] = useState({
@@ -217,98 +214,89 @@ export default function SurveyProfilePage() {
         </Box>
         <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-        <Tabs
-          value={tab}
-          onChange={(_event, value) => setTab(value)}
-          sx={{ "& .MuiTab-root": { color: "var(--color-muted)" }, "& .Mui-selected": { color: "var(--color-text)" } }}
-        >
-          <Tab label="Overview" />
-          <Tab label="Questions" />
-          <Tab label="Settings" />
-        </Tabs>
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Overview</Typography>
+          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>Summary</Typography>
+          <Typography sx={{ color: "var(--color-text)", fontSize: "1.25rem", fontWeight: 700 }}>
+            {surveyDraft.title || "Untitled Survey"}
+          </Typography>
+          <Typography sx={{ color: "var(--color-muted)" }}>
+            {surveyDraft.description || "No description added yet."}
+          </Typography>
+        </Box>
 
-        {tab === 0 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
-            <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>Summary</Typography>
-            <Typography sx={{ color: "var(--color-text)", fontSize: "1.25rem", fontWeight: 700 }}>
-              {surveyDraft.title || "Untitled Survey"}
-            </Typography>
-            <Typography sx={{ color: "var(--color-muted)" }}>
-              {surveyDraft.description || "No description added yet."}
-            </Typography>
-          </Box>
-        )}
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-        {tab === 1 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
-            {surveyDraft.questions.map((question, index) => (
-              <Box key={`question-${index}`} sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                <TextField
-                  label={`Question ${index + 1}`}
-                  value={question.text}
-                  onChange={(event) => updateQuestionText(index, event.target.value)}
-                  sx={{ ...classes.input, flex: 1 }}
-                  disabled={mode === "view"}
-                />
-                {mode === "edit" && surveyDraft.questions.length > 1 && (
-                  <Button
-                    variant="outlined"
-                    sx={{ color: "var(--color-text)" }}
-                    onClick={() => removeQuestion(index)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </Box>
-            ))}
-            {mode === "edit" && (
-              <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={addQuestion}>
-                Add Question
-              </Button>
-            )}
-          </Box>
-        )}
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Questions</Typography>
+          {surveyDraft.questions.map((question, index) => (
+            <Box key={`question-${index}`} sx={{ display: "flex", gap: "12px", alignItems: "center" }}>
+              <TextField
+                label={`Question ${index + 1}`}
+                value={question.text}
+                onChange={(event) => updateQuestionText(index, event.target.value)}
+                sx={{ ...classes.input, flex: 1 }}
+                disabled={mode === "view"}
+              />
+              {mode === "edit" && surveyDraft.questions.length > 1 && (
+                <Button
+                  variant="outlined"
+                  sx={{ color: "var(--color-text)" }}
+                  onClick={() => removeQuestion(index)}
+                >
+                  Remove
+                </Button>
+              )}
+            </Box>
+          ))}
+          {mode === "edit" && (
+            <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={addQuestion}>
+              Add Question
+            </Button>
+          )}
+        </Box>
 
-        {tab === 2 && (
-          <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
-            <TextField
-              label="Survey title"
-              value={surveyDraft.title}
-              onChange={(event) => setSurveyDraft((prev) => ({ ...prev, title: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            />
-            <TextField
-              label="Description"
-              value={surveyDraft.description}
-              onChange={(event) => setSurveyDraft((prev) => ({ ...prev, description: event.target.value }))}
-              sx={classes.input}
-              multiline
-              minRows={2}
-              disabled={mode === "view"}
-            />
-            <TextField
-              label="Comment prompt"
-              value={surveyDraft.commentPrompt}
-              onChange={(event) => setSurveyDraft((prev) => ({ ...prev, commentPrompt: event.target.value }))}
-              sx={classes.input}
-              disabled={mode === "view"}
-            />
-            <TextField
-              select
-              label="Status"
-              value={surveyDraft.isActive ? "active" : "inactive"}
-              onChange={(event) =>
-                setSurveyDraft((prev) => ({ ...prev, isActive: event.target.value === "active" }))
-              }
-              sx={classes.input}
-              disabled={mode === "view"}
-            >
-              <MenuItem value="active">Active</MenuItem>
-              <MenuItem value="inactive">Inactive</MenuItem>
-            </TextField>
-          </Box>
-        )}
+        <Divider sx={{ borderColor: "var(--color-border)" }} />
+
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "720px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Settings</Typography>
+          <TextField
+            label="Survey title"
+            value={surveyDraft.title}
+            onChange={(event) => setSurveyDraft((prev) => ({ ...prev, title: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          />
+          <TextField
+            label="Description"
+            value={surveyDraft.description}
+            onChange={(event) => setSurveyDraft((prev) => ({ ...prev, description: event.target.value }))}
+            sx={classes.input}
+            multiline
+            minRows={2}
+            disabled={mode === "view"}
+          />
+          <TextField
+            label="Comment prompt"
+            value={surveyDraft.commentPrompt}
+            onChange={(event) => setSurveyDraft((prev) => ({ ...prev, commentPrompt: event.target.value }))}
+            sx={classes.input}
+            disabled={mode === "view"}
+          />
+          <TextField
+            select
+            label="Status"
+            value={surveyDraft.isActive ? "active" : "inactive"}
+            onChange={(event) =>
+              setSurveyDraft((prev) => ({ ...prev, isActive: event.target.value === "active" }))
+            }
+            sx={classes.input}
+            disabled={mode === "view"}
+          >
+            <MenuItem value="active">Active</MenuItem>
+            <MenuItem value="inactive">Inactive</MenuItem>
+          </TextField>
+        </Box>
       </Box>
     </Box>
   );
