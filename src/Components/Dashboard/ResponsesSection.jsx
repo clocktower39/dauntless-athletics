@@ -78,7 +78,7 @@ export default function ResponsesSection({
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Team</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Date</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Comment</TableCell>
@@ -91,7 +91,12 @@ export default function ResponsesSection({
                 {responses.map((response) => (
                   <TableRow key={response.id} hover>
                     <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {response.organization_name}
+                      {response.team_name || response.organization_name || "—"}
+                      {response.team_name && response.organization_name && (
+                        <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
+                          {response.organization_name}
+                        </Typography>
+                      )}
                     </TableCell>
                     <TableCell sx={{ color: "var(--color-text)" }}>
                       {response.survey_title || "—"}

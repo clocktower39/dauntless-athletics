@@ -572,6 +572,7 @@ router.get("/invites", async (req, res) => {
   const organizationId = req.query.organization_id
     ? Number(req.query.organization_id)
     : null;
+  const teamId = req.query.team_id ? Number(req.query.team_id) : null;
   const surveyId = req.query.survey_id ? Number(req.query.survey_id) : null;
   const params = [];
   const filters = [];
@@ -586,14 +587,21 @@ router.get("/invites", async (req, res) => {
     filters.push(`invites.survey_id = $${params.length}`);
   }
 
+  if (teamId) {
+    params.push(teamId);
+    filters.push(`invites.team_id = $${params.length}`);
+  }
+
   const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
 
   const result = await query(
-    `SELECT invites.id, invites.organization_id, invites.survey_id, invites.used_at, invites.created_at,
+    `SELECT invites.id, invites.organization_id, invites.team_id, invites.survey_id, invites.used_at, invites.created_at,
             organizations.name AS organization_name, organizations.type AS organization_type,
+            teams.name AS team_name, teams.level AS team_level,
             surveys.title AS survey_title
      FROM invites
-     JOIN organizations ON organizations.id = invites.organization_id
+     LEFT JOIN organizations ON organizations.id = invites.organization_id
+     LEFT JOIN teams ON teams.id = invites.team_id
      JOIN surveys ON surveys.id = invites.survey_id
      ${whereClause}
      ORDER BY invites.created_at DESC`,
@@ -604,12 +612,12 @@ router.get("/invites", async (req, res) => {
 });
 
 router.post("/invites", async (req, res) => {
-  const organizationId = Number(req.body?.organization_id);
+  const teamId = Number(req.body?.team_id);
   const surveyId = Number(req.body?.survey_id);
   const count = Number(req.body?.count || 1);
 
-  if (!Number.isInteger(organizationId)) {
-    return res.status(400).json({ error: "organization_id is required." });
+  if (!Number.isInteger(teamId)) {
+    return res.status(400).json({ error: "team_id is required." });
   }
 
   if (!Number.isInteger(surveyId)) {
@@ -626,9 +634,13 @@ router.post("/invites", async (req, res) => {
   try {
     await client.query("BEGIN");
 
-    const organizationResult = await client.query(
-      "SELECT id, name, type FROM organizations WHERE id = $1 AND deleted_at IS NULL",
-      [organizationId]
+    const teamResult = await client.query(
+      `SELECT teams.id, teams.name, teams.organization_id,
+              organizations.name AS organization_name, organizations.type AS organization_type
+       FROM teams
+       LEFT JOIN organizations ON organizations.id = teams.organization_id
+       WHERE teams.id = $1`,
+      [teamId]
     );
 
     const surveyResult = await client.query(
@@ -636,14 +648,29 @@ router.post("/invites", async (req, res) => {
       [surveyId]
     );
 
-    if (organizationResult.rowCount === 0) {
+    if (teamResult.rowCount === 0) {
       await client.query("ROLLBACK");
-      return res.status(404).json({ error: "Organization not found." });
+      return res.status(404).json({ error: "Team not found." });
     }
 
     if (surveyResult.rowCount === 0) {
       await client.query("ROLLBACK");
       return res.status(404).json({ error: "Survey not found." });
+    }
+
+    const team = teamResult.rows[0];
+    if (!team.organization_id) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Team must be linked to an organization." });
+    }
+
+    const questionCountResult = await client.query(
+      "SELECT COUNT(*)::int AS count FROM survey_questions WHERE survey_id = $1",
+      [surveyId]
+    );
+    if (questionCountResult.rows[0]?.count === 0) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Survey has no questions." });
     }
 
     const invites = [];
@@ -652,8 +679,8 @@ router.post("/invites", async (req, res) => {
       const tokenHash = hashToken(token);
 
       const inviteResult = await client.query(
-        "INSERT INTO invites (survey_id, organization_id, token_hash) VALUES ($1, $2, $3) RETURNING id, created_at",
-        [surveyId, organizationId, tokenHash]
+        "INSERT INTO invites (survey_id, organization_id, team_id, token_hash) VALUES ($1, $2, $3, $4) RETURNING id, created_at",
+        [surveyId, team.organization_id, team.id, tokenHash]
       );
 
       invites.push({
@@ -667,7 +694,12 @@ router.post("/invites", async (req, res) => {
     await client.query("COMMIT");
 
     return res.status(201).json({
-      organization: organizationResult.rows[0],
+      organization: {
+        id: team.organization_id,
+        name: team.organization_name,
+        type: team.organization_type,
+      },
+      team: { id: team.id, name: team.name },
       survey: surveyResult.rows[0],
       invites,
       warning: baseUrl
@@ -695,11 +727,13 @@ router.post("/invites/:id/regenerate", async (req, res) => {
     await client.query("BEGIN");
 
     const inviteResult = await client.query(
-      `SELECT invites.id, invites.organization_id, invites.survey_id, invites.used_at,
+      `SELECT invites.id, invites.organization_id, invites.team_id, invites.survey_id, invites.used_at,
               organizations.name AS organization_name, organizations.type AS organization_type,
+              teams.name AS team_name,
               surveys.title AS survey_title
        FROM invites
-       JOIN organizations ON organizations.id = invites.organization_id
+       LEFT JOIN organizations ON organizations.id = invites.organization_id
+       LEFT JOIN teams ON teams.id = invites.team_id
        JOIN surveys ON surveys.id = invites.survey_id
        WHERE invites.id = $1 FOR UPDATE`,
       [inviteId]
@@ -718,13 +752,22 @@ router.post("/invites/:id/regenerate", async (req, res) => {
         .json({ error: "Invite already used. Reopen it before regenerating." });
     }
 
+    const questionCountResult = await client.query(
+      "SELECT COUNT(*)::int AS count FROM survey_questions WHERE survey_id = $1",
+      [invite.survey_id]
+    );
+    if (questionCountResult.rows[0]?.count === 0) {
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Survey has no questions." });
+    }
+
     await client.query("DELETE FROM invites WHERE id = $1", [inviteId]);
 
     const token = crypto.randomBytes(32).toString("base64url");
     const tokenHash = hashToken(token);
     const newInviteResult = await client.query(
-      "INSERT INTO invites (survey_id, organization_id, token_hash) VALUES ($1, $2, $3) RETURNING id, created_at",
-      [invite.survey_id, invite.organization_id, tokenHash]
+      "INSERT INTO invites (survey_id, organization_id, team_id, token_hash) VALUES ($1, $2, $3, $4) RETURNING id, created_at",
+      [invite.survey_id, invite.organization_id, invite.team_id, tokenHash]
     );
 
     await client.query("COMMIT");
@@ -735,6 +778,7 @@ router.post("/invites/:id/regenerate", async (req, res) => {
         name: invite.organization_name,
         type: invite.organization_type,
       },
+      team: invite.team_id ? { id: invite.team_id, name: invite.team_name } : null,
       survey: { id: invite.survey_id, title: invite.survey_title },
       invites: [
         {
@@ -806,6 +850,7 @@ router.get("/responses", async (req, res) => {
   const organizationId = req.query.organization_id
     ? Number(req.query.organization_id)
     : null;
+  const teamId = req.query.team_id ? Number(req.query.team_id) : null;
   const surveyId = req.query.survey_id ? Number(req.query.survey_id) : null;
   const params = [];
   const filters = [];
@@ -820,15 +865,22 @@ router.get("/responses", async (req, res) => {
     filters.push(`responses.survey_id = $${params.length}`);
   }
 
+  if (teamId) {
+    params.push(teamId);
+    filters.push(`responses.team_id = $${params.length}`);
+  }
+
   const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
 
   const result = await query(
-    `SELECT responses.id, responses.organization_id, responses.survey_id,
+    `SELECT responses.id, responses.organization_id, responses.team_id, responses.survey_id,
             organizations.name AS organization_name, organizations.type AS organization_type,
+            teams.name AS team_name, teams.level AS team_level,
             surveys.title AS survey_title,
             responses.answers, responses.comment, responses.created_at
      FROM responses
-     JOIN organizations ON organizations.id = responses.organization_id
+     LEFT JOIN organizations ON organizations.id = responses.organization_id
+     LEFT JOIN teams ON teams.id = responses.team_id
      JOIN surveys ON surveys.id = responses.survey_id
      ${whereClause}
      ORDER BY responses.created_at DESC`,
@@ -1250,172 +1302,6 @@ router.delete("/contacts/:id", async (req, res) => {
   }
 
   return res.json({ contactId, deleted: true });
-});
-
-router.get("/coaches", async (_req, res) => {
-  const result = await query(
-    `SELECT coaches.id, coaches.org_id, coaches.name, coaches.email, coaches.phone, coaches.created_at,
-            COUNT(coach_team.team_id)::int AS team_count
-     FROM coaches
-     LEFT JOIN coach_team ON coach_team.coach_id = coaches.id
-     GROUP BY coaches.id
-     ORDER BY coaches.created_at DESC`
-  );
-  return res.json({ coaches: result.rows });
-});
-
-router.post("/coaches", async (req, res) => {
-  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
-  const email = typeof req.body?.email === "string" ? req.body.email.trim() : "";
-  const phone = typeof req.body?.phone === "string" ? req.body.phone.trim() : "";
-  const orgId = Number(req.body?.org_id) || DEFAULT_ORG_ID;
-
-  if (!name) {
-    return res.status(400).json({ error: "Coach name is required." });
-  }
-
-  const result = await query(
-    `INSERT INTO coaches (org_id, name, email, phone)
-     VALUES ($1, $2, $3, $4)
-     RETURNING id, org_id, name, email, phone, created_at`,
-    [orgId, name, email || null, phone || null]
-  );
-
-  return res.status(201).json({ coach: result.rows[0] });
-});
-
-router.put("/coaches/:id", async (req, res) => {
-  const coachId = Number(req.params.id);
-  if (!Number.isInteger(coachId)) {
-    return res.status(400).json({ error: "Coach id is required." });
-  }
-
-  const name = typeof req.body?.name === "string" ? req.body.name.trim() : "";
-  const email = typeof req.body?.email === "string" ? req.body.email.trim() : "";
-  const phone = typeof req.body?.phone === "string" ? req.body.phone.trim() : "";
-
-  const updateFields = [];
-  const params = [];
-  let paramIndex = 1;
-
-  if (name) {
-    updateFields.push(`name = $${paramIndex++}`);
-    params.push(name);
-  }
-  if (email || email === "") {
-    updateFields.push(`email = $${paramIndex++}`);
-    params.push(email || null);
-  }
-  if (phone || phone === "") {
-    updateFields.push(`phone = $${paramIndex++}`);
-    params.push(phone || null);
-  }
-
-  if (updateFields.length === 0) {
-    return res.status(400).json({ error: "No updates provided." });
-  }
-
-  params.push(coachId);
-
-  const result = await query(
-    `UPDATE coaches SET ${updateFields.join(", ")} WHERE id = $${paramIndex}
-     RETURNING id, org_id, name, email, phone, created_at`,
-    params
-  );
-
-  if (result.rowCount === 0) {
-    return res.status(404).json({ error: "Coach not found." });
-  }
-
-  return res.json({ coach: result.rows[0] });
-});
-
-router.delete("/coaches/:id", async (req, res) => {
-  const coachId = Number(req.params.id);
-  if (!Number.isInteger(coachId)) {
-    return res.status(400).json({ error: "Coach id is required." });
-  }
-
-  const result = await query("DELETE FROM coaches WHERE id = $1 RETURNING id", [coachId]);
-  if (result.rowCount === 0) {
-    return res.status(404).json({ error: "Coach not found." });
-  }
-
-  return res.json({ coachId, deleted: true });
-});
-
-router.post("/coach-teams", async (req, res) => {
-  const coachId = Number(req.body?.coach_id);
-  const teamId = Number(req.body?.team_id);
-  const seasonId = Number(req.body?.season_id) || DEFAULT_SEASON_ID;
-  const role = typeof req.body?.role === "string" ? req.body.role.trim() : "";
-
-  if (!Number.isInteger(coachId)) {
-    return res.status(400).json({ error: "coach_id is required." });
-  }
-  if (!Number.isInteger(teamId)) {
-    return res.status(400).json({ error: "team_id is required." });
-  }
-
-  const result = await query(
-    `INSERT INTO coach_team (coach_id, team_id, season_id, role)
-     VALUES ($1, $2, $3, $4)
-     ON CONFLICT (coach_id, team_id, season_id) DO NOTHING
-     RETURNING coach_id, team_id, season_id, role`,
-    [coachId, teamId, seasonId, role || null]
-  );
-
-  return res.status(201).json({ assignment: result.rows[0] || null });
-});
-
-router.delete("/coach-teams", async (req, res) => {
-  const coachId = Number(req.body?.coach_id);
-  const teamId = Number(req.body?.team_id);
-  const seasonId = Number(req.body?.season_id) || DEFAULT_SEASON_ID;
-
-  if (!Number.isInteger(coachId) || !Number.isInteger(teamId)) {
-    return res.status(400).json({ error: "coach_id and team_id are required." });
-  }
-
-  const result = await query(
-    `DELETE FROM coach_team WHERE coach_id = $1 AND team_id = $2 AND season_id = $3`,
-    [coachId, teamId, seasonId]
-  );
-
-  return res.json({ coachId, teamId, seasonId, deleted: result.rowCount > 0 });
-});
-
-router.get("/coach-teams", async (req, res) => {
-  const coachId = req.query.coach_id ? Number(req.query.coach_id) : null;
-  const teamId = req.query.team_id ? Number(req.query.team_id) : null;
-  const params = [];
-  const filters = [];
-
-  if (coachId) {
-    params.push(coachId);
-    filters.push(`coach_team.coach_id = $${params.length}`);
-  }
-
-  if (teamId) {
-    params.push(teamId);
-    filters.push(`coach_team.team_id = $${params.length}`);
-  }
-
-  const whereClause = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
-
-  const result = await query(
-    `SELECT coach_team.coach_id, coach_team.team_id, coach_team.season_id, coach_team.role,
-            coaches.name AS coach_name, teams.name AS team_name, seasons.name AS season_name
-     FROM coach_team
-     JOIN coaches ON coaches.id = coach_team.coach_id
-     JOIN teams ON teams.id = coach_team.team_id
-     LEFT JOIN seasons ON seasons.id = coach_team.season_id
-     ${whereClause}
-     ORDER BY coaches.name ASC, teams.name ASC`,
-    params
-  );
-
-  return res.json({ assignments: result.rows });
 });
 
 router.get("/practices", async (req, res) => {

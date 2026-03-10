@@ -8,7 +8,6 @@ import classes from "../dashboardStyles";
 import { formatDate } from "../dashboardUtils";
 import { apiRequest, authHeader } from "../surveyApi";
 import {
-  setCoaches,
   setInvites,
   setOrganizations,
   setPractices,
@@ -26,7 +25,6 @@ export default function OverviewPage() {
   const organizations = useSelector((state) => state.dashboard.organizations);
   const teams = useSelector((state) => state.dashboard.teams);
   const seasons = useSelector((state) => state.dashboard.seasons);
-  const coaches = useSelector((state) => state.dashboard.coaches);
   const surveys = useSelector((state) => state.dashboard.surveys);
   const invites = useSelector((state) => state.dashboard.invites);
   const responses = useSelector((state) => state.dashboard.responses);
@@ -41,11 +39,10 @@ export default function OverviewPage() {
     const load = async () => {
       try {
         setDataError("");
-        const [orgRes, teamRes, seasonRes, coachRes, surveyRes, inviteRes, responseRes, practiceRes] = await Promise.all([
+        const [orgRes, teamRes, seasonRes, surveyRes, inviteRes, responseRes, practiceRes] = await Promise.all([
           apiRequest("/api/admin/organizations", { headers: authHeaders }),
           apiRequest("/api/admin/teams", { headers: authHeaders }),
           apiRequest("/api/admin/seasons", { headers: authHeaders }),
-          apiRequest("/api/admin/coaches", { headers: authHeaders }),
           apiRequest("/api/admin/surveys", { headers: authHeaders }),
           apiRequest("/api/admin/invites", { headers: authHeaders }),
           apiRequest("/api/admin/responses", { headers: authHeaders }),
@@ -55,7 +52,6 @@ export default function OverviewPage() {
         dispatch(setOrganizations(orgRes.organizations || []));
         dispatch(setTeams(teamRes.teams || []));
         dispatch(setSeasons(seasonRes.seasons || []));
-        dispatch(setCoaches(coachRes.coaches || []));
         dispatch(setSurveys(surveyRes.surveys || []));
         dispatch(setInvites(inviteRes.invites || []));
         dispatch(setResponses(responseRes.responses || []));
@@ -97,9 +93,8 @@ export default function OverviewPage() {
       { label: "Responses", value: responses.length },
       { label: "Practices", value: practices.length },
       { label: "Contacts", value: totalContacts },
-      { label: "Coaches", value: coaches.length },
     ],
-    [surveys.length, invites.length, responses.length, practices.length, totalContacts, coaches.length]
+    [surveys.length, invites.length, responses.length, practices.length, totalContacts]
   );
 
   const overviewAlerts = useMemo(() => {
@@ -113,7 +108,7 @@ export default function OverviewPage() {
     if (teams.length === 0) {
       items.push({
         title: "No teams created",
-        body: "Create teams to start tracking rosters, coaches, and practices.",
+        body: "Create teams to start tracking rosters, contacts, and practices.",
       });
     }
     if (surveys.length === 0) {
@@ -135,14 +130,13 @@ export default function OverviewPage() {
     () => [
       { label: "Organizations", value: organizations.length },
       { label: "Teams", value: teams.length },
-      { label: "Coaches", value: coaches.length },
       { label: "Contacts", value: totalContacts },
       { label: "Surveys", value: surveys.length },
       { label: "Campaigns", value: invites.length },
       { label: "Responses", value: responses.length },
       { label: "Practices", value: practices.length },
     ],
-    [organizations.length, teams.length, coaches.length, totalContacts, surveys.length, invites.length, responses.length, practices.length]
+    [organizations.length, teams.length, totalContacts, surveys.length, invites.length, responses.length, practices.length]
   );
 
   const recentInvites = useMemo(() => invites.slice(0, 5), [invites]);
@@ -168,7 +162,6 @@ export default function OverviewPage() {
         onAddTeam={() => navigate("/dashboard/teams?new=1")}
         onCreateSurvey={() => navigate("/dashboard/surveys?new=1")}
         onGenerateInvites={() => navigate("/dashboard/campaigns?new=1")}
-        onAddCoach={() => navigate("/dashboard/people?new=coach")}
         onAddContact={() => navigate("/dashboard/people?new=contact")}
         inviteDisabled={organizations.length === 0 || surveys.length === 0}
         contactDisabled={teams.length === 0}

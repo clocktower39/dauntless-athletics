@@ -22,7 +22,6 @@ export default function OverviewSection({
   onAddTeam,
   onCreateSurvey,
   onGenerateInvites,
-  onAddCoach,
   onAddContact,
   inviteDisabled,
   contactDisabled,
@@ -122,9 +121,6 @@ export default function OverviewSection({
             >
               Generate invite links
             </Button>
-            <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={onAddCoach}>
-              Add coach
-            </Button>
             <Button
               variant="outlined"
               sx={{ color: "var(--color-text)" }}
@@ -147,7 +143,7 @@ export default function OverviewSection({
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
+                    <TableCell sx={classes.tableHeadCell}>Team</TableCell>
                     <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
                     <TableCell sx={classes.tableHeadCell}>Status</TableCell>
                   </TableRow>
@@ -156,7 +152,12 @@ export default function OverviewSection({
                   {recentInvites.map((invite) => (
                     <TableRow key={invite.id} hover>
                       <TableCell sx={{ color: "var(--color-text)" }}>
-                        {invite.organization_name}
+                        {invite.team_name || invite.organization_name || "—"}
+                        {invite.team_name && invite.organization_name && (
+                          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
+                            {invite.organization_name}
+                          </Typography>
+                        )}
                       </TableCell>
                       <TableCell sx={{ color: "var(--color-text)" }}>
                         {invite.survey_title || "—"}
@@ -181,7 +182,7 @@ export default function OverviewSection({
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
+                    <TableCell sx={classes.tableHeadCell}>Team</TableCell>
                     <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
                     <TableCell sx={classes.tableHeadCell}>Date</TableCell>
                   </TableRow>
@@ -190,7 +191,12 @@ export default function OverviewSection({
                   {recentResponses.map((response) => (
                     <TableRow key={response.id} hover>
                       <TableCell sx={{ color: "var(--color-text)" }}>
-                        {response.organization_name}
+                        {response.team_name || response.organization_name || "—"}
+                        {response.team_name && response.organization_name && (
+                          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
+                            {response.organization_name}
+                          </Typography>
+                        )}
                       </TableCell>
                       <TableCell sx={{ color: "var(--color-text)" }}>
                         {response.survey_title || "—"}

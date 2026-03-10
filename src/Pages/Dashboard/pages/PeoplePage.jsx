@@ -17,9 +17,7 @@ import PeopleSection from "../../../Components/Dashboard/PeopleSection";
 import classes from "../dashboardStyles";
 import { audienceOptions, emptyContact } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
-import { setCoaches, setContacts, setOrganizations, setSeasons, setTeams } from "../../../store/dashboardSlice";
-
-const emptyCoach = { name: "", email: "", phone: "" };
+import { setContacts, setOrganizations, setTeams } from "../../../store/dashboardSlice";
 
 export default function PeoplePage() {
   const dispatch = useDispatch();
@@ -27,26 +25,14 @@ export default function PeoplePage() {
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
   const teams = useSelector((state) => state.dashboard.teams);
-  const seasons = useSelector((state) => state.dashboard.seasons);
-  const coaches = useSelector((state) => state.dashboard.coaches);
   const contacts = useSelector((state) => state.dashboard.contacts);
   const [dataError, setDataError] = useState("");
-  const [peopleView, setPeopleView] = useState("coaches");
   const [peopleSearch, setPeopleSearch] = useState("");
   const [contactOrgFilter, setContactOrgFilter] = useState("all");
   const [contactTeamFilter, setContactTeamFilter] = useState("all");
-  const [coachModalOpen, setCoachModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
-  const [assignCoachModalOpen, setAssignCoachModalOpen] = useState(false);
-  const [coachForm, setCoachForm] = useState(emptyCoach);
-  const [editingCoachId, setEditingCoachId] = useState(null);
   const [contactForm, setContactForm] = useState(emptyContact);
   const [editingContactId, setEditingContactId] = useState(null);
-  const [assignCoachId, setAssignCoachId] = useState(null);
-  const [assignTeamId, setAssignTeamId] = useState("");
-  const [assignSeasonId, setAssignSeasonId] = useState("");
-  const [assignCoachRole, setAssignCoachRole] = useState("");
-  const [coachAssignments, setCoachAssignments] = useState([]);
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
   const teamMap = useMemo(() => new Map(teams.map((team) => [String(team.id), team])), [teams]);
@@ -55,16 +41,6 @@ export default function PeoplePage() {
     if (contactOrgFilter === "all") return teams;
     return teams.filter((team) => String(team.organization_id) === contactOrgFilter);
   }, [teams, contactOrgFilter]);
-
-  const filteredCoaches = useMemo(() => {
-    const term = peopleSearch.trim().toLowerCase();
-    if (!term) return coaches;
-    return coaches.filter((coach) =>
-      [coach.name, coach.email, coach.phone].some((field) =>
-        String(field || "").toLowerCase().includes(term)
-      )
-    );
-  }, [coaches, peopleSearch]);
 
   const filteredContacts = useMemo(() => {
     const term = peopleSearch.trim().toLowerCase();
@@ -88,15 +64,11 @@ export default function PeoplePage() {
     const load = async () => {
       try {
         setDataError("");
-        const [coachRes, teamRes, seasonRes, orgRes] = await Promise.all([
-          apiRequest("/api/admin/coaches", { headers: authHeaders }),
+        const [teamRes, orgRes] = await Promise.all([
           apiRequest("/api/admin/teams", { headers: authHeaders }),
-          apiRequest("/api/admin/seasons", { headers: authHeaders }),
           apiRequest("/api/admin/organizations", { headers: authHeaders }),
         ]);
-        dispatch(setCoaches(coachRes.coaches || []));
         dispatch(setTeams(teamRes.teams || []));
-        dispatch(setSeasons(seasonRes.seasons || []));
         dispatch(setOrganizations(orgRes.organizations || []));
       } catch (error) {
         setDataError(error.message);
@@ -115,7 +87,7 @@ export default function PeoplePage() {
   }, [contactOrgFilter, contactTeamFilter, contactTeamOptions]);
 
   useEffect(() => {
-    if (!token || peopleView !== "contacts") return;
+    if (!token) return;
     const loadContacts = async () => {
       try {
         const params = new URLSearchParams();
@@ -135,82 +107,15 @@ export default function PeoplePage() {
       }
     };
     loadContacts();
-  }, [token, peopleView, contactOrgFilter, contactTeamFilter, authHeaders, dispatch]);
+  }, [token, contactOrgFilter, contactTeamFilter, authHeaders, dispatch]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const newParam = params.get("new");
-    if (newParam === "coach") {
-      setPeopleView("coaches");
-      handleOpenCoachModal();
-    }
     if (newParam === "contact") {
-      setPeopleView("contacts");
       handleOpenContactModal();
     }
   }, [location.search]);
-
-  const handleOpenCoachModal = (coach = null) => {
-    if (coach) {
-      setEditingCoachId(coach.id);
-      setCoachForm({
-        name: coach.name || "",
-        email: coach.email || "",
-        phone: coach.phone || "",
-      });
-    } else {
-      setEditingCoachId(null);
-      setCoachForm(emptyCoach);
-    }
-    setCoachModalOpen(true);
-  };
-
-  const handleSaveCoach = async () => {
-    if (!coachForm.name.trim()) {
-      setDataError("Coach name is required.");
-      return;
-    }
-    try {
-      setDataError("");
-      if (editingCoachId) {
-        await apiRequest(`/api/admin/coaches/${editingCoachId}`, {
-          method: "PUT",
-          headers: authHeaders,
-          body: JSON.stringify({
-            name: coachForm.name.trim(),
-            email: coachForm.email.trim(),
-            phone: coachForm.phone.trim(),
-          }),
-        });
-      } else {
-        await apiRequest("/api/admin/coaches", {
-          method: "POST",
-          headers: authHeaders,
-          body: JSON.stringify({
-            name: coachForm.name.trim(),
-            email: coachForm.email.trim(),
-            phone: coachForm.phone.trim(),
-          }),
-        });
-      }
-      const result = await apiRequest("/api/admin/coaches", { headers: authHeaders });
-      dispatch(setCoaches(result.coaches || []));
-      setCoachModalOpen(false);
-    } catch (error) {
-      setDataError(error.message);
-    }
-  };
-
-  const handleDeleteCoach = async (coachId) => {
-    try {
-      setDataError("");
-      await apiRequest(`/api/admin/coaches/${coachId}`, { method: "DELETE", headers: authHeaders });
-      const result = await apiRequest("/api/admin/coaches", { headers: authHeaders });
-      dispatch(setCoaches(result.coaches || []));
-    } catch (error) {
-      setDataError(error.message);
-    }
-  };
 
   const handleOpenContactModal = (contact = null) => {
     if (contact) {
@@ -323,75 +228,12 @@ export default function PeoplePage() {
     }
   };
 
-  const handleOpenAssignCoach = async (coach) => {
-    setAssignCoachId(coach.id);
-    setAssignTeamId("");
-    setAssignSeasonId("");
-    setAssignCoachRole("");
-    setAssignCoachModalOpen(true);
-    try {
-      const result = await apiRequest(`/api/admin/coach-teams?coach_id=${coach.id}`, { headers: authHeaders });
-      setCoachAssignments(result.assignments || []);
-    } catch (error) {
-      setCoachAssignments([]);
-      setDataError(error.message);
-    }
-  };
-
-  const handleAssignCoach = async () => {
-    if (!assignCoachId || !assignTeamId) {
-      setDataError("Select a coach and team to assign.");
-      return;
-    }
-    try {
-      setDataError("");
-      await apiRequest("/api/admin/coach-teams", {
-        method: "POST",
-        headers: authHeaders,
-        body: JSON.stringify({
-          coach_id: assignCoachId,
-          team_id: Number(assignTeamId),
-          season_id: assignSeasonId ? Number(assignSeasonId) : null,
-          role: assignCoachRole.trim(),
-        }),
-      });
-      const result = await apiRequest(`/api/admin/coach-teams?coach_id=${assignCoachId}`, { headers: authHeaders });
-      setCoachAssignments(result.assignments || []);
-      const coachRes = await apiRequest("/api/admin/coaches", { headers: authHeaders });
-      dispatch(setCoaches(coachRes.coaches || []));
-    } catch (error) {
-      setDataError(error.message);
-    }
-  };
-
-  const handleRemoveCoachAssignment = async (assignment) => {
-    try {
-      setDataError("");
-      await apiRequest("/api/admin/coach-teams", {
-        method: "DELETE",
-        headers: authHeaders,
-        body: JSON.stringify({
-          coach_id: assignment.coach_id,
-          team_id: assignment.team_id,
-          season_id: assignment.season_id,
-        }),
-      });
-      const result = await apiRequest(`/api/admin/coach-teams?coach_id=${assignment.coach_id}`, { headers: authHeaders });
-      setCoachAssignments(result.assignments || []);
-      const coachRes = await apiRequest("/api/admin/coaches", { headers: authHeaders });
-      dispatch(setCoaches(coachRes.coaches || []));
-    } catch (error) {
-      setDataError(error.message);
-    }
-  };
 
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       {dataError && <Alert severity="error">{dataError}</Alert>}
       <PeopleSection
         classes={classes}
-        peopleView={peopleView}
-        onPeopleViewChange={setPeopleView}
         peopleSearch={peopleSearch}
         onPeopleSearchChange={setPeopleSearch}
         organizations={organizations}
@@ -400,155 +242,11 @@ export default function PeoplePage() {
         contactTeamFilter={contactTeamFilter}
         onContactTeamFilterChange={setContactTeamFilter}
         contactTeamOptions={contactTeamOptions}
-        onAddCoach={() => handleOpenCoachModal()}
         onAddContact={() => handleOpenContactModal()}
-        filteredCoaches={filteredCoaches}
         filteredContacts={filteredContacts}
-        onAssignCoach={handleOpenAssignCoach}
-        onEditCoach={handleOpenCoachModal}
-        onDeleteCoach={handleDeleteCoach}
         onEditContact={handleOpenContactModal}
         onDeleteContact={handleDeleteContact}
       />
-
-      <Dialog
-        open={coachModalOpen}
-        onClose={() => {
-          setCoachModalOpen(false);
-          setEditingCoachId(null);
-          setCoachForm(emptyCoach);
-        }}
-        fullWidth
-        maxWidth="sm"
-        PaperProps={{ sx: { backgroundColor: "var(--color-surface)", color: "var(--color-text)" } }}
-      >
-        <DialogTitle sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
-          {editingCoachId ? "Edit Coach" : "Add Coach"}
-        </DialogTitle>
-        <DialogContent sx={{ display: "grid", gap: "12px" }}>
-          <TextField
-            label="Coach name"
-            value={coachForm.name}
-            onChange={(event) => setCoachForm((prev) => ({ ...prev, name: event.target.value }))}
-            sx={classes.input}
-          />
-          <TextField
-            label="Email"
-            value={coachForm.email}
-            onChange={(event) => setCoachForm((prev) => ({ ...prev, email: event.target.value }))}
-            sx={classes.input}
-          />
-          <TextField
-            label="Phone"
-            value={coachForm.phone}
-            onChange={(event) => setCoachForm((prev) => ({ ...prev, phone: event.target.value }))}
-            sx={classes.input}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => setCoachModalOpen(false)}>
-            Cancel
-          </Button>
-          <Button variant="contained" sx={classes.button} onClick={handleSaveCoach}>
-            {editingCoachId ? "Save Coach" : "Add Coach"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={assignCoachModalOpen}
-        onClose={() => setAssignCoachModalOpen(false)}
-        fullWidth
-        maxWidth="md"
-        PaperProps={{ sx: { backgroundColor: "var(--color-surface)", color: "var(--color-text)" } }}
-      >
-        <DialogTitle sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
-          Assign Coach to Team
-        </DialogTitle>
-        <DialogContent sx={{ display: "grid", gap: "12px" }}>
-          <Box sx={{ display: "grid", gap: "12px" }}>
-            <TextField
-              select
-              label="Team"
-              value={assignTeamId}
-              onChange={(event) => setAssignTeamId(event.target.value)}
-              sx={classes.input}
-            >
-              {teams.map((team) => (
-                <MenuItem key={team.id} value={team.id}>
-                  {team.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              select
-              label="Season (optional)"
-              value={assignSeasonId}
-              onChange={(event) => setAssignSeasonId(event.target.value)}
-              sx={classes.input}
-            >
-              <MenuItem value="">Default season</MenuItem>
-              {seasons.map((season) => (
-                <MenuItem key={season.id} value={season.id}>
-                  {season.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Role (optional)"
-              value={assignCoachRole}
-              onChange={(event) => setAssignCoachRole(event.target.value)}
-              sx={classes.input}
-            />
-            <Button variant="contained" sx={classes.button} onClick={handleAssignCoach}>
-              Assign Coach
-            </Button>
-          </Box>
-          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Current Assignments</Typography>
-          {coachAssignments.length === 0 ? (
-            <Typography sx={{ color: "var(--color-muted)" }}>No assignments yet.</Typography>
-          ) : (
-            <Box sx={{ display: "grid", gap: "8px" }}>
-              {coachAssignments.map((assignment) => (
-                <Box
-                  key={`${assignment.coach_id}-${assignment.team_id}-${assignment.season_id || "0"}`}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "12px",
-                    padding: "10px 12px",
-                    borderRadius: "10px",
-                    border: "1px solid var(--color-border)",
-                    backgroundColor: "var(--color-surface-2)",
-                  }}
-                >
-                  <Box>
-                    <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {assignment.team_name}
-                    </Typography>
-                    <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-                      {assignment.season_name || "Default season"} {assignment.role ? `• ${assignment.role}` : ""}
-                    </Typography>
-                  </Box>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{ color: "var(--color-text)" }}
-                    onClick={() => handleRemoveCoachAssignment(assignment)}
-                  >
-                    Remove
-                  </Button>
-                </Box>
-              ))}
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={() => setAssignCoachModalOpen(false)}>
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
 
       <Dialog
         open={contactModalOpen}

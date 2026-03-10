@@ -46,10 +46,13 @@ router.get("/:token", async (req, res) => {
   const tokenHash = hashToken(req.params.token);
 
   const result = await query(
-    `SELECT invites.used_at, invites.survey_id, organizations.name AS organization_name,
+    `SELECT invites.used_at, invites.survey_id, invites.team_id,
+            organizations.name AS organization_name,
+            teams.name AS team_name,
             surveys.title, surveys.description, surveys.comment_prompt
      FROM invites
-     JOIN organizations ON organizations.id = invites.organization_id
+     LEFT JOIN organizations ON organizations.id = invites.organization_id
+     LEFT JOIN teams ON teams.id = invites.team_id
      JOIN surveys ON surveys.id = invites.survey_id
      WHERE invites.token_hash = $1`,
     [tokenHash]
@@ -64,9 +67,13 @@ router.get("/:token", async (req, res) => {
     "SELECT id, prompt, sort_order FROM survey_questions WHERE survey_id = $1 ORDER BY sort_order ASC",
     [invite.survey_id]
   );
+  if (questionsResult.rows.length === 0) {
+    return res.status(400).json({ error: "Survey has no questions." });
+  }
 
   return res.json({
     organizationName: invite.organization_name,
+    teamName: invite.team_name,
     used: Boolean(invite.used_at),
     survey: {
       id: invite.survey_id,
@@ -95,7 +102,7 @@ router.post("/:token", async (req, res) => {
     await client.query("BEGIN");
 
     const inviteResult = await client.query(
-      "SELECT id, organization_id, used_at FROM invites WHERE token_hash = $1 FOR UPDATE",
+      "SELECT id, organization_id, team_id, survey_id, used_at FROM invites WHERE token_hash = $1 FOR UPDATE",
       [tokenHash]
     );
 
@@ -138,10 +145,11 @@ router.post("/:token", async (req, res) => {
     }
 
     await client.query(
-      "INSERT INTO responses (survey_id, organization_id, invite_id, answers, comment) VALUES ($1, $2, $3, $4, $5)",
+      "INSERT INTO responses (survey_id, organization_id, team_id, invite_id, answers, comment) VALUES ($1, $2, $3, $4, $5, $6)",
       [
         invite.survey_id,
         invite.organization_id,
+        invite.team_id,
         invite.id,
         answers,
         comment || null,

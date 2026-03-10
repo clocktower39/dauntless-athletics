@@ -21,11 +21,9 @@ export default function CampaignsSection({
   classes,
   selectedSurveyId,
   onSelectedSurveyChange,
-  selectedOrganizationIds,
-  onSelectedOrganizationsChange,
   selectedTeamIds = [],
   teamsByOrganization = {},
-  onToggleTeam = () => {},
+  onSelectedTeamIdsChange = () => {},
   inviteSurveyOptions,
   organizationOptions,
   onGenerateLinks,
@@ -74,14 +72,12 @@ export default function CampaignsSection({
             </TextField>
             <OrganizationTeamMultiSelect
               classes={classes}
-              label="Organizations"
+              label="Teams"
               minWidth="260px"
               organizationOptions={organizationOptions}
               teamsByOrganization={teamsByOrganization}
-              selectedOrganizationIds={selectedOrganizationIds}
-              onOrganizationsChange={onSelectedOrganizationsChange}
               selectedTeamIds={selectedTeamIds}
-              onToggleTeam={onToggleTeam}
+              onSelectedTeamIdsChange={onSelectedTeamIdsChange}
             />
           </Box>
         </Box>
@@ -155,7 +151,7 @@ export default function CampaignsSection({
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
+                  <TableCell sx={classes.tableHeadCell}>Team</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
                   <TableCell sx={classes.tableHeadCell}>Status</TableCell>
                   <TableCell sx={classes.tableHeadCell} align="right">
@@ -167,7 +163,12 @@ export default function CampaignsSection({
                 {invites.map((invite) => (
                   <TableRow key={invite.id} hover>
                     <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {invite.organization_name}
+                      {invite.team_name || invite.organization_name || "—"}
+                      {invite.team_name && invite.organization_name && (
+                        <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
+                          {invite.organization_name}
+                        </Typography>
+                      )}
                     </TableCell>
                     <TableCell sx={{ color: "var(--color-text)" }}>
                       {invite.survey_title || "—"}

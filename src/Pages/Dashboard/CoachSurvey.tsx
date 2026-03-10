@@ -40,6 +40,7 @@ type SurveyStatus = {
   error: string;
   used: boolean;
   organizationName: string;
+  teamName?: string;
 };
 
 type SubmitState = {
@@ -51,6 +52,7 @@ type SubmitState = {
 type SurveyStatusResponse = {
   used: boolean;
   organizationName?: string;
+  teamName?: string;
   survey?: {
     id: number;
     title: string;
@@ -161,6 +163,7 @@ export default function CoachSurvey() {
     error: "",
     used: false,
     organizationName: "",
+    teamName: "",
   });
   const [survey, setSurvey] = useState<SurveyStatusResponse["survey"] | null>(null);
   const [questions, setQuestions] = useState<SurveyQuestion[]>([]);
@@ -186,7 +189,7 @@ export default function CoachSurvey() {
     let active = true;
     const fetchStatus = async () => {
       if (!tokenParam) {
-        setStatus({ error: "Invalid survey link.", used: false, organizationName: "" });
+        setStatus({ error: "Invalid survey link.", used: false, organizationName: "", teamName: "" });
         setLoading(false);
         return;
       }
@@ -198,12 +201,13 @@ export default function CoachSurvey() {
           error: "",
           used: result.used,
           organizationName: result.organizationName || "",
+          teamName: result.teamName || "",
         });
         setSurvey(result.survey || null);
         setQuestions(result.survey?.questions || []);
       } catch (error) {
         if (!active) return;
-        setStatus({ error: getErrorMessage(error), used: false, organizationName: "" });
+        setStatus({ error: getErrorMessage(error), used: false, organizationName: "", teamName: "" });
         setSurvey(null);
         setQuestions([]);
       } finally {
@@ -270,6 +274,10 @@ export default function CoachSurvey() {
           <Typography sx={{ color: "var(--color-muted)", marginBottom: "24px" }}>
             {survey?.description
               ? survey.description
+              : status.teamName
+              ? `This confidential survey is for the ${status.teamName}${
+                  status.organizationName ? ` at ${status.organizationName}` : ""
+                }. We appreciate your honest feedback.`
               : status.organizationName
               ? `This confidential survey is for ${status.organizationName}. We appreciate your honest feedback.`
               : "This confidential survey helps us improve our coaching experience."}

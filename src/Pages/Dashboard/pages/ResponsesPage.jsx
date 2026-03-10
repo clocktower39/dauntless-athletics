@@ -105,7 +105,12 @@ export default function ResponsesPage() {
           {responseDetail && (
             <>
               <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {responseDetail.organization_name}
+                {responseDetail.team_name || responseDetail.organization_name || "—"}
+                {responseDetail.team_name && responseDetail.organization_name && (
+                  <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
+                    {responseDetail.organization_name}
+                  </Typography>
+                )}
               </Typography>
               {responseDetail.survey_title && (
                 <Typography sx={{ color: "var(--color-muted)" }}>{responseDetail.survey_title}</Typography>

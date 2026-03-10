@@ -3,28 +3,31 @@ import { Autocomplete, Box, Checkbox, TextField, Typography } from "@mui/materia
 
 export default function OrganizationTeamMultiSelect({
   classes,
-  label = "Organizations",
+  label = "Teams",
   minWidth = "260px",
   organizationOptions = [],
   teamsByOrganization = {},
-  selectedOrganizationIds = [],
-  onOrganizationsChange = () => {},
   selectedTeamIds = [],
-  onToggleTeam = () => {},
+  onSelectedTeamIdsChange = () => {},
 }) {
-  const selectedOptions = organizationOptions.filter((org) =>
-    selectedOrganizationIds.includes(String(org.id))
-  );
-  const allOrganizationIds = organizationOptions.map((org) => String(org.id));
+  const allTeamIds = Object.values(teamsByOrganization).flat().map((team) => String(team.id));
   const allSelected =
-    allOrganizationIds.length > 0 &&
-    allOrganizationIds.every((orgId) => selectedOrganizationIds.includes(orgId));
+    allTeamIds.length > 0 && allTeamIds.every((teamId) => selectedTeamIds.includes(teamId));
   const selectAllOption = {
     id: "__all__",
     name: allSelected ? "Clear all" : "Select all",
     _isSelectAll: true,
   };
   const optionsWithSelectAll = [selectAllOption, ...organizationOptions];
+  const selectedCount = selectedTeamIds.length;
+
+  const toggleTeams = (teamIds, shouldSelect) => {
+    if (teamIds.length === 0) return;
+    const next = shouldSelect
+      ? Array.from(new Set([...selectedTeamIds, ...teamIds]))
+      : selectedTeamIds.filter((id) => !teamIds.includes(id));
+    onSelectedTeamIdsChange(next);
+  };
 
   return (
     <Autocomplete
@@ -32,26 +35,23 @@ export default function OrganizationTeamMultiSelect({
       disableCloseOnSelect
       disablePortal
       options={optionsWithSelectAll}
-      value={selectedOptions}
-      onChange={(_event, value) => {
-        const hasSelectAll = value.some((option) => option?._isSelectAll);
-        if (hasSelectAll) {
-          onOrganizationsChange(allSelected ? [] : allOrganizationIds);
+      onChange={(_event, _value, _reason, details) => {
+        const option = details?.option;
+        if (!option) return;
+        if (option?._isSelectAll) {
+          onSelectedTeamIdsChange(allSelected ? [] : allTeamIds);
           return;
         }
-        onOrganizationsChange(value.map((org) => String(org.id)));
+        const orgId = String(option.id);
+        const orgTeams = teamsByOrganization[orgId] || [];
+        const orgTeamIds = orgTeams.map((team) => String(team.id));
+        const orgSelectedCount = orgTeamIds.filter((id) => selectedTeamIds.includes(id)).length;
+        const orgSelected = orgTeamIds.length > 0 && orgSelectedCount === orgTeamIds.length;
+        toggleTeams(orgTeamIds, !orgSelected);
       }}
       getOptionLabel={(option) => option?.name || ""}
       isOptionEqualToValue={(option, value) => String(option.id) === String(value.id)}
-      renderTags={(value, getTagProps) =>
-        value
-          .filter((option) => !option?._isSelectAll)
-          .map((option, index) => (
-            <span key={String(option.id)} {...getTagProps({ index })}>
-              {option.name}
-            </span>
-          ))
-      }
+      renderTags={() => (selectedCount > 0 ? <span>{selectedCount} teams selected</span> : null)}
       slotProps={{
         paper: {
           sx: {
@@ -100,7 +100,7 @@ export default function OrganizationTeamMultiSelect({
               <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
                 <Checkbox
                   checked={allSelected}
-                  indeterminate={!allSelected && selectedOrganizationIds.length > 0}
+                  indeterminate={!allSelected && selectedCount > 0}
                   sx={{
                     color: "var(--color-muted, #a9b4c3)",
                     "&.Mui-checked": { color: "var(--color-accent, #d72638)" },
@@ -116,12 +116,21 @@ export default function OrganizationTeamMultiSelect({
         }
         const orgId = String(option.id);
         const orgTeams = teamsByOrganization[orgId] || [];
+        const orgTeamIds = orgTeams.map((team) => String(team.id));
+        const orgSelectedCount = orgTeamIds.filter((id) => selectedTeamIds.includes(id)).length;
+        const orgSelected = orgTeamIds.length > 0 && orgSelectedCount === orgTeamIds.length;
+        const orgIndeterminate = orgSelectedCount > 0 && orgSelectedCount < orgTeamIds.length;
         return (
           <li {...props}>
             <Box sx={{ display: "grid", gap: "4px", width: "100%" }}>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Checkbox
-                  checked={selected}
+                  checked={orgSelected}
+                  indeterminate={orgIndeterminate}
+                  onChange={(event) => {
+                    event.stopPropagation();
+                    toggleTeams(orgTeamIds, !orgSelected);
+                  }}
                   sx={{
                     color: "var(--color-muted, #a9b4c3)",
                     "&.Mui-checked": { color: "var(--color-accent, #d72638)" },
@@ -148,7 +157,7 @@ export default function OrganizationTeamMultiSelect({
                           checked={checked}
                           onChange={(event) => {
                             event.stopPropagation();
-                            onToggleTeam(team);
+                            toggleTeams([teamId], !checked);
                           }}
                           onMouseDown={(event) => {
                             event.preventDefault();

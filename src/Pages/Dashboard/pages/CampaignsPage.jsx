@@ -29,7 +29,6 @@ export default function CampaignsPage() {
   const teams = useSelector((state) => state.dashboard.teams);
   const invites = useSelector((state) => state.dashboard.invites);
   const [dataError, setDataError] = useState("");
-  const [selectedOrganizationIds, setSelectedOrganizationIds] = useState([]);
   const [selectedTeamIds, setSelectedTeamIds] = useState([]);
   const [selectedSurveyId, setSelectedSurveyId] = useState("");
   const [inviteCount, setInviteCount] = useState(1);
@@ -155,8 +154,8 @@ export default function CampaignsPage() {
   };
 
   const handleCreateInvites = async () => {
-    if (selectedOrganizationIds.length === 0) {
-      setDataError("Select at least one organization before generating invite links.");
+    if (selectedTeamIds.length === 0) {
+      setDataError("Select at least one team before generating invite links.");
       return;
     }
     if (!selectedSurveyId) {
@@ -166,12 +165,12 @@ export default function CampaignsPage() {
     try {
       setDataError("");
       const results = await Promise.all(
-        selectedOrganizationIds.map((orgId) =>
+        selectedTeamIds.map((teamId) =>
           apiRequest("/api/admin/invites", {
             method: "POST",
             headers: authHeaders,
             body: JSON.stringify({
-              organization_id: Number(orgId),
+              team_id: Number(teamId),
               survey_id: Number(selectedSurveyId),
               count: Number(inviteCount),
             }),
@@ -231,40 +230,13 @@ export default function CampaignsPage() {
 
   const filteredInvites = useMemo(() => {
     let items = invites;
-    if (selectedOrganizationIds.length > 0) {
+    if (selectedTeamIds.length > 0) {
       items = items.filter((invite) =>
-        selectedOrganizationIds.includes(String(invite.organization_id))
+        selectedTeamIds.includes(String(invite.team_id))
       );
     }
     return items;
-  }, [invites, selectedOrganizationIds]);
-
-  const handleOrganizationsChange = (orgIds) => {
-    setSelectedOrganizationIds(orgIds);
-    if (orgIds.length === 0) {
-      setSelectedTeamIds([]);
-      return;
-    }
-    setSelectedTeamIds((prev) =>
-      prev.filter((teamId) => {
-        const team = teams.find((item) => String(item.id) === String(teamId));
-        return team && orgIds.includes(String(team.organization_id));
-      })
-    );
-  };
-
-  const handleToggleTeam = (team) => {
-    const teamId = String(team.id);
-    const orgId = String(team.organization_id || "");
-    setSelectedTeamIds((prev) =>
-      prev.includes(teamId) ? prev.filter((id) => id !== teamId) : [...prev, teamId]
-    );
-    if (orgId) {
-      setSelectedOrganizationIds((prev) =>
-        prev.includes(orgId) ? prev : [...prev, orgId]
-      );
-    }
-  };
+  }, [invites, selectedTeamIds]);
 
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
@@ -273,15 +245,13 @@ export default function CampaignsPage() {
         classes={classes}
         selectedSurveyId={selectedSurveyId}
         onSelectedSurveyChange={setSelectedSurveyId}
-        selectedOrganizationIds={selectedOrganizationIds}
-        onSelectedOrganizationsChange={handleOrganizationsChange}
         selectedTeamIds={selectedTeamIds}
         teamsByOrganization={teamsByOrganization}
-        onToggleTeam={handleToggleTeam}
+        onSelectedTeamIdsChange={setSelectedTeamIds}
         inviteSurveyOptions={inviteSurveyOptions}
         organizationOptions={organizationOptions}
         onGenerateLinks={() => setInviteModalOpen(true)}
-        generateDisabled={organizations.length === 0 || surveys.length === 0}
+        generateDisabled={teams.length === 0 || surveys.length === 0}
         latestInvites={latestInvites}
         allInvitesSelected={allInvitesSelected}
         selectedInviteIds={selectedInviteIds}
@@ -323,13 +293,11 @@ export default function CampaignsPage() {
           </TextField>
           <OrganizationTeamMultiSelect
             classes={classes}
-            label="Organizations"
+            label="Teams"
             organizationOptions={organizationOptions}
             teamsByOrganization={teamsByOrganization}
-            selectedOrganizationIds={selectedOrganizationIds}
-            onOrganizationsChange={handleOrganizationsChange}
             selectedTeamIds={selectedTeamIds}
-            onToggleTeam={handleToggleTeam}
+            onSelectedTeamIdsChange={setSelectedTeamIds}
           />
           <TextField
             label="Count"
@@ -340,7 +308,7 @@ export default function CampaignsPage() {
             inputProps={{ min: 1, max: 50 }}
           />
           <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-            Invite links are single-use and tied to the selected survey and organization.
+            Invite links are single-use and tied to the selected survey and team.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -351,7 +319,7 @@ export default function CampaignsPage() {
             variant="contained"
             sx={classes.button}
             onClick={handleCreateInvites}
-            disabled={selectedOrganizationIds.length === 0 || !selectedSurveyId}
+            disabled={selectedTeamIds.length === 0 || !selectedSurveyId}
           >
             Generate Links
           </Button>

@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS invites (
   id BIGSERIAL PRIMARY KEY,
   survey_id BIGINT NOT NULL REFERENCES surveys(id) ON DELETE CASCADE,
   organization_id BIGINT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  team_id BIGINT REFERENCES teams(id) ON DELETE CASCADE,
   token_hash TEXT NOT NULL UNIQUE,
   used_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -67,11 +68,13 @@ CREATE TABLE IF NOT EXISTS invites (
 
 CREATE INDEX IF NOT EXISTS invites_survey_id_idx ON invites (survey_id);
 CREATE INDEX IF NOT EXISTS invites_organization_id_idx ON invites (organization_id);
+CREATE INDEX IF NOT EXISTS invites_team_id_idx ON invites (team_id);
 
 CREATE TABLE IF NOT EXISTS responses (
   id BIGSERIAL PRIMARY KEY,
   survey_id BIGINT NOT NULL REFERENCES surveys(id) ON DELETE CASCADE,
   organization_id BIGINT NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  team_id BIGINT REFERENCES teams(id) ON DELETE SET NULL,
   invite_id BIGINT NOT NULL UNIQUE REFERENCES invites(id) ON DELETE CASCADE,
   answers JSONB NOT NULL,
   comment TEXT,
@@ -80,6 +83,7 @@ CREATE TABLE IF NOT EXISTS responses (
 
 CREATE INDEX IF NOT EXISTS responses_organization_id_idx ON responses (organization_id);
 CREATE INDEX IF NOT EXISTS responses_survey_id_idx ON responses (survey_id);
+CREATE INDEX IF NOT EXISTS responses_team_id_idx ON responses (team_id);
 
 CREATE TABLE IF NOT EXISTS teams (
   id BIGSERIAL PRIMARY KEY,
@@ -144,16 +148,6 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS coaches (
-  id BIGSERIAL PRIMARY KEY,
-  org_id BIGINT NOT NULL REFERENCES orgs(id),
-  user_id BIGINT REFERENCES users(id),
-  name TEXT NOT NULL,
-  email TEXT,
-  phone TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
 CREATE TABLE IF NOT EXISTS athletes (
   id BIGSERIAL PRIMARY KEY,
   org_id BIGINT NOT NULL REFERENCES orgs(id),
@@ -170,15 +164,6 @@ CREATE TABLE IF NOT EXISTS parents (
   org_id BIGINT NOT NULL REFERENCES orgs(id),
   user_id BIGINT REFERENCES users(id),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS coach_team (
-  coach_id BIGINT NOT NULL REFERENCES coaches(id) ON DELETE CASCADE,
-  team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
-  season_id BIGINT REFERENCES seasons(id),
-  role TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  PRIMARY KEY (coach_id, team_id, season_id)
 );
 
 CREATE TABLE IF NOT EXISTS athlete_team (
@@ -200,10 +185,7 @@ CREATE TABLE IF NOT EXISTS parent_athlete (
   PRIMARY KEY (parent_id, athlete_id)
 );
 
-CREATE INDEX IF NOT EXISTS coaches_org_id_idx ON coaches (org_id);
 CREATE INDEX IF NOT EXISTS athletes_org_id_idx ON athletes (org_id);
-CREATE INDEX IF NOT EXISTS coach_team_team_id_idx ON coach_team (team_id);
-CREATE INDEX IF NOT EXISTS coach_team_coach_id_idx ON coach_team (coach_id);
 CREATE INDEX IF NOT EXISTS athlete_team_team_id_idx ON athlete_team (team_id);
 CREATE INDEX IF NOT EXISTS athlete_team_athlete_id_idx ON athlete_team (athlete_id);
 

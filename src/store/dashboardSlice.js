@@ -6,7 +6,6 @@ const dashboardSlice = createSlice({
     organizations: [],
     teams: [],
     seasons: [],
-    coaches: [],
     contacts: [],
     practices: [],
     surveys: [],
@@ -22,9 +21,6 @@ const dashboardSlice = createSlice({
     },
     setSeasons(state, action) {
       state.seasons = action.payload || [];
-    },
-    setCoaches(state, action) {
-      state.coaches = action.payload || [];
     },
     setContacts(state, action) {
       state.contacts = action.payload || [];
@@ -48,7 +44,6 @@ export const {
   setOrganizations,
   setTeams,
   setSeasons,
-  setCoaches,
   setContacts,
   setPractices,
   setSurveys,
