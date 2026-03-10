@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
 import Camps from "./Pages/WebsitePages/Camps";
 import PeakPerformanceCamp from "./Pages/WebsitePages/PeakPerformanceCamp";
@@ -26,6 +27,7 @@ import CampaignsPage from "./Pages/Dashboard/pages/CampaignsPage";
 import CampaignProfilePage from "./Pages/Dashboard/pages/CampaignProfilePage";
 import ResponsesPage from "./Pages/Dashboard/pages/ResponsesPage";
 import ResponseProfilePage from "./Pages/Dashboard/pages/ResponseProfilePage";
+import appTheme from "./theme/appTheme";
 import "./App.css";
 
 function App() {
@@ -77,7 +79,15 @@ function App() {
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
         <Route path="/survey-admin/*" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<AdminDashboard />}>
+        <Route
+          path="/dashboard"
+          element={
+            <ThemeProvider theme={appTheme}>
+              <CssBaseline />
+              <AdminDashboard />
+            </ThemeProvider>
+          }
+        >
           <Route index element={<OverviewPage />} />
           <Route path="overview" element={<OverviewPage />} />
           <Route path="clients" element={<Navigate to="/dashboard/organizations" replace />} />
