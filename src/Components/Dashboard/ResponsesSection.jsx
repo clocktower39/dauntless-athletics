@@ -4,16 +4,10 @@ import {
   Button,
   Divider,
   MenuItem,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 export default function ResponsesSection({
   classes,
@@ -74,53 +68,70 @@ export default function ResponsesSection({
         ) : responses.length === 0 ? (
           <Typography sx={{ color: "var(--color-muted)" }}>No responses yet.</Typography>
         ) : (
-          <TableContainer component={Paper} sx={classes.tablePaper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={classes.tableHeadCell}>Team</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Date</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Comment</TableCell>
-                  <TableCell sx={classes.tableHeadCell} align="right">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {responses.map((response) => (
-                  <TableRow key={response.id} hover>
-                    <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {response.team_name || response.organization_name || "—"}
-                      {response.team_name && response.organization_name && (
-                        <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
-                          {response.organization_name}
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {response.survey_title || "—"}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {formatDate(response.created_at)}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {response.comment
-                        ? response.comment.length > 60
-                          ? `${response.comment.slice(0, 60)}...`
-                          : response.comment
-                        : "—"}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onViewResponse(response)}>
-                        View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DataGrid
+            rows={responses}
+            columns={[
+              {
+                field: "team_name",
+                headerName: "Team",
+                flex: 1,
+                minWidth: 220,
+                valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+              },
+              {
+                field: "survey_title",
+                headerName: "Survey",
+                flex: 1,
+                minWidth: 200,
+                valueGetter: (_value, row) => row?.survey_title || "—",
+              },
+              {
+                field: "created_at",
+                headerName: "Date",
+                width: 160,
+                valueGetter: (_value, row) => formatDate(row?.created_at),
+              },
+              {
+                field: "comment",
+                headerName: "Comment",
+                flex: 1,
+                minWidth: 260,
+                valueGetter: (_value, row) =>
+                  row?.comment
+                    ? row.comment.length > 60
+                      ? `${row.comment.slice(0, 60)}...`
+                      : row.comment
+                    : "—",
+              },
+              {
+                field: "actions",
+                headerName: "Actions",
+                minWidth: 120,
+                sortable: false,
+                filterable: false,
+                renderCell: (params) => (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    sx={{ color: "var(--color-text)" }}
+                    onClick={() => onViewResponse(params.row)}
+                  >
+                    View
+                  </Button>
+                ),
+              },
+            ]}
+            autoHeight
+            density="compact"
+            disableRowSelectionOnClick
+            pageSizeOptions={[10, 25, 50]}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 } },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+            sx={classes.dataGrid}
+          />
         )}
       </Box>
     </Box>

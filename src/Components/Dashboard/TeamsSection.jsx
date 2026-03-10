@@ -4,16 +4,10 @@ import {
   Button,
   Divider,
   MenuItem,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 export default function TeamsSection({
   classes,
@@ -96,49 +90,73 @@ export default function TeamsSection({
         {filteredTeams.length === 0 ? (
           <Typography sx={{ color: "var(--color-muted)" }}>No teams match the current filters.</Typography>
         ) : (
-          <TableContainer component={Paper} sx={classes.tablePaper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={classes.tableHeadCell}>Team</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Organization</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Season</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Contacts</TableCell>
-                  <TableCell sx={classes.tableHeadCell} align="right">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredTeams.map((team) => (
-                  <TableRow key={team.id} hover>
-                    <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {team.name}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {team.organization_name || "—"}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {team.season_name || seasonMap.get(String(team.season_id)) || team.season || "—"}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {team.contact_count || 0}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onEditTeam(team)}>
-                          Edit
-                        </Button>
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onDeleteTeam(team.id)}>
-                          Delete
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DataGrid
+            rows={filteredTeams}
+            columns={[
+              { field: "name", headerName: "Team", flex: 1, minWidth: 200 },
+              {
+                field: "organization_name",
+                headerName: "Organization",
+                flex: 1,
+                minWidth: 200,
+                valueGetter: (_value, row) => row?.organization_name || "—",
+              },
+              {
+                field: "season_name",
+                headerName: "Season",
+                flex: 0.8,
+                minWidth: 160,
+                valueGetter: (_value, row) =>
+                  row?.season_name ||
+                  seasonMap.get(String(row?.season_id)) ||
+                  row?.season ||
+                  "—",
+              },
+              {
+                field: "contact_count",
+                headerName: "Contacts",
+                width: 120,
+                valueGetter: (_value, row) => row?.contact_count || 0,
+              },
+              {
+                field: "actions",
+                headerName: "Actions",
+                minWidth: 160,
+                sortable: false,
+                filterable: false,
+                renderCell: (params) => (
+                  <Box sx={{ display: "flex", gap: "8px" }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onEditTeam(params.row)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onDeleteTeam(params.row.id)}
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                ),
+              },
+            ]}
+            autoHeight
+            density="compact"
+            disableRowSelectionOnClick
+            pageSizeOptions={[10, 25, 50]}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 } },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+            sx={classes.dataGrid}
+          />
         )}
       </Box>
 
@@ -181,49 +199,78 @@ export default function TeamsSection({
             {practices.length === 0 ? (
               <Typography sx={{ color: "var(--color-muted)" }}>No practices scheduled yet.</Typography>
             ) : (
-              <TableContainer component={Paper} sx={classes.tablePaper}>
-                <Table size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={classes.tableHeadCell}>Day</TableCell>
-                      <TableCell sx={classes.tableHeadCell}>Time</TableCell>
-                      <TableCell sx={classes.tableHeadCell}>Coach</TableCell>
-                      <TableCell sx={classes.tableHeadCell}>Location</TableCell>
-                      <TableCell sx={classes.tableHeadCell} align="right">
-                        Actions
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {practices.map((practice) => (
-                      <TableRow key={practice.id} hover>
-                        <TableCell sx={{ color: "var(--color-text)" }}>
-                          {dayOptions.find((day) => day.value === practice.day_of_week)?.label || "—"}
-                        </TableCell>
-                        <TableCell sx={{ color: "var(--color-text)" }}>
-                          {practice.start_time?.slice(0, 5)} - {practice.end_time?.slice(0, 5)}
-                        </TableCell>
-                        <TableCell sx={{ color: "var(--color-text)" }}>
-                          {practice.contact_name || "—"}
-                        </TableCell>
-                        <TableCell sx={{ color: "var(--color-text)" }}>
-                          {practice.location || "—"}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                            <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onEditPractice(practice)}>
-                              Edit
-                            </Button>
-                            <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onDeletePractice(practice.id)}>
-                              Delete
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <DataGrid
+                rows={practices}
+                columns={[
+                  {
+                    field: "day_of_week",
+                    headerName: "Day",
+                    width: 140,
+                    valueGetter: (_value, row) =>
+                      dayOptions.find((day) => day.value === row?.day_of_week)?.label || "—",
+                  },
+                  {
+                    field: "time",
+                    headerName: "Time",
+                    width: 160,
+                    valueGetter: (_value, row) =>
+                      row?.start_time?.slice(0, 5) && row?.end_time?.slice(0, 5)
+                        ? `${row.start_time.slice(0, 5)} - ${row.end_time.slice(0, 5)}`
+                        : "—",
+                  },
+                  {
+                    field: "contact_name",
+                    headerName: "Coach",
+                    flex: 1,
+                    minWidth: 160,
+                    valueGetter: (_value, row) => row?.contact_name || "—",
+                  },
+                  {
+                    field: "location",
+                    headerName: "Location",
+                    flex: 1,
+                    minWidth: 160,
+                    valueGetter: (_value, row) => row?.location || "—",
+                  },
+                  {
+                    field: "actions",
+                    headerName: "Actions",
+                    minWidth: 160,
+                    sortable: false,
+                    filterable: false,
+                    renderCell: (params) => (
+                      <Box sx={{ display: "flex", gap: "8px" }}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          sx={{ color: "var(--color-text)" }}
+                          onClick={() => onEditPractice(params.row)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          sx={{ color: "var(--color-text)" }}
+                          onClick={() => onDeletePractice(params.row.id)}
+                        >
+                          Delete
+                        </Button>
+                      </Box>
+                    ),
+                  },
+                ]}
+                autoHeight
+                density="compact"
+                disableRowSelectionOnClick
+                pageSizeOptions={[10, 25, 50]}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 10 } },
+                }}
+                slots={{ toolbar: GridToolbar }}
+                slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+                sx={classes.dataGrid}
+              />
             )}
           </>
         )}
@@ -244,46 +291,66 @@ export default function TeamsSection({
         {seasons.length === 0 ? (
           <Typography sx={{ color: "var(--color-muted)" }}>No seasons yet.</Typography>
         ) : (
-          <TableContainer component={Paper} sx={classes.tablePaper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={classes.tableHeadCell}>Season</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Dates</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Active</TableCell>
-                  <TableCell sx={classes.tableHeadCell} align="right">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {seasons.map((season) => (
-                  <TableRow key={season.id} hover>
-                    <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {season.name}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {season.start_date ? String(season.start_date).slice(0, 10) : "—"}{" "}
-                      {season.end_date ? `→ ${String(season.end_date).slice(0, 10)}` : ""}
-                    </TableCell>
-                    <TableCell sx={{ color: season.is_active ? "var(--color-accent)" : "var(--color-muted)" }}>
-                      {season.is_active ? "Active" : "Inactive"}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onEditSeason(season)}>
-                          Edit
-                        </Button>
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onDeleteSeason(season.id)}>
-                          Delete
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DataGrid
+            rows={seasons}
+            columns={[
+              { field: "name", headerName: "Season", flex: 1, minWidth: 200 },
+              {
+                field: "dates",
+                headerName: "Dates",
+                flex: 1,
+                minWidth: 220,
+                valueGetter: (_value, row) => {
+                  const start = row?.start_date ? String(row.start_date).slice(0, 10) : "—";
+                  const end = row?.end_date ? String(row.end_date).slice(0, 10) : "";
+                  return end ? `${start} → ${end}` : start;
+                },
+              },
+              {
+                field: "is_active",
+                headerName: "Active",
+                width: 120,
+                valueGetter: (_value, row) => (row?.is_active ? "Active" : "Inactive"),
+              },
+              {
+                field: "actions",
+                headerName: "Actions",
+                minWidth: 160,
+                sortable: false,
+                filterable: false,
+                renderCell: (params) => (
+                  <Box sx={{ display: "flex", gap: "8px" }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onEditSeason(params.row)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onDeleteSeason(params.row.id)}
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                ),
+              },
+            ]}
+            autoHeight
+            density="compact"
+            disableRowSelectionOnClick
+            pageSizeOptions={[10, 25, 50]}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 } },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+            sx={classes.dataGrid}
+          />
         )}
       </Box>
     </Box>

@@ -4,15 +4,9 @@ import {
   Box,
   Button,
   Divider,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 export default function OverviewSection({
   classes,
@@ -139,37 +133,41 @@ export default function OverviewSection({
           {recentInvites.length === 0 ? (
             <Typography sx={{ color: "var(--color-muted)" }}>No invite activity yet.</Typography>
           ) : (
-            <TableContainer component={Paper} sx={classes.tablePaper}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={classes.tableHeadCell}>Team</TableCell>
-                    <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                    <TableCell sx={classes.tableHeadCell}>Status</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {recentInvites.map((invite) => (
-                    <TableRow key={invite.id} hover>
-                      <TableCell sx={{ color: "var(--color-text)" }}>
-                        {invite.team_name || invite.organization_name || "—"}
-                        {invite.team_name && invite.organization_name && (
-                          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
-                            {invite.organization_name}
-                          </Typography>
-                        )}
-                      </TableCell>
-                      <TableCell sx={{ color: "var(--color-text)" }}>
-                        {invite.survey_title || "—"}
-                      </TableCell>
-                      <TableCell sx={{ color: invite.used_at ? "var(--color-accent)" : "var(--color-muted)" }}>
-                        {invite.used_at ? "Used" : "Unused"}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <DataGrid
+              rows={recentInvites}
+              columns={[
+                {
+                  field: "team_name",
+                  headerName: "Team",
+                  flex: 1,
+                  minWidth: 220,
+                  valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+                },
+                {
+                  field: "survey_title",
+                  headerName: "Survey",
+                  flex: 1,
+                  minWidth: 200,
+                  valueGetter: (_value, row) => row?.survey_title || "—",
+                },
+                {
+                  field: "status",
+                  headerName: "Status",
+                  width: 140,
+                  valueGetter: (_value, row) => (row?.used_at ? "Used" : "Unused"),
+                },
+              ]}
+              autoHeight
+              density="compact"
+              disableRowSelectionOnClick
+              pageSizeOptions={[5, 10]}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 5 } },
+              }}
+              slots={{ toolbar: GridToolbar }}
+              slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+              sx={classes.dataGrid}
+            />
           )}
         </Box>
 
@@ -178,37 +176,41 @@ export default function OverviewSection({
           {recentResponses.length === 0 ? (
             <Typography sx={{ color: "var(--color-muted)" }}>No responses yet.</Typography>
           ) : (
-            <TableContainer component={Paper} sx={classes.tablePaper}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={classes.tableHeadCell}>Team</TableCell>
-                    <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                    <TableCell sx={classes.tableHeadCell}>Date</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {recentResponses.map((response) => (
-                    <TableRow key={response.id} hover>
-                      <TableCell sx={{ color: "var(--color-text)" }}>
-                        {response.team_name || response.organization_name || "—"}
-                        {response.team_name && response.organization_name && (
-                          <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
-                            {response.organization_name}
-                          </Typography>
-                        )}
-                      </TableCell>
-                      <TableCell sx={{ color: "var(--color-text)" }}>
-                        {response.survey_title || "—"}
-                      </TableCell>
-                      <TableCell sx={{ color: "var(--color-text)" }}>
-                        {formatDate(response.created_at)}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <DataGrid
+              rows={recentResponses}
+              columns={[
+                {
+                  field: "team_name",
+                  headerName: "Team",
+                  flex: 1,
+                  minWidth: 220,
+                  valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+                },
+                {
+                  field: "survey_title",
+                  headerName: "Survey",
+                  flex: 1,
+                  minWidth: 200,
+                  valueGetter: (_value, row) => row?.survey_title || "—",
+                },
+                {
+                  field: "created_at",
+                  headerName: "Date",
+                  width: 160,
+                  valueGetter: (_value, row) => formatDate(row?.created_at),
+                },
+              ]}
+              autoHeight
+              density="compact"
+              disableRowSelectionOnClick
+              pageSizeOptions={[5, 10]}
+              initialState={{
+                pagination: { paginationModel: { page: 0, pageSize: 5 } },
+              }}
+              slots={{ toolbar: GridToolbar }}
+              slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+              sx={classes.dataGrid}
+            />
           )}
         </Box>
       </Box>

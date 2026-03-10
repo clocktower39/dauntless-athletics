@@ -151,6 +151,72 @@ const classes = {
     textTransform: "uppercase",
     letterSpacing: "0.08em",
   },
+  dataGrid: {
+    border: "1px solid var(--color-border)",
+    borderRadius: "12px",
+    backgroundColor: "var(--color-surface-2)",
+    color: "var(--color-text)",
+    "& .MuiDataGrid-main": {
+      backgroundColor: "var(--color-surface-2)",
+    },
+    "& .MuiDataGrid-virtualScroller": {
+      backgroundColor: "var(--color-surface-2)",
+    },
+    "& .MuiDataGrid-overlay": {
+      backgroundColor: "var(--color-surface-2)",
+      color: "var(--color-muted)",
+    },
+    "& .MuiDataGrid-columnHeaders, & .MuiDataGrid-columnHeadersInner, & .MuiDataGrid-columnHeader": {
+      backgroundColor: "var(--color-surface-3) !important",
+      color: "var(--color-text)",
+      textTransform: "uppercase",
+      fontSize: "0.72rem",
+      letterSpacing: "0.08em",
+      borderBottom: "1px solid var(--color-border)",
+    },
+    "& .MuiDataGrid-columnHeaderTitle": {
+      color: "var(--color-text)",
+    },
+    "& .MuiDataGrid-cell": {
+      borderBottom: "1px solid var(--color-border)",
+      color: "var(--color-text)",
+    },
+    "& .MuiDataGrid-row:hover": {
+      backgroundColor: "rgba(215, 38, 56, 0.08)",
+    },
+    "& .MuiDataGrid-footerContainer": {
+      borderTop: "1px solid var(--color-border)",
+      backgroundColor: "var(--color-surface-3)",
+      color: "var(--color-muted)",
+    },
+    "& .MuiTablePagination-root": {
+      color: "var(--color-muted)",
+    },
+    "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows": {
+      color: "var(--color-muted)",
+    },
+    "& .MuiTablePagination-select, & .MuiTablePagination-selectIcon": {
+      color: "var(--color-text)",
+    },
+    "& .MuiDataGrid-toolbarContainer": {
+      padding: "8px 12px",
+      borderBottom: "1px solid var(--color-border)",
+      backgroundColor: "var(--color-surface-3)",
+    },
+    "& .MuiDataGrid-toolbarContainer .MuiButton-root": {
+      color: "var(--color-text)",
+    },
+    "& .MuiDataGrid-toolbarContainer .MuiInputBase-root": {
+      color: "var(--color-text)",
+    },
+    "& .MuiDataGrid-toolbarContainer .MuiInputBase-input::placeholder": {
+      color: "var(--color-muted)",
+      opacity: 1,
+    },
+    "& .MuiDataGrid-columnSeparator": {
+      color: "var(--color-border)",
+    },
+  },
   workspaceHeader: {
     display: "flex",
     alignItems: "center",

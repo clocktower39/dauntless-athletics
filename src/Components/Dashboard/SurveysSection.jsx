@@ -3,16 +3,10 @@ import {
   Box,
   Button,
   Divider,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 export default function SurveysSection({
   classes,
@@ -46,48 +40,69 @@ export default function SurveysSection({
           />
         </Box>
         {filteredSurveys.length > 0 ? (
-          <TableContainer component={Paper} sx={classes.tablePaper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Questions</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Status</TableCell>
-                  <TableCell sx={classes.tableHeadCell} align="right">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredSurveys.map((survey) => (
-                  <TableRow key={survey.id} hover>
-                    <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {survey.title}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {survey.questions?.length || 0}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {survey.isActive ? "Active" : "Inactive"}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onEditSurvey(survey)}>
-                          Edit
-                        </Button>
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onToggleSurveyActive(survey)}>
-                          {survey.isActive ? "Deactivate" : "Activate"}
-                        </Button>
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onDeleteSurvey(survey.id)}>
-                          Delete
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DataGrid
+            rows={filteredSurveys}
+            columns={[
+              { field: "title", headerName: "Survey", flex: 1, minWidth: 220 },
+              {
+                field: "questionsCount",
+                headerName: "Questions",
+                width: 130,
+                valueGetter: (_value, row) => row?.questions?.length || 0,
+              },
+              {
+                field: "isActive",
+                headerName: "Status",
+                width: 140,
+                valueGetter: (_value, row) => (row?.isActive ? "Active" : "Inactive"),
+              },
+              {
+                field: "actions",
+                headerName: "Actions",
+                minWidth: 240,
+                sortable: false,
+                filterable: false,
+                renderCell: (params) => (
+                  <Box sx={{ display: "flex", gap: "8px" }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onEditSurvey(params.row)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onToggleSurveyActive(params.row)}
+                    >
+                      {params.row.isActive ? "Deactivate" : "Activate"}
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onDeleteSurvey(params.row.id)}
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                ),
+              },
+            ]}
+            autoHeight
+            density="compact"
+            disableRowSelectionOnClick
+            pageSizeOptions={[10, 25, 50]}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 } },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+            sx={classes.dataGrid}
+          />
         ) : (
           <Typography sx={{ color: "var(--color-muted)" }}>
             No surveys yet. Create one to get started.

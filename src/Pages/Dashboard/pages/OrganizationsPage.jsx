@@ -91,8 +91,6 @@ export default function OrganizationsPage() {
     }, {});
   }, [teams]);
 
-  const allOrganizationsSelected =
-    filteredOrganizations.length > 0 && selectedOrganizationIds.length === filteredOrganizations.length;
 
   useEffect(() => {
     if (!token) return;
@@ -194,20 +192,6 @@ export default function OrganizationsPage() {
     }
   };
 
-  const toggleOrganizationSelection = (id) => {
-    setSelectedOrganizationIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  const handleToggleAllOrganizations = () => {
-    if (allOrganizationsSelected) {
-      setSelectedOrganizationIds([]);
-    } else {
-      setSelectedOrganizationIds(filteredOrganizations.map((org) => org.id));
-    }
-  };
-
   const handleBulkArchiveOrganizations = async () => {
     if (selectedOrganizationIds.length === 0) return;
     try {
@@ -230,6 +214,18 @@ export default function OrganizationsPage() {
 
   const orgReadOnly = orgDrawerMode === "view";
 
+  const handleSelectedOrganizationIdsChange = (selection) => {
+    if (Array.isArray(selection)) {
+      setSelectedOrganizationIds(selection);
+      return;
+    }
+    if (selection && selection.ids) {
+      setSelectedOrganizationIds(Array.from(selection.ids));
+      return;
+    }
+    setSelectedOrganizationIds([]);
+  };
+
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       {dataError && <Alert severity="error">{dataError}</Alert>}
@@ -247,9 +243,7 @@ export default function OrganizationsPage() {
         districts={districts}
         filteredOrganizations={filteredOrganizations}
         selectedOrganizationIds={selectedOrganizationIds}
-        allOrganizationsSelected={allOrganizationsSelected}
-        onToggleAllOrganizations={handleToggleAllOrganizations}
-        onToggleOrganizationSelection={toggleOrganizationSelection}
+        onSelectedOrganizationIdsChange={handleSelectedOrganizationIdsChange}
         onBulkArchive={handleBulkArchiveOrganizations}
         onClearSelection={() => setSelectedOrganizationIds([])}
         onNewOrganization={() => openOrganizationDrawer(null, "create")}

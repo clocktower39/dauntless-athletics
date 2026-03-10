@@ -5,17 +5,11 @@ import {
   Checkbox,
   Divider,
   MenuItem,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   TextField,
   Typography,
 } from "@mui/material";
 import OrganizationTeamMultiSelect from "./OrganizationTeamMultiSelect";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 
 export default function CampaignsSection({
   classes,
@@ -98,46 +92,70 @@ export default function CampaignsSection({
                 Copy selected
               </Button>
             </Box>
-            <TableContainer component={Paper} sx={classes.tablePaper}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={classes.tableHeadCell} />
-                    <TableCell sx={classes.tableHeadCell}>Invite Link</TableCell>
-                    <TableCell sx={classes.tableHeadCell} align="right">
-                      Action
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {latestInvites.map((invite) => {
-                    const inviteText = getInviteText(invite);
-                    return (
-                      <TableRow key={invite.id} hover>
-                        <TableCell>
-                          <Checkbox
-                            checked={selectedInviteIds.includes(invite.id)}
-                            onChange={() => onToggleInvite(invite.id)}
-                            sx={{
-                              color: "var(--color-muted)",
-                              "&.Mui-checked": { color: "var(--color-accent)" },
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell sx={{ color: "var(--color-text)", fontFamily: "monospace" }}>
-                          {inviteText}
-                        </TableCell>
-                        <TableCell align="right">
-                          <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onCopyInvite(inviteText)}>
-                            Copy
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <DataGrid
+                rows={latestInvites}
+                columns={[
+                  {
+                    field: "selected",
+                    headerName: "",
+                    width: 60,
+                    sortable: false,
+                    filterable: false,
+                    renderCell: (params) => (
+                      <Checkbox
+                        checked={selectedInviteIds.includes(params.row.id)}
+                        onChange={() => onToggleInvite(params.row.id)}
+                        sx={{
+                          color: "var(--color-muted)",
+                          "&.Mui-checked": { color: "var(--color-accent)" },
+                        }}
+                      />
+                    ),
+                  },
+                  {
+                    field: "link",
+                    headerName: "Invite Link",
+                    flex: 1,
+                    minWidth: 240,
+                    valueGetter: (_value, row) => getInviteText(row),
+                    renderCell: (params) => (
+                      <Typography sx={{ color: "var(--color-text)", fontFamily: "monospace" }}>
+                        {getInviteText(params.row)}
+                      </Typography>
+                    ),
+                  },
+                  {
+                    field: "actions",
+                    headerName: "Action",
+                    width: 120,
+                    sortable: false,
+                    filterable: false,
+                    renderCell: (params) => {
+                      const inviteText = getInviteText(params.row);
+                      return (
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          sx={{ color: "var(--color-text)" }}
+                          onClick={() => onCopyInvite(inviteText)}
+                        >
+                          Copy
+                        </Button>
+                      );
+                    },
+                  },
+                ]}
+                autoHeight
+                density="compact"
+                disableRowSelectionOnClick
+                pageSizeOptions={[5, 10, 25]}
+                initialState={{
+                  pagination: { paginationModel: { page: 0, pageSize: 5 } },
+                }}
+                slots={{ toolbar: GridToolbar }}
+                slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+                sx={classes.dataGrid}
+              />
           </Box>
         )}
       </Box>
@@ -147,57 +165,81 @@ export default function CampaignsSection({
         {invites.length === 0 ? (
           <Typography sx={{ color: "var(--color-muted)" }}>No invite links yet.</Typography>
         ) : (
-          <TableContainer component={Paper} sx={classes.tablePaper}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={classes.tableHeadCell}>Team</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Survey</TableCell>
-                  <TableCell sx={classes.tableHeadCell}>Status</TableCell>
-                  <TableCell sx={classes.tableHeadCell} align="right">
-                    Actions
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {invites.map((invite) => (
-                  <TableRow key={invite.id} hover>
-                    <TableCell sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                      {invite.team_name || invite.organization_name || "—"}
-                      {invite.team_name && invite.organization_name && (
-                        <Typography sx={{ color: "var(--color-muted)", fontSize: "0.78rem" }}>
-                          {invite.organization_name}
-                        </Typography>
-                      )}
-                    </TableCell>
-                    <TableCell sx={{ color: "var(--color-text)" }}>
-                      {invite.survey_title || "—"}
-                    </TableCell>
-                    <TableCell sx={{ color: invite.used_at ? "var(--color-accent)" : "var(--color-muted)" }}>
-                      {invite.used_at ? `Used ${formatDate(invite.used_at)}` : "Unused"}
-                    </TableCell>
-                    <TableCell align="right">
-                      <Box sx={{ display: "flex", gap: "8px", justifyContent: "flex-end", flexWrap: "wrap" }}>
-                        {!invite.used_at && (
-                          <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onRegenerateInvite(invite.id)}>
-                            Resend
-                          </Button>
-                        )}
-                        {invite.used_at && (
-                          <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onReopenInvite(invite.id)}>
-                            Reopen
-                          </Button>
-                        )}
-                        <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={() => onDeleteInvite(invite.id)}>
-                          Delete
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DataGrid
+            rows={invites}
+            columns={[
+              {
+                field: "team_name",
+                headerName: "Team",
+                flex: 1,
+                minWidth: 220,
+                valueGetter: (_value, row) => row?.team_name || row?.organization_name || "—",
+              },
+              {
+                field: "survey_title",
+                headerName: "Survey",
+                flex: 1,
+                minWidth: 200,
+                valueGetter: (_value, row) => row?.survey_title || "—",
+              },
+              {
+                field: "status",
+                headerName: "Status",
+                width: 180,
+                valueGetter: (_value, row) =>
+                  row?.used_at ? `Used ${formatDate(row.used_at)}` : "Unused",
+              },
+              {
+                field: "actions",
+                headerName: "Actions",
+                minWidth: 220,
+                sortable: false,
+                filterable: false,
+                renderCell: (params) => (
+                  <Box sx={{ display: "flex", gap: "8px" }}>
+                    {!params.row.used_at && (
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{ color: "var(--color-text)" }}
+                        onClick={() => onRegenerateInvite(params.row.id)}
+                      >
+                        Resend
+                      </Button>
+                    )}
+                    {params.row.used_at && (
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{ color: "var(--color-text)" }}
+                        onClick={() => onReopenInvite(params.row.id)}
+                      >
+                        Reopen
+                      </Button>
+                    )}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      sx={{ color: "var(--color-text)" }}
+                      onClick={() => onDeleteInvite(params.row.id)}
+                    >
+                      Delete
+                    </Button>
+                  </Box>
+                ),
+              },
+            ]}
+            autoHeight
+            density="compact"
+            disableRowSelectionOnClick
+            pageSizeOptions={[10, 25, 50]}
+            initialState={{
+              pagination: { paginationModel: { page: 0, pageSize: 10 } },
+            }}
+            slots={{ toolbar: GridToolbar }}
+            slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+            sx={classes.dataGrid}
+          />
         )}
       </Box>
     </Box>
