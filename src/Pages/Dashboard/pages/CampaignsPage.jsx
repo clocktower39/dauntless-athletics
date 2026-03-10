@@ -53,6 +53,10 @@ export default function CampaignsPage() {
       }, {}),
     [teams]
   );
+  const teamNameById = useMemo(
+    () => new Map(teams.map((team) => [String(team.id), team.name])),
+    [teams]
+  );
 
   useEffect(() => {
     if (!token) return;
@@ -155,6 +159,26 @@ export default function CampaignsPage() {
     await copyToClipboard(payload);
   };
 
+  const handleCopySelectedInvitesAsObject = async () => {
+    const selected = latestInvites.filter((invite) => selectedInviteIds.includes(invite.id));
+    if (selected.length === 0) {
+      setDataError("Select at least one link to copy.");
+      return;
+    }
+    const payload = selected
+      .map((invite) => ({
+        team:
+          invite.team_name ||
+          (invite.team_id ? teamNameById.get(String(invite.team_id)) : "") ||
+          invite.organization_name ||
+          "Unknown team",
+        link: getInviteText(invite),
+        survey: invite.survey_title || undefined,
+      }))
+      .filter((entry) => entry.link);
+    await copyToClipboard(JSON.stringify(payload, null, 2));
+  };
+
   const handleCreateInvites = async () => {
     if (selectedTeamIds.length === 0) {
       setDataError("Select at least one team before generating invite links.");
@@ -179,7 +203,18 @@ export default function CampaignsPage() {
           })
         )
       );
-      const createdInvites = results.flatMap((result) => result.invites || []);
+      const createdInvites = results.flatMap((result) =>
+        (result.invites || []).map((invite) => ({
+          ...invite,
+          team_id: result.team?.id,
+          team_name: result.team?.name,
+          organization_id: result.organization?.id,
+          organization_name: result.organization?.name,
+          survey_id: result.survey?.id,
+          survey_title: result.survey?.title,
+          created_at: invite.created_at || invite.createdAt || null,
+        }))
+      );
       setLatestInvites(createdInvites);
       setSelectedInviteIds([]);
       setInviteModalOpen(false);
@@ -196,7 +231,17 @@ export default function CampaignsPage() {
         method: "POST",
         headers: authHeaders,
       });
-      setLatestInvites(result.invites || []);
+      const regeneratedInvites = (result.invites || []).map((invite) => ({
+        ...invite,
+        team_id: result.team?.id,
+        team_name: result.team?.name,
+        organization_id: result.organization?.id,
+        organization_name: result.organization?.name,
+        survey_id: result.survey?.id,
+        survey_title: result.survey?.title,
+        created_at: invite.created_at || invite.createdAt || null,
+      }));
+      setLatestInvites(regeneratedInvites);
       setSelectedInviteIds([]);
       await loadInvites(selectedSurveyId);
     } catch (error) {
@@ -260,6 +305,7 @@ export default function CampaignsPage() {
         onToggleAllInvites={handleToggleAllInvites}
         onToggleInvite={toggleInviteSelection}
         onCopySelected={handleCopySelectedInvites}
+        onCopySelectedAsObject={handleCopySelectedInvitesAsObject}
         getInviteText={getInviteText}
         onCopyInvite={copyToClipboard}
         invites={filteredInvites}

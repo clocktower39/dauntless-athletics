@@ -31,6 +31,7 @@ export default function CampaignsSection({
   onToggleAllInvites,
   onToggleInvite,
   onCopySelected,
+  onCopySelectedAsObject,
   getInviteText,
   onCopyInvite,
   invites,
@@ -95,6 +96,14 @@ export default function CampaignsSection({
               <Typography sx={{ color: "var(--color-text)" }}>Select all</Typography>
               <Button variant="outlined" size="small" sx={{ color: "var(--color-text)" }} onClick={onCopySelected}>
                 Copy selected
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                sx={{ color: "var(--color-text)" }}
+                onClick={onCopySelectedAsObject}
+              >
+                Copy as JSON
               </Button>
             </Box>
             <DataGrid
