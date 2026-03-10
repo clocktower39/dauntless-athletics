@@ -165,16 +165,42 @@ export default function CampaignsPage() {
       setDataError("Select at least one link to copy.");
       return;
     }
+    const closeDate = "April 15, 2026";
     const payload = selected
-      .map((invite) => ({
-        team:
+      .map((invite) => {
+        const team =
           invite.team_name ||
           (invite.team_id ? teamNameById.get(String(invite.team_id)) : "") ||
           invite.organization_name ||
-          "Unknown team",
-        link: getInviteText(invite),
-        survey: invite.survey_title || undefined,
-      }))
+          "Unknown team";
+        const link = getInviteText(invite);
+        const teamLabel = team === "Unknown team" ? "your team" : team;
+        const surveyTitle = invite.survey_title || "Dauntless Athletics Coach Survey";
+        const emailSubject = `${surveyTitle} — ${teamLabel}`;
+        const emailBody = [
+          `Hi ${teamLabel} Coach/Team,`,
+          "",
+          "We’re collecting feedback to improve our cheer programs.",
+          `Please complete the survey by ${closeDate}.`,
+          "",
+          `Survey link: ${link}`,
+          "",
+          "This link is unique and one-time use.",
+          "",
+          "Thank you,",
+          "Dauntless Athletics",
+        ].join("\n");
+        const textMessage = `Dauntless Athletics ${surveyTitle} for ${teamLabel}: ${link} (one-time link). Please complete by ${closeDate}. Thank you!`;
+
+        return {
+          team,
+          link,
+          survey: invite.survey_title || undefined,
+          email_subject: emailSubject,
+          email_body: emailBody,
+          text_message: textMessage,
+        };
+      })
       .filter((entry) => entry.link);
     await copyToClipboard(JSON.stringify(payload, null, 2));
   };
