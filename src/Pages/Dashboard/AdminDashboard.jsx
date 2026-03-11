@@ -16,6 +16,7 @@ import BusinessIcon from "@mui/icons-material/Business";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import TextSnippetOutlinedIcon from "@mui/icons-material/TextSnippetOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import DashboardNav from "../../Components/Dashboard/DashboardNav";
 import classes from "./dashboardStyles";
@@ -50,6 +51,7 @@ export default function AdminDashboard() {
       { id: "surveys", label: "Surveys", icon: <AssignmentOutlinedIcon /> },
       { id: "campaigns", label: "Campaigns", icon: <AssignmentOutlinedIcon /> },
       { id: "responses", label: "Responses", icon: <AssignmentOutlinedIcon /> },
+      { id: "message-prep", label: "Message Prep", icon: <TextSnippetOutlinedIcon /> },
     ],
     []
   );

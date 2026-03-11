@@ -27,6 +27,7 @@ import CampaignsPage from "./Pages/Dashboard/pages/CampaignsPage";
 import CampaignProfilePage from "./Pages/Dashboard/pages/CampaignProfilePage";
 import ResponsesPage from "./Pages/Dashboard/pages/ResponsesPage";
 import ResponseProfilePage from "./Pages/Dashboard/pages/ResponseProfilePage";
+import MessagePrepPage from "./Pages/Dashboard/pages/MessagePrepPage";
 import appTheme from "./theme/appTheme";
 import "./App.css";
 
@@ -103,6 +104,7 @@ function App() {
           <Route path="campaigns/:inviteId" element={<CampaignProfilePage />} />
           <Route path="responses" element={<ResponsesPage />} />
           <Route path="responses/:responseId" element={<ResponseProfilePage />} />
+          <Route path="message-prep" element={<MessagePrepPage />} />
         </Route>
         <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="*" element={<NotFoundPage />} />

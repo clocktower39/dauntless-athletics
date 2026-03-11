@@ -194,6 +194,7 @@ export default function CampaignsPage() {
 
         return {
           team,
+          team_id: invite.team_id || null,
           link,
           survey: invite.survey_title || undefined,
           email_subject: emailSubject,
