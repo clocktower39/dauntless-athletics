@@ -2,6 +2,7 @@ import { useState } from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography, Skeleton } from "@mui/material";
 import Footer from "../../Components/Footer";
+import SEO from "../../Components/SEO";
 
 type Employee = {
   displayName: string;
@@ -256,6 +257,11 @@ export default function Staff() {
   };
   return (
     <>
+      <SEO
+        title="Our Coaches & Staff"
+        description="Meet the Dauntless Athletics coaching staff and leadership team serving cheerleading, tumbling, and stunting athletes."
+        path="/staff"
+      />
       <WebsiteNavbar />
       <Box sx={{ backgroundColor: "transparent", padding: { xs: "30px 0", md: "50px 0" } }}>
         <Typography

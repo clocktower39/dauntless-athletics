@@ -11,6 +11,7 @@ export default defineConfig({
         "/",
         "/camps",
         "/college-combine",
+        "/peak-performance-camp",
         "/class-schedule",
         "/services",
         "/staff",

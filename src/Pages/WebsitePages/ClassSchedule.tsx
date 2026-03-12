@@ -5,6 +5,7 @@ import HolidayClosure from "../../Components/HolidayClosure";
 import Footer from "../../Components/Footer";
 import { camps } from "../../states";
 import dayjs from "dayjs";
+import SEO from "../../Components/SEO";
 
 import {
   ScheduleComponent,
@@ -557,6 +558,11 @@ export default function ClassSchedule() {
 
   return (
     <>
+      <SEO
+        title="Class Schedule"
+        description="View the Dauntless Athletics class schedule for cheerleading, tumbling, stunting, and clinics in the Phoenix metro area."
+        path="/class-schedule"
+      />
       <WebsiteNavbar />
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">

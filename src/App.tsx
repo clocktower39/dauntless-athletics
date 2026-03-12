@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router";
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { HelmetProvider } from "react-helmet-async";
 import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
 import Camps from "./Pages/WebsitePages/Camps";
 import PeakPerformanceCamp from "./Pages/WebsitePages/PeakPerformanceCamp";
@@ -60,8 +61,9 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
+    <HelmetProvider>
+      <Router>
+        <Routes>
         {/* Default website pages, anyone can access */}
         {checkSubDomain() ? (
           <>
@@ -108,8 +110,9 @@ function App() {
         </Route>
         <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </HelmetProvider>
   );
 }
 

@@ -3,6 +3,7 @@ import { HashLink as Link } from "react-router-hash-link";
 import { Button, Box, Container, Divider, Grid, Typography } from "@mui/material";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
+import SEO from "../../Components/SEO";
 import {
   MiscellaneousServices as MiscellaneousServicesIcon,
   Fireplace as FireplaceIcon,
@@ -34,6 +35,11 @@ const classes = {
 export default function CollegeCombine() {
   return (
     <>
+      <SEO
+        title="College Combine"
+        description="College Combine at Dauntless Athletics for athletes preparing for collegiate cheer. Learn from experienced coaches and refine skills."
+        path="/college-combine"
+      />
       <WebsiteNavbar />
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">

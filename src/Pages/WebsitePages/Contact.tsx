@@ -4,6 +4,7 @@ import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Button, Container, Grid, TextField, Typography } from "@mui/material";
 import HolidayClosure from "../../Components/HolidayClosure";
 import Footer from "../../Components/Footer";
+import SEO from "../../Components/SEO";
 import {
   ContactPhoneOutlined as ContactPhoneOutlinedIcon,
   Phone as PhoneIcon,
@@ -218,6 +219,11 @@ export default function Contact() {
 
   return (
     <>
+      <SEO
+        title="Contact Us"
+        description="Contact Dauntless Athletics to learn about cheerleading, tumbling, stunting classes, camps, and private lessons in the Phoenix metro area."
+        path="/contact-us"
+      />
       <WebsiteNavbar />
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">

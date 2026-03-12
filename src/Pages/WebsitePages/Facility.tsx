@@ -2,7 +2,8 @@ import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
 import { HomeOutlined as HomeOutlinedIcon } from "@mui/icons-material";
-import ImageWithSkeleton from "../../Components/ImageWithSkeleton"
+import ImageWithSkeleton from "../../Components/ImageWithSkeleton";
+import SEO from "../../Components/SEO";
 
 const classes = {
   mainImgBox: {
@@ -22,6 +23,11 @@ const classes = {
 export default function Facility() {
   return (
     <>
+      <SEO
+        title="Facility"
+        description="Explore the Dauntless Athletics facility for cheerleading, tumbling, and stunting training in the Phoenix metro area."
+        path="/facility"
+      />
       <WebsiteNavbar />
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">

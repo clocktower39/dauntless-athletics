@@ -2,6 +2,7 @@ import WebsiteNavbar from "./WebsiteNavbar";
 import { HashLink as Link } from "react-router-hash-link";
 import { Button, Box, Container, Grid, Typography } from "@mui/material";
 import Footer from "../../Components/Footer";
+import SEO from "../../Components/SEO";
 import {
   Policy as PolicyIcon,
   Hub as HubIcon,
@@ -35,6 +36,11 @@ const classes = {
 export default function Services() {
   return (
     <>
+      <SEO
+        title="Cheerleading, Tumbling & Stunting Services"
+        description="Dauntless Athletics offers cheerleading, tumbling, stunting, private lessons, and team training in the Phoenix metro area."
+        path="/services"
+      />
       <WebsiteNavbar />
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">

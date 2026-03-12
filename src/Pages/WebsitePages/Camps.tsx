@@ -2,6 +2,7 @@ import { camps } from "../../states";
 import WebsiteNavbar from "./WebsiteNavbar";
 import CampComponent from "../../Components/CampComponent";
 import Footer from "../../Components/Footer";
+import SEO from "../../Components/SEO";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { Groups as GroupsIcon } from "@mui/icons-material";
 import OurProcess from "../../Components/OurProcess";
@@ -41,6 +42,11 @@ const classes = {
 export default function Camps() {
   return (
     <>
+      <SEO
+        title="Cheer & Tumbling Camps"
+        description="Explore cheerleading, tumbling, and stunting camps and clinics at Dauntless Athletics in the Phoenix metro area."
+        path="/camps"
+      />
       <WebsiteNavbar />
       <Box sx={classes.mainImgBox}>
         <Container maxWidth="lg">

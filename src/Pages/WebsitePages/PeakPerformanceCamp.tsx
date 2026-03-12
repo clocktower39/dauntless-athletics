@@ -18,6 +18,7 @@ import {
 import { HashLink as Link } from "react-router-hash-link";
 import WebsiteNavbar from "./WebsiteNavbar";
 import Footer from "../../Components/Footer";
+import SEO from "../../Components/SEO";
 
 const formLink =
   "https://docs.google.com/forms/d/e/1FAIpQLScfWJL6iHzEE8zzi5oFcEH3-Jr41YkYj4tE9OQuDXE_1JvjjQ/viewform";
@@ -123,6 +124,11 @@ const classes = {
 export default function PeakPerformanceCamp() {
   return (
     <>
+      <SEO
+        title="Peak Performance Camp"
+        description="Peak Performance Camp at Dauntless Athletics — June 12–13, 2026 at Sun Devil Fitness Complex. Team training focused on stunting, tumbling, and performance."
+        path="/peak-performance-camp"
+      />
       <WebsiteNavbar />
       <Box sx={classes.heroShell}>
         <Container maxWidth="lg">

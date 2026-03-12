@@ -19,6 +19,7 @@ import ReactPlayer from "../../Components/YouTubeOnlyPlayer";
 import CampComponent from "../../Components/CampComponent";
 import CaptivateMinds from "../../Components/CaptivateMinds";
 import Footer from "../../Components/Footer";
+import SEO from "../../Components/SEO";
 import DauntlessAthleticsTumblingCampsImg from "../../assets/Dauntless-Athletics-Tumbling-Camps.jpg";
 import useHashOnView from "../../Hooks/useHashOnView";
 
@@ -92,6 +93,11 @@ export default function Home() {
 
   return (
     <>
+      <SEO
+        title="Cheerleading, Tumbling & Stunting Training"
+        description="Dauntless Athletics provides cheerleading, tumbling, and stunting training in the Phoenix metro area. Camps, clinics, private lessons, and team training for all levels."
+        path="/"
+      />
       <WebsiteNavbar />
       <Box
         sx={{
