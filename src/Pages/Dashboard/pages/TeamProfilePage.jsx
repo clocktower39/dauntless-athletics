@@ -4,6 +4,10 @@ import {
   Alert,
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   Link,
   MenuItem,
@@ -14,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link as RouterLink } from "react-router-dom";
 import classes from "../dashboardStyles";
-import { emptyTeam } from "../dashboardConstants";
+import { dayOptions, emptyPractice, emptyTeam } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
 import { setContacts, setOrganizations, setSeasons, setTeams } from "../../../store/dashboardSlice";
 import RowActionsMenu from "../../../Components/Dashboard/RowActionsMenu";
@@ -33,6 +37,10 @@ export default function TeamProfilePage() {
   const startEdit = searchParams.get("edit") === "1";
   const [mode, setMode] = useState(teamId === "new" || startEdit ? "edit" : "view");
   const [teamForm, setTeamForm] = useState(emptyTeam);
+  const [practices, setPractices] = useState([]);
+  const [practiceModalOpen, setPracticeModalOpen] = useState(false);
+  const [practiceForm, setPracticeForm] = useState(emptyPractice);
+  const [editingPracticeId, setEditingPracticeId] = useState(null);
 
   const isNew = teamId === "new";
   const teamIdNumber = Number(teamId);
@@ -49,6 +57,11 @@ export default function TeamProfilePage() {
   const contactsForTeam = useMemo(
     () => contacts.filter((contact) => Number(contact.team_id) === Number(teamIdNumber)),
     [contacts, teamIdNumber]
+  );
+
+  const practiceCoachOptions = useMemo(
+    () => contactsForTeam.filter((contact) => contact.id),
+    [contactsForTeam]
   );
 
   useEffect(() => {
@@ -98,6 +111,24 @@ export default function TeamProfilePage() {
       setMode("edit");
     }
   }, [startEdit]);
+
+  useEffect(() => {
+    if (!token || isNew || !teamIdNumber) {
+      setPractices([]);
+      return;
+    }
+    const loadPractices = async () => {
+      try {
+        const practiceRes = await apiRequest(`/api/admin/practices?team_id=${teamIdNumber}`, {
+          headers: authHeaders,
+        });
+        setPractices(practiceRes.practices || []);
+      } catch (error) {
+        setDataError(error.message);
+      }
+    };
+    loadPractices();
+  }, [token, isNew, teamIdNumber, authHeaders]);
 
   const handleSave = async () => {
     if (!teamForm.name.trim()) {
@@ -158,6 +189,86 @@ export default function TeamProfilePage() {
     }
   };
 
+  const reloadPractices = async () => {
+    if (!teamIdNumber) return;
+    const practiceRes = await apiRequest(`/api/admin/practices?team_id=${teamIdNumber}`, {
+      headers: authHeaders,
+    });
+    setPractices(practiceRes.practices || []);
+  };
+
+  const handleOpenPracticeModal = () => {
+    setEditingPracticeId(null);
+    setPracticeForm({ ...emptyPractice, teamId: String(teamIdNumber) });
+    setPracticeModalOpen(true);
+  };
+
+  const handleEditPractice = (practice) => {
+    setEditingPracticeId(practice.id);
+    setPracticeForm({
+      teamId: practice.team_id ? String(practice.team_id) : String(teamIdNumber),
+      contactId: practice.contact_id ? String(practice.contact_id) : "",
+      dayOfWeek: practice.day_of_week ?? 1,
+      startTime: practice.start_time?.slice(0, 5) || "15:00",
+      endTime: practice.end_time?.slice(0, 5) || "17:00",
+      location: practice.location || "",
+      notes: practice.notes || "",
+    });
+    setPracticeModalOpen(true);
+  };
+
+  const handleClosePracticeModal = () => {
+    setEditingPracticeId(null);
+    setPracticeForm({ ...emptyPractice, teamId: String(teamIdNumber || "") });
+    setPracticeModalOpen(false);
+  };
+
+  const handleSavePractice = async () => {
+    if (!teamIdNumber) return;
+    try {
+      setDataError("");
+      const payload = {
+        team_id: teamIdNumber,
+        contact_id: practiceForm.contactId ? Number(practiceForm.contactId) : null,
+        day_of_week: Number(practiceForm.dayOfWeek),
+        start_time: practiceForm.startTime,
+        end_time: practiceForm.endTime,
+        location: practiceForm.location.trim(),
+        notes: practiceForm.notes.trim(),
+      };
+      if (editingPracticeId) {
+        await apiRequest(`/api/admin/practices/${editingPracticeId}`, {
+          method: "PUT",
+          headers: authHeaders,
+          body: JSON.stringify(payload),
+        });
+      } else {
+        await apiRequest("/api/admin/practices", {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify(payload),
+        });
+      }
+      await reloadPractices();
+      handleClosePracticeModal();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleDeletePractice = async (practiceId) => {
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/practices/${practiceId}`, {
+        method: "DELETE",
+        headers: authHeaders,
+      });
+      await reloadPractices();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
   const organizationLabel = teamForm.organizationId
     ? orgMap.get(String(teamForm.organizationId))?.name || "—"
     : "Unassigned";
@@ -212,6 +323,10 @@ export default function TeamProfilePage() {
             <Box sx={classes.statCard}>
               <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Contacts</Typography>
               <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{contactsForTeam.length}</Typography>
+            </Box>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Practices</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{practices.length}</Typography>
             </Box>
           </Box>
         </Box>
@@ -300,6 +415,96 @@ export default function TeamProfilePage() {
 
         <Divider sx={{ borderColor: "var(--color-border)" }} />
 
+        {!isNew && (
+          <>
+            <Box sx={{ paddingTop: "8px" }}>
+              <Box sx={classes.workspaceHeader}>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Practices</Typography>
+                  <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
+                    Manage this team&apos;s practice schedule here.
+                  </Typography>
+                </Box>
+                <Button variant="contained" sx={classes.button} onClick={handleOpenPracticeModal}>
+                  Add Practice
+                </Button>
+              </Box>
+              {practices.length === 0 ? (
+                <Typography sx={{ color: "var(--color-muted)" }}>No practices scheduled yet.</Typography>
+              ) : (
+                <DataGrid
+                  rows={practices}
+                  columns={[
+                    {
+                      field: "day_of_week",
+                      headerName: "Day",
+                      width: 140,
+                      valueGetter: (_value, row) =>
+                        dayOptions.find((day) => day.value === row?.day_of_week)?.label || "—",
+                    },
+                    {
+                      field: "time",
+                      headerName: "Time",
+                      width: 160,
+                      valueGetter: (_value, row) =>
+                        row?.start_time?.slice(0, 5) && row?.end_time?.slice(0, 5)
+                          ? `${row.start_time.slice(0, 5)} - ${row.end_time.slice(0, 5)}`
+                          : "—",
+                    },
+                    {
+                      field: "contact_name",
+                      headerName: "Coach",
+                      flex: 1,
+                      minWidth: 160,
+                      valueGetter: (_value, row) => row?.contact_name || "—",
+                      renderCell: (params) =>
+                        params.row.contact_id ? (
+                          <Link component={RouterLink} to={`/dashboard/people/${params.row.contact_id}`} sx={linkSx}>
+                            {params.value}
+                          </Link>
+                        ) : (
+                          params.value
+                        ),
+                    },
+                    {
+                      field: "location",
+                      headerName: "Location",
+                      flex: 1,
+                      minWidth: 180,
+                      valueGetter: (_value, row) => row?.location || "—",
+                    },
+                    {
+                      field: "actions",
+                      headerName: "Actions",
+                      minWidth: 120,
+                      sortable: false,
+                      filterable: false,
+                      renderCell: (params) => (
+                        <RowActionsMenu
+                          actions={[
+                            { label: "Edit", onClick: () => handleEditPractice(params.row) },
+                            { label: "Delete", onClick: () => handleDeletePractice(params.row.id), color: "danger" },
+                          ]}
+                        />
+                      ),
+                    },
+                  ]}
+                  autoHeight
+                  density="compact"
+                  disableRowSelectionOnClick
+                  pageSizeOptions={[5, 10, 25]}
+                  initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
+                  slots={{ toolbar: GridToolbar }}
+                  slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+                  sx={classes.dataGrid}
+                />
+              )}
+            </Box>
+
+            <Divider sx={{ borderColor: "var(--color-border)" }} />
+          </>
+        )}
+
         <Box sx={{ paddingTop: "8px" }}>
           <Typography sx={{ fontWeight: 600, color: "var(--color-text)", marginBottom: "8px" }}>Contacts</Typography>
           {contactsForTeam.length === 0 ? (
@@ -350,6 +555,89 @@ export default function TeamProfilePage() {
           )}
         </Box>
       </Box>
+
+      <Dialog
+        open={practiceModalOpen}
+        onClose={handleClosePracticeModal}
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{ sx: { backgroundColor: "var(--color-surface)", color: "var(--color-text)" } }}
+      >
+        <DialogTitle sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
+          {editingPracticeId ? "Edit Practice" : "Add Practice"}
+        </DialogTitle>
+        <DialogContent sx={{ display: "grid", gap: "12px" }}>
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <TextField
+              select
+              label="Day"
+              value={practiceForm.dayOfWeek}
+              onChange={(event) =>
+                setPracticeForm((prev) => ({ ...prev, dayOfWeek: Number(event.target.value) }))
+              }
+              sx={{ ...classes.input, flex: 1, minWidth: "160px" }}
+            >
+              {dayOptions.map((day) => (
+                <MenuItem key={day.value} value={day.value}>
+                  {day.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              type="time"
+              label="Start"
+              value={practiceForm.startTime}
+              onChange={(event) => setPracticeForm((prev) => ({ ...prev, startTime: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "140px" }}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              type="time"
+              label="End"
+              value={practiceForm.endTime}
+              onChange={(event) => setPracticeForm((prev) => ({ ...prev, endTime: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "140px" }}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+          <TextField
+            select
+            label="Coach / Primary Contact"
+            value={practiceForm.contactId}
+            onChange={(event) => setPracticeForm((prev) => ({ ...prev, contactId: event.target.value }))}
+            sx={classes.input}
+          >
+            <MenuItem value="">Unassigned</MenuItem>
+            {practiceCoachOptions.map((contact) => (
+              <MenuItem key={contact.id} value={contact.id}>
+                {contact.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            label="Location"
+            value={practiceForm.location}
+            onChange={(event) => setPracticeForm((prev) => ({ ...prev, location: event.target.value }))}
+            sx={classes.input}
+          />
+          <TextField
+            label="Notes"
+            value={practiceForm.notes}
+            onChange={(event) => setPracticeForm((prev) => ({ ...prev, notes: event.target.value }))}
+            sx={classes.input}
+            multiline
+            minRows={2}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={handleClosePracticeModal}>
+            Cancel
+          </Button>
+          <Button variant="contained" sx={classes.button} onClick={handleSavePractice}>
+            {editingPracticeId ? "Save Practice" : "Add Practice"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

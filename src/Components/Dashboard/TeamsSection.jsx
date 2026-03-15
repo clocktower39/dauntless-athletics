@@ -27,14 +27,6 @@ export default function TeamsSection({
   onEditTeam,
   onDeleteTeam,
   seasonMap,
-  teams,
-  practices,
-  selectedTeamId,
-  onSelectedTeamChange,
-  dayOptions,
-  onAddPractice,
-  onEditPractice,
-  onDeletePractice,
   onAddSeason,
   onEditSeason,
   onDeleteSeason,
@@ -173,118 +165,6 @@ export default function TeamsSection({
             slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
             sx={classes.dataGrid}
           />
-        )}
-      </Box>
-
-      <Box sx={classes.section}>
-        <Box sx={classes.workspaceHeader}>
-          <Box>
-            <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Practice Schedule</Typography>
-            <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
-              Maintain team practice blocks.
-            </Typography>
-          </Box>
-          <Button
-            variant="contained"
-            sx={classes.button}
-            onClick={onAddPractice}
-            disabled={teams.length === 0}
-          >
-            Add Practice
-          </Button>
-        </Box>
-        {teams.length === 0 ? (
-          <Typography sx={{ color: "var(--color-muted)" }}>
-            Add a team first to create a practice schedule.
-          </Typography>
-        ) : (
-          <>
-            <TextField
-              select
-              label="Team"
-              value={selectedTeamId}
-              onChange={(event) => onSelectedTeamChange(event.target.value)}
-              sx={{ ...classes.input, maxWidth: "320px" }}
-            >
-              {teams.map((team) => (
-                <MenuItem key={team.id} value={team.id}>
-                  {team.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            {practices.length === 0 ? (
-              <Typography sx={{ color: "var(--color-muted)" }}>No practices scheduled yet.</Typography>
-            ) : (
-              <DataGrid
-                rows={practices}
-                columns={[
-                  {
-                    field: "day_of_week",
-                    headerName: "Day",
-                    width: 140,
-                    valueGetter: (_value, row) =>
-                      dayOptions.find((day) => day.value === row?.day_of_week)?.label || "—",
-                  },
-                  {
-                    field: "time",
-                    headerName: "Time",
-                    width: 160,
-                    valueGetter: (_value, row) =>
-                      row?.start_time?.slice(0, 5) && row?.end_time?.slice(0, 5)
-                        ? `${row.start_time.slice(0, 5)} - ${row.end_time.slice(0, 5)}`
-                        : "—",
-                  },
-                  {
-                    field: "contact_name",
-                    headerName: "Coach",
-                    flex: 1,
-                    minWidth: 160,
-                    valueGetter: (_value, row) => row?.contact_name || "—",
-                    renderCell: (params) =>
-                      params.row.contact_id ? (
-                        <Link component={RouterLink} to={`/dashboard/people/${params.row.contact_id}`} sx={linkSx}>
-                          {params.value}
-                        </Link>
-                      ) : (
-                        params.value
-                      ),
-                  },
-                  {
-                    field: "location",
-                    headerName: "Location",
-                    flex: 1,
-                    minWidth: 160,
-                    valueGetter: (_value, row) => row?.location || "—",
-                  },
-                  {
-                    field: "actions",
-                    headerName: "Actions",
-                    minWidth: 160,
-                    sortable: false,
-                    filterable: false,
-                    renderCell: (params) => (
-                      <RowActionsMenu
-                        actions={[
-                          { label: "Edit", onClick: () => onEditPractice(params.row) },
-                          { label: "Delete", onClick: () => onDeletePractice(params.row.id), color: "danger" },
-                        ]}
-                      />
-                    ),
-                  },
-                ]}
-                autoHeight
-                density="compact"
-                disableRowSelectionOnClick
-                pageSizeOptions={[10, 25, 50]}
-                initialState={{
-                  pagination: { paginationModel: { page: 0, pageSize: 10 } },
-                }}
-                slots={{ toolbar: GridToolbar }}
-                slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
-                sx={classes.dataGrid}
-              />
-            )}
-          </>
         )}
       </Box>
 

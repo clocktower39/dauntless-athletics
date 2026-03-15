@@ -16,9 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import TeamsSection from "../../../Components/Dashboard/TeamsSection";
 import classes from "../dashboardStyles";
-import { dayOptions, emptyPractice, emptyTeam } from "../dashboardConstants";
+import { emptyTeam } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
-import { setContacts, setPractices, setSeasons, setTeams, setOrganizations } from "../../../store/dashboardSlice";
+import { setSeasons, setTeams, setOrganizations } from "../../../store/dashboardSlice";
 
 export default function TeamsPage() {
   const dispatch = useDispatch();
@@ -27,19 +27,14 @@ export default function TeamsPage() {
   const organizations = useSelector((state) => state.dashboard.organizations);
   const teams = useSelector((state) => state.dashboard.teams);
   const seasons = useSelector((state) => state.dashboard.seasons);
-  const practices = useSelector((state) => state.dashboard.practices);
-  const contacts = useSelector((state) => state.dashboard.contacts);
   const [dataError, setDataError] = useState("");
   const [teamSearch, setTeamSearch] = useState("");
   const [teamOrgFilter, setTeamOrgFilter] = useState("all");
   const [teamSeasonFilter, setTeamSeasonFilter] = useState("all");
   const [teamModalOpen, setTeamModalOpen] = useState(false);
   const [seasonModalOpen, setSeasonModalOpen] = useState(false);
-  const [practiceModalOpen, setPracticeModalOpen] = useState(false);
   const [teamForm, setTeamForm] = useState(emptyTeam);
-  const [practiceForm, setPracticeForm] = useState(emptyPractice);
   const [editingTeamId, setEditingTeamId] = useState(null);
-  const [editingPracticeId, setEditingPracticeId] = useState(null);
   const [editingSeasonId, setEditingSeasonId] = useState(null);
   const [editingSeasonName, setEditingSeasonName] = useState("");
   const [editingSeasonStart, setEditingSeasonStart] = useState("");
@@ -49,7 +44,6 @@ export default function TeamsPage() {
   const [newSeasonStart, setNewSeasonStart] = useState("");
   const [newSeasonEnd, setNewSeasonEnd] = useState("");
   const [newSeasonActive, setNewSeasonActive] = useState(false);
-  const [selectedTeamId, setSelectedTeamId] = useState("");
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
 
@@ -92,33 +86,6 @@ export default function TeamsPage() {
     };
     load();
   }, [token, authHeaders, dispatch]);
-
-  useEffect(() => {
-    if (!selectedTeamId && teams.length > 0) {
-      setSelectedTeamId(String(teams[0].id));
-    }
-  }, [selectedTeamId, teams]);
-
-  useEffect(() => {
-    if (!selectedTeamId) {
-      dispatch(setContacts([]));
-      dispatch(setPractices([]));
-      return;
-    }
-    const loadTeamDetail = async () => {
-      try {
-        const [contactsRes, practicesRes] = await Promise.all([
-          apiRequest(`/api/admin/contacts?team_id=${selectedTeamId}`, { headers: authHeaders }),
-          apiRequest(`/api/admin/practices?team_id=${selectedTeamId}`, { headers: authHeaders }),
-        ]);
-        dispatch(setContacts(contactsRes.contacts || []));
-        dispatch(setPractices(practicesRes.practices || []));
-      } catch (error) {
-        setDataError(error.message);
-      }
-    };
-    loadTeamDetail();
-  }, [selectedTeamId, authHeaders, dispatch]);
 
   const handleOpenTeamModal = () => {
     navigate("/dashboard/teams/new");
@@ -255,79 +222,6 @@ export default function TeamsPage() {
     }
   };
 
-  const handleSavePractice = async () => {
-    if (!practiceForm.teamId) {
-      setDataError("Select a team for this practice.");
-      return;
-    }
-    try {
-      setDataError("");
-      const payload = {
-        team_id: Number(practiceForm.teamId),
-        contact_id: practiceForm.contactId ? Number(practiceForm.contactId) : null,
-        day_of_week: practiceForm.dayOfWeek,
-        start_time: practiceForm.startTime,
-        end_time: practiceForm.endTime,
-        location: practiceForm.location.trim(),
-        notes: practiceForm.notes.trim(),
-      };
-      if (editingPracticeId) {
-        await apiRequest(`/api/admin/practices/${editingPracticeId}`, {
-          method: "PUT",
-          headers: authHeaders,
-          body: JSON.stringify(payload),
-        });
-      } else {
-        await apiRequest("/api/admin/practices", {
-          method: "POST",
-          headers: authHeaders,
-          body: JSON.stringify(payload),
-        });
-      }
-      const practicesRes = await apiRequest(`/api/admin/practices?team_id=${practiceForm.teamId}`, { headers: authHeaders });
-      dispatch(setPractices(practicesRes.practices || []));
-      setPracticeModalOpen(false);
-      setEditingPracticeId(null);
-      setPracticeForm((prev) => ({ ...emptyPractice, teamId: prev.teamId }));
-    } catch (error) {
-      setDataError(error.message);
-    }
-  };
-
-  const handleEditPractice = (practice) => {
-    setEditingPracticeId(practice.id);
-    setPracticeForm({
-      teamId: practice.team_id ? String(practice.team_id) : "",
-      contactId: practice.contact_id ? String(practice.contact_id) : "",
-      dayOfWeek: practice.day_of_week ?? 1,
-      startTime: practice.start_time?.slice(0, 5) || "15:00",
-      endTime: practice.end_time?.slice(0, 5) || "17:00",
-      location: practice.location || "",
-      notes: practice.notes || "",
-    });
-    setPracticeModalOpen(true);
-  };
-
-  const handleCancelPracticeEdit = () => {
-    setEditingPracticeId(null);
-    setPracticeForm((prev) => ({ ...emptyPractice, teamId: prev.teamId }));
-    setPracticeModalOpen(false);
-  };
-
-  const handleDeletePractice = async (practiceId) => {
-    try {
-      setDataError("");
-      await apiRequest(`/api/admin/practices/${practiceId}`, {
-        method: "DELETE",
-        headers: authHeaders,
-      });
-      const practicesRes = await apiRequest(`/api/admin/practices?team_id=${selectedTeamId}`, { headers: authHeaders });
-      dispatch(setPractices(practicesRes.practices || []));
-    } catch (error) {
-      setDataError(error.message);
-    }
-  };
-
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       {dataError && <Alert severity="error">{dataError}</Alert>}
@@ -346,18 +240,6 @@ export default function TeamsPage() {
         onEditTeam={handleEditTeam}
         onDeleteTeam={handleDeleteTeam}
         seasonMap={seasonMap}
-        teams={teams}
-        practices={practices}
-        selectedTeamId={selectedTeamId}
-        onSelectedTeamChange={setSelectedTeamId}
-        dayOptions={dayOptions}
-        onAddPractice={() => {
-          setEditingPracticeId(null);
-          setPracticeForm((prev) => ({ ...emptyPractice, teamId: prev.teamId || selectedTeamId || "" }));
-          setPracticeModalOpen(true);
-        }}
-        onEditPractice={handleEditPractice}
-        onDeletePractice={handleDeletePractice}
         onAddSeason={() => {
           setEditingSeasonId(null);
           setEditingSeasonName("");
@@ -573,117 +455,6 @@ export default function TeamsPage() {
         </DialogActions>
       </Dialog>
 
-      <Dialog
-        open={practiceModalOpen}
-        onClose={() => {
-          if (editingPracticeId) {
-            handleCancelPracticeEdit();
-          } else {
-            setPracticeModalOpen(false);
-          }
-        }}
-        fullWidth
-        maxWidth="sm"
-        PaperProps={{ sx: { backgroundColor: "var(--color-surface)", color: "var(--color-text)" } }}
-      >
-        <DialogTitle sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
-          {editingPracticeId ? "Edit Practice" : "Add Practice"}
-        </DialogTitle>
-        <DialogContent sx={{ display: "grid", gap: "12px" }}>
-          <TextField
-            select
-            label="Team"
-            value={practiceForm.teamId}
-            onChange={(event) => setPracticeForm((prev) => ({ ...prev, teamId: event.target.value }))}
-            sx={classes.input}
-          >
-            {teams.map((team) => (
-              <MenuItem key={team.id} value={team.id}>
-                {team.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <TextField
-              select
-              label="Day"
-              value={practiceForm.dayOfWeek}
-              onChange={(event) =>
-                setPracticeForm((prev) => ({ ...prev, dayOfWeek: Number(event.target.value) }))
-              }
-              sx={{ ...classes.input, flex: 1, minWidth: "160px" }}
-            >
-              {dayOptions.map((day) => (
-                <MenuItem key={day.value} value={day.value}>
-                  {day.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              type="time"
-              label="Start"
-              value={practiceForm.startTime}
-              onChange={(event) => setPracticeForm((prev) => ({ ...prev, startTime: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "140px" }}
-              InputLabelProps={{ shrink: true }}
-            />
-            <TextField
-              type="time"
-              label="End"
-              value={practiceForm.endTime}
-              onChange={(event) => setPracticeForm((prev) => ({ ...prev, endTime: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "140px" }}
-              InputLabelProps={{ shrink: true }}
-            />
-          </Box>
-          <TextField
-            select
-            label="Coach / Primary Contact"
-            value={practiceForm.contactId}
-            onChange={(event) => setPracticeForm((prev) => ({ ...prev, contactId: event.target.value }))}
-            sx={classes.input}
-          >
-            <MenuItem value="">Unassigned</MenuItem>
-            {contacts.map((contact) => (
-              <MenuItem key={contact.id} value={contact.id}>
-                {contact.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="Location"
-            value={practiceForm.location}
-            onChange={(event) => setPracticeForm((prev) => ({ ...prev, location: event.target.value }))}
-            sx={classes.input}
-          />
-          <TextField
-            label="Notes"
-            value={practiceForm.notes}
-            onChange={(event) => setPracticeForm((prev) => ({ ...prev, notes: event.target.value }))}
-            sx={classes.input}
-            multiline
-            minRows={2}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant="outlined"
-            sx={{ color: "var(--color-text)" }}
-            onClick={() => {
-              if (editingPracticeId) {
-                handleCancelPracticeEdit();
-              } else {
-                setPracticeModalOpen(false);
-              }
-            }}
-          >
-            Cancel
-          </Button>
-          <Button variant="contained" sx={classes.button} onClick={handleSavePractice}>
-            {editingPracticeId ? "Save Practice" : "Add Practice"}
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 }
