@@ -105,6 +105,7 @@ export default function TeamsPage() {
         sport: teamForm.sport.trim(),
         level: teamForm.level.trim(),
         season: teamForm.season.trim(),
+        expected_athlete_count: Number(teamForm.expectedAthleteCount || 0),
         location: teamForm.location.trim(),
         notes: teamForm.notes.trim(),
       };
@@ -329,6 +330,16 @@ export default function TeamsPage() {
             value={teamForm.season}
             onChange={(event) => setTeamForm((prev) => ({ ...prev, season: event.target.value }))}
             sx={classes.input}
+          />
+          <TextField
+            label="Expected athletes"
+            type="number"
+            value={teamForm.expectedAthleteCount}
+            onChange={(event) =>
+              setTeamForm((prev) => ({ ...prev, expectedAthleteCount: Math.max(0, Number(event.target.value) || 0) }))
+            }
+            sx={classes.input}
+            inputProps={{ min: 0 }}
           />
           <TextField
             label="Location"

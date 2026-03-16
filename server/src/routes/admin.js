@@ -20,6 +20,7 @@ const isValidTime = (value) => {
 
 const DEFAULT_ORG_ID = 1;
 const DEFAULT_SEASON_ID = 1;
+const ATHLETE_MEMBERSHIP_STATUSES = new Set(["active", "inactive", "removed", "transferred"]);
 
 const buildSurveyPayload = (survey, questions) => ({
   id: survey.id,
@@ -906,15 +907,20 @@ router.get("/teams", async (req, res) => {
 
   const result = await query(
     `SELECT teams.id, teams.org_id, teams.organization_id, teams.season_id, teams.name, teams.sport, teams.level, teams.season,
-            teams.location, teams.notes, teams.created_at,
+            teams.expected_athlete_count, teams.location, teams.notes, teams.created_at,
             organizations.name AS organization_name,
             organizations.type AS organization_type,
             seasons.name AS season_name,
-            COUNT(contacts.id)::int AS contact_count
+            COUNT(DISTINCT contacts.id)::int AS contact_count,
+            COUNT(DISTINCT athlete_team.athlete_id) FILTER (
+              WHERE athlete_team.status = 'active'
+                AND athlete_team.season_id = teams.season_id
+            )::int AS athlete_count
      FROM teams
      LEFT JOIN organizations ON organizations.id = teams.organization_id
      LEFT JOIN seasons ON seasons.id = teams.season_id
      LEFT JOIN contacts ON contacts.team_id = teams.id
+     LEFT JOIN athlete_team ON athlete_team.team_id = teams.id
      ${whereClause}
      GROUP BY teams.id, organizations.name, organizations.type, seasons.name
      ORDER BY teams.created_at DESC`,
@@ -935,6 +941,10 @@ router.post("/teams", async (req, res) => {
   const sport = typeof req.body?.sport === "string" ? req.body.sport.trim() : "";
   const level = typeof req.body?.level === "string" ? req.body.level.trim() : "";
   const season = typeof req.body?.season === "string" ? req.body.season.trim() : "";
+  const rawExpectedAthleteCount = Number(req.body?.expected_athlete_count);
+  const expectedAthleteCount = Number.isFinite(rawExpectedAthleteCount)
+    ? Math.max(0, Math.trunc(rawExpectedAthleteCount))
+    : 0;
   const location = typeof req.body?.location === "string" ? req.body.location.trim() : "";
   const notes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
 
@@ -953,9 +963,9 @@ router.post("/teams", async (req, res) => {
   }
 
   const result = await query(
-    `INSERT INTO teams (org_id, organization_id, season_id, name, sport, level, season, location, notes)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-     RETURNING id, org_id, organization_id, season_id, name, sport, level, season, location, notes, created_at`,
+    `INSERT INTO teams (org_id, organization_id, season_id, name, sport, level, season, expected_athlete_count, location, notes)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+     RETURNING id, org_id, organization_id, season_id, name, sport, level, season, expected_athlete_count, location, notes, created_at`,
     [
       DEFAULT_ORG_ID,
       hasOrganizationId ? organizationId : null,
@@ -964,6 +974,7 @@ router.post("/teams", async (req, res) => {
       sport || null,
       level || null,
       season || null,
+      expectedAthleteCount,
       location || null,
       notes || null,
     ]
@@ -993,6 +1004,14 @@ router.put("/teams/:id", async (req, res) => {
   const sport = typeof req.body?.sport === "string" ? req.body.sport.trim() : "";
   const level = typeof req.body?.level === "string" ? req.body.level.trim() : "";
   const season = typeof req.body?.season === "string" ? req.body.season.trim() : "";
+  const hasExpectedAthleteCount = Object.prototype.hasOwnProperty.call(
+    req.body || {},
+    "expected_athlete_count"
+  );
+  const rawExpectedAthleteCount = Number(req.body?.expected_athlete_count);
+  const expectedAthleteCount = Number.isFinite(rawExpectedAthleteCount)
+    ? Math.max(0, Math.trunc(rawExpectedAthleteCount))
+    : 0;
   const location = typeof req.body?.location === "string" ? req.body.location.trim() : "";
   const notes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
 
@@ -1040,6 +1059,11 @@ router.put("/teams/:id", async (req, res) => {
   updateFields.push(`season = $${paramIndex++}`);
   params.push(season || null);
 
+  if (hasExpectedAthleteCount) {
+    updateFields.push(`expected_athlete_count = $${paramIndex++}`);
+    params.push(expectedAthleteCount);
+  }
+
   updateFields.push(`location = $${paramIndex++}`);
   params.push(location || null);
 
@@ -1050,7 +1074,7 @@ router.put("/teams/:id", async (req, res) => {
 
   const result = await query(
     `UPDATE teams SET ${updateFields.join(", ")} WHERE id = $${paramIndex}
-     RETURNING id, org_id, organization_id, season_id, name, sport, level, season, location, notes, created_at`,
+     RETURNING id, org_id, organization_id, season_id, name, sport, level, season, expected_athlete_count, location, notes, created_at`,
     params
   );
 
@@ -1073,6 +1097,238 @@ router.delete("/teams/:id", async (req, res) => {
   }
 
   return res.json({ teamId, deleted: true });
+});
+
+router.get("/athletes", async (req, res) => {
+  const teamId = req.query.team_id ? Number(req.query.team_id) : null;
+  const seasonId = req.query.season_id ? Number(req.query.season_id) : null;
+  const status = typeof req.query.status === "string" ? req.query.status.trim().toLowerCase() : "";
+  const params = [];
+  const filters = ["athletes.deleted_at IS NULL"];
+
+  if (teamId) {
+    params.push(teamId);
+    filters.push(`athlete_team.team_id = $${params.length}`);
+  }
+
+  if (seasonId) {
+    params.push(seasonId);
+    filters.push(`athlete_team.season_id = $${params.length}`);
+  }
+
+  if (status) {
+    params.push(status);
+    filters.push(`athlete_team.status = $${params.length}`);
+  }
+
+  const joinClause =
+    teamId || seasonId || status
+      ? "JOIN athlete_team ON athlete_team.athlete_id = athletes.id"
+      : "LEFT JOIN athlete_team ON athlete_team.athlete_id = athletes.id";
+  const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
+
+  const result = await query(
+    `SELECT athletes.id, athletes.org_id, athletes.first_name, athletes.last_name, athletes.dob,
+            athletes.gender, athletes.created_at,
+            athlete_team.team_id, athlete_team.season_id, athlete_team.status,
+            athlete_team.positions, athlete_team.skill_notes, athlete_team.goal_notes,
+            athlete_team.notes, athlete_team.start_date, athlete_team.end_date,
+            teams.name AS team_name, seasons.name AS season_name
+     FROM athletes
+     ${joinClause}
+     LEFT JOIN teams ON teams.id = athlete_team.team_id
+     LEFT JOIN seasons ON seasons.id = athlete_team.season_id
+     ${whereClause}
+     ORDER BY athletes.last_name ASC, athletes.first_name ASC`,
+    params
+  );
+
+  return res.json({ athletes: result.rows });
+});
+
+router.post("/athletes", async (req, res) => {
+  const firstName = typeof req.body?.first_name === "string" ? req.body.first_name.trim() : "";
+  const lastName = typeof req.body?.last_name === "string" ? req.body.last_name.trim() : "";
+  const dob = typeof req.body?.dob === "string" && req.body.dob.trim() ? req.body.dob.trim() : null;
+  const gender = typeof req.body?.gender === "string" ? req.body.gender.trim() : "";
+  const teamId = req.body?.team_id ? Number(req.body.team_id) : null;
+  const seasonId = req.body?.season_id ? Number(req.body.season_id) : null;
+  const status = typeof req.body?.status === "string" ? req.body.status.trim().toLowerCase() : "active";
+  const positions = typeof req.body?.positions === "string" ? req.body.positions.trim() : "";
+  const skillNotes = typeof req.body?.skill_notes === "string" ? req.body.skill_notes.trim() : "";
+  const goalNotes = typeof req.body?.goal_notes === "string" ? req.body.goal_notes.trim() : "";
+  const membershipNotes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
+  const startDate =
+    typeof req.body?.start_date === "string" && req.body.start_date.trim()
+      ? req.body.start_date.trim()
+      : null;
+  const endDate =
+    typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
+
+  if (!firstName || !lastName) {
+    return res.status(400).json({ error: "First and last name are required." });
+  }
+
+  if ((teamId && !seasonId) || (!teamId && seasonId)) {
+    return res.status(400).json({ error: "team_id and season_id must be provided together." });
+  }
+
+  if (!ATHLETE_MEMBERSHIP_STATUSES.has(status)) {
+    return res.status(400).json({ error: "Invalid athlete status." });
+  }
+
+  if (teamId) {
+    const teamResult = await query("SELECT id FROM teams WHERE id = $1", [teamId]);
+    if (teamResult.rowCount === 0) {
+      return res.status(404).json({ error: "Team not found." });
+    }
+    const seasonResult = await query("SELECT id FROM seasons WHERE id = $1", [seasonId]);
+    if (seasonResult.rowCount === 0) {
+      return res.status(404).json({ error: "Season not found." });
+    }
+  }
+
+  const client = await getClient();
+  try {
+    await client.query("BEGIN");
+
+    const teamResult = await client.query("SELECT id FROM teams WHERE id = $1", [teamId]);
+    if (teamResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Team not found." });
+    }
+
+    const seasonResult = await client.query("SELECT id FROM seasons WHERE id = $1", [seasonId]);
+    if (seasonResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Season not found." });
+    }
+
+    const athleteResult = await client.query(
+      `INSERT INTO athletes (org_id, first_name, last_name, dob, gender)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, org_id, first_name, last_name, dob, gender, created_at`,
+      [DEFAULT_ORG_ID, firstName, lastName, dob, gender || null]
+    );
+
+    if (teamId && seasonId) {
+      await client.query(
+        `INSERT INTO athlete_team (
+          athlete_id, team_id, season_id, status, positions, skill_notes, goal_notes, notes, start_date, end_date
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, COALESCE($9, CURRENT_DATE), $10)`,
+        [
+          athleteResult.rows[0].id,
+          teamId,
+          seasonId,
+          status,
+          positions || null,
+          skillNotes || null,
+          goalNotes || null,
+          membershipNotes || null,
+          startDate,
+          endDate,
+        ]
+      );
+    }
+
+    await client.query("COMMIT");
+    return res.status(201).json({ athlete: athleteResult.rows[0] });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to create athlete." });
+  } finally {
+    client.release();
+  }
+});
+
+router.put("/athletes/:id", async (req, res) => {
+  const athleteId = Number(req.params.id);
+  if (!Number.isInteger(athleteId)) {
+    return res.status(400).json({ error: "Athlete id is required." });
+  }
+
+  const firstName = typeof req.body?.first_name === "string" ? req.body.first_name.trim() : "";
+  const lastName = typeof req.body?.last_name === "string" ? req.body.last_name.trim() : "";
+  const dob = typeof req.body?.dob === "string" && req.body.dob.trim() ? req.body.dob.trim() : null;
+  const gender = typeof req.body?.gender === "string" ? req.body.gender.trim() : "";
+  const teamId = req.body?.team_id ? Number(req.body.team_id) : null;
+  const seasonId = req.body?.season_id ? Number(req.body.season_id) : null;
+  const status = typeof req.body?.status === "string" ? req.body.status.trim().toLowerCase() : "active";
+  const positions = typeof req.body?.positions === "string" ? req.body.positions.trim() : "";
+  const skillNotes = typeof req.body?.skill_notes === "string" ? req.body.skill_notes.trim() : "";
+  const goalNotes = typeof req.body?.goal_notes === "string" ? req.body.goal_notes.trim() : "";
+  const membershipNotes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
+  const startDate =
+    typeof req.body?.start_date === "string" && req.body.start_date.trim()
+      ? req.body.start_date.trim()
+      : null;
+  const endDate =
+    typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
+
+  if (!firstName || !lastName) {
+    return res.status(400).json({ error: "First and last name are required." });
+  }
+
+  if (!teamId || !seasonId) {
+    return res.status(400).json({ error: "team_id and season_id are required." });
+  }
+
+  if (!ATHLETE_MEMBERSHIP_STATUSES.has(status)) {
+    return res.status(400).json({ error: "Invalid athlete status." });
+  }
+
+  const client = await getClient();
+  try {
+    await client.query("BEGIN");
+
+    const athleteResult = await client.query(
+      `UPDATE athletes
+       SET first_name = $1, last_name = $2, dob = $3, gender = $4
+       WHERE id = $5 AND deleted_at IS NULL
+       RETURNING id`,
+      [firstName, lastName, dob, gender || null, athleteId]
+    );
+
+    if (athleteResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Athlete not found." });
+    }
+
+    await client.query(
+      `INSERT INTO athlete_team (
+        athlete_id, team_id, season_id, status, positions, skill_notes, goal_notes, notes, start_date, end_date
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, COALESCE($9, CURRENT_DATE), $10)
+      ON CONFLICT (athlete_id, team_id, season_id)
+      DO UPDATE SET
+        status = EXCLUDED.status,
+        positions = EXCLUDED.positions,
+        skill_notes = EXCLUDED.skill_notes,
+        goal_notes = EXCLUDED.goal_notes,
+        notes = EXCLUDED.notes,
+        start_date = EXCLUDED.start_date,
+        end_date = EXCLUDED.end_date`,
+      [
+        athleteId,
+        teamId,
+        seasonId,
+        status,
+        positions || null,
+        skillNotes || null,
+        goalNotes || null,
+        membershipNotes || null,
+        startDate,
+        endDate,
+      ]
+    );
+
+    await client.query("COMMIT");
+    return res.json({ athleteId, updated: true });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to update athlete." });
+  } finally {
+    client.release();
+  }
 });
 
 router.get("/contacts", async (req, res) => {

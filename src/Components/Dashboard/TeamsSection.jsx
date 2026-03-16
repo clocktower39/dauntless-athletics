@@ -138,6 +138,18 @@ export default function TeamsSection({
                 valueGetter: (_value, row) => row?.contact_count || 0,
               },
               {
+                field: "athlete_count",
+                headerName: "Athletes",
+                width: 120,
+                valueGetter: (_value, row) => row?.athlete_count || 0,
+              },
+              {
+                field: "expected_athlete_count",
+                headerName: "Target",
+                width: 120,
+                valueGetter: (_value, row) => row?.expected_athlete_count || 0,
+              },
+              {
                 field: "actions",
                 headerName: "Actions",
                 minWidth: 120,

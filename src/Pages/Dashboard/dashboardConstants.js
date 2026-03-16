@@ -18,6 +18,7 @@ export const emptyTeam = {
   sport: "",
   level: "",
   season: "",
+  expectedAthleteCount: 0,
   location: "",
   notes: "",
 };
@@ -42,6 +43,27 @@ export const emptyPractice = {
   location: "",
   notes: "",
 };
+
+export const emptyAthlete = {
+  firstName: "",
+  lastName: "",
+  dob: "",
+  gender: "",
+  status: "active",
+  positions: "",
+  skillNotes: "",
+  goalNotes: "",
+  notes: "",
+  startDate: "",
+  endDate: "",
+};
+
+export const athleteStatusOptions = [
+  { value: "active", label: "Active" },
+  { value: "inactive", label: "Inactive" },
+  { value: "removed", label: "Removed" },
+  { value: "transferred", label: "Transferred" },
+];
 
 export const audienceOptions = ["Coach", "Athlete", "Parent", "Staff", "Other"];
 

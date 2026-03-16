@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS teams (
   level TEXT,
   season TEXT,
   season_id BIGINT REFERENCES seasons(id) DEFAULT 1,
+  expected_athlete_count INTEGER NOT NULL DEFAULT 0 CHECK (expected_athlete_count >= 0),
   location TEXT,
   notes TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -171,6 +172,10 @@ CREATE TABLE IF NOT EXISTS athlete_team (
   team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
   season_id BIGINT NOT NULL REFERENCES seasons(id),
   status TEXT NOT NULL DEFAULT 'active',
+  positions TEXT,
+  skill_notes TEXT,
+  goal_notes TEXT,
+  notes TEXT,
   start_date DATE NOT NULL DEFAULT CURRENT_DATE,
   end_date DATE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -188,6 +193,7 @@ CREATE TABLE IF NOT EXISTS parent_athlete (
 CREATE INDEX IF NOT EXISTS athletes_org_id_idx ON athletes (org_id);
 CREATE INDEX IF NOT EXISTS athlete_team_team_id_idx ON athlete_team (team_id);
 CREATE INDEX IF NOT EXISTS athlete_team_athlete_id_idx ON athlete_team (athlete_id);
+CREATE INDEX IF NOT EXISTS athlete_team_team_season_status_idx ON athlete_team (team_id, season_id, status);
 
 CREATE TABLE IF NOT EXISTS survey_campaigns (
   id BIGSERIAL PRIMARY KEY,

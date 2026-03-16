@@ -18,7 +18,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Link as RouterLink } from "react-router-dom";
 import classes from "../dashboardStyles";
-import { dayOptions, emptyPractice, emptyTeam } from "../dashboardConstants";
+import {
+  athleteStatusOptions,
+  dayOptions,
+  emptyAthlete,
+  emptyPractice,
+  emptyTeam,
+} from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
 import { setContacts, setOrganizations, setSeasons, setTeams } from "../../../store/dashboardSlice";
 import RowActionsMenu from "../../../Components/Dashboard/RowActionsMenu";
@@ -41,6 +47,10 @@ export default function TeamProfilePage() {
   const [practiceModalOpen, setPracticeModalOpen] = useState(false);
   const [practiceForm, setPracticeForm] = useState(emptyPractice);
   const [editingPracticeId, setEditingPracticeId] = useState(null);
+  const [athletes, setAthletes] = useState([]);
+  const [athleteModalOpen, setAthleteModalOpen] = useState(false);
+  const [athleteForm, setAthleteForm] = useState(emptyAthlete);
+  const [editingAthleteId, setEditingAthleteId] = useState(null);
 
   const isNew = teamId === "new";
   const teamIdNumber = Number(teamId);
@@ -53,6 +63,10 @@ export default function TeamProfilePage() {
 
   const orgMap = useMemo(() => new Map(organizations.map((org) => [String(org.id), org])), [organizations]);
   const seasonMap = useMemo(() => new Map(seasons.map((season) => [String(season.id), season])), [seasons]);
+  const activeSeasonId = useMemo(() => {
+    if (isNew) return null;
+    return Number(team?.season_id || teamForm.seasonId || 0) || null;
+  }, [isNew, team?.season_id, teamForm.seasonId]);
 
   const contactsForTeam = useMemo(
     () => contacts.filter((contact) => Number(contact.team_id) === Number(teamIdNumber)),
@@ -100,6 +114,7 @@ export default function TeamProfilePage() {
         sport: team.sport || "",
         level: team.level || "",
         season: team.season || "",
+        expectedAthleteCount: team.expected_athlete_count || 0,
         location: team.location || "",
         notes: team.notes || "",
       });
@@ -130,6 +145,25 @@ export default function TeamProfilePage() {
     loadPractices();
   }, [token, isNew, teamIdNumber, authHeaders]);
 
+  useEffect(() => {
+    if (!token || isNew || !teamIdNumber || !activeSeasonId) {
+      setAthletes([]);
+      return;
+    }
+    const loadAthletes = async () => {
+      try {
+        const athleteRes = await apiRequest(
+          `/api/admin/athletes?team_id=${teamIdNumber}&season_id=${activeSeasonId}`,
+          { headers: authHeaders }
+        );
+        setAthletes(athleteRes.athletes || []);
+      } catch (error) {
+        setDataError(error.message);
+      }
+    };
+    loadAthletes();
+  }, [token, isNew, teamIdNumber, activeSeasonId, authHeaders]);
+
   const handleSave = async () => {
     if (!teamForm.name.trim()) {
       setDataError("Team name is required.");
@@ -144,6 +178,7 @@ export default function TeamProfilePage() {
         sport: teamForm.sport.trim(),
         level: teamForm.level.trim(),
         season: teamForm.season.trim(),
+        expected_athlete_count: Number(teamForm.expectedAthleteCount || 0),
         location: teamForm.location.trim(),
         notes: teamForm.notes.trim(),
       };
@@ -195,6 +230,15 @@ export default function TeamProfilePage() {
       headers: authHeaders,
     });
     setPractices(practiceRes.practices || []);
+  };
+
+  const reloadAthletes = async () => {
+    if (!teamIdNumber || !activeSeasonId) return;
+    const athleteRes = await apiRequest(
+      `/api/admin/athletes?team_id=${teamIdNumber}&season_id=${activeSeasonId}`,
+      { headers: authHeaders }
+    );
+    setAthletes(athleteRes.athletes || []);
   };
 
   const handleOpenPracticeModal = () => {
@@ -251,6 +295,111 @@ export default function TeamProfilePage() {
       }
       await reloadPractices();
       handleClosePracticeModal();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleOpenAthleteModal = () => {
+    setEditingAthleteId(null);
+    setAthleteForm(emptyAthlete);
+    setAthleteModalOpen(true);
+  };
+
+  const handleEditAthlete = (athlete) => {
+    setEditingAthleteId(athlete.id);
+    setAthleteForm({
+      firstName: athlete.first_name || "",
+      lastName: athlete.last_name || "",
+      dob: athlete.dob ? String(athlete.dob).slice(0, 10) : "",
+      gender: athlete.gender || "",
+      status: athlete.status || "active",
+      positions: athlete.positions || "",
+      skillNotes: athlete.skill_notes || "",
+      goalNotes: athlete.goal_notes || "",
+      notes: athlete.notes || "",
+      startDate: athlete.start_date ? String(athlete.start_date).slice(0, 10) : "",
+      endDate: athlete.end_date ? String(athlete.end_date).slice(0, 10) : "",
+    });
+    setAthleteModalOpen(true);
+  };
+
+  const handleCloseAthleteModal = () => {
+    setEditingAthleteId(null);
+    setAthleteForm(emptyAthlete);
+    setAthleteModalOpen(false);
+  };
+
+  const handleSaveAthlete = async () => {
+    if (!teamIdNumber || !activeSeasonId) {
+      setDataError("Save the team with a season before adding athletes.");
+      return;
+    }
+    try {
+      setDataError("");
+      const payload = {
+        first_name: athleteForm.firstName.trim(),
+        last_name: athleteForm.lastName.trim(),
+        dob: athleteForm.dob || null,
+        gender: athleteForm.gender.trim(),
+        team_id: teamIdNumber,
+        season_id: activeSeasonId,
+        status: athleteForm.status,
+        positions: athleteForm.positions.trim(),
+        skill_notes: athleteForm.skillNotes.trim(),
+        goal_notes: athleteForm.goalNotes.trim(),
+        notes: athleteForm.notes.trim(),
+        start_date: athleteForm.startDate || null,
+        end_date: athleteForm.endDate || null,
+      };
+      if (editingAthleteId) {
+        await apiRequest(`/api/admin/athletes/${editingAthleteId}`, {
+          method: "PUT",
+          headers: authHeaders,
+          body: JSON.stringify(payload),
+        });
+      } else {
+        await apiRequest("/api/admin/athletes", {
+          method: "POST",
+          headers: authHeaders,
+          body: JSON.stringify(payload),
+        });
+      }
+      await reloadAthletes();
+      const refreshed = await apiRequest("/api/admin/teams", { headers: authHeaders });
+      dispatch(setTeams(refreshed.teams || []));
+      handleCloseAthleteModal();
+    } catch (error) {
+      setDataError(error.message);
+    }
+  };
+
+  const handleRemoveAthlete = async (athlete) => {
+    if (!teamIdNumber || !activeSeasonId) return;
+    try {
+      setDataError("");
+      await apiRequest(`/api/admin/athletes/${athlete.id}`, {
+        method: "PUT",
+        headers: authHeaders,
+        body: JSON.stringify({
+          first_name: athlete.first_name,
+          last_name: athlete.last_name,
+          dob: athlete.dob ? String(athlete.dob).slice(0, 10) : null,
+          gender: athlete.gender || null,
+          team_id: teamIdNumber,
+          season_id: activeSeasonId,
+          status: "removed",
+          positions: athlete.positions || "",
+          skill_notes: athlete.skill_notes || "",
+          goal_notes: athlete.goal_notes || "",
+          notes: athlete.notes || "",
+          start_date: athlete.start_date ? String(athlete.start_date).slice(0, 10) : null,
+          end_date: new Date().toISOString().slice(0, 10),
+        }),
+      });
+      await reloadAthletes();
+      const refreshed = await apiRequest("/api/admin/teams", { headers: authHeaders });
+      dispatch(setTeams(refreshed.teams || []));
     } catch (error) {
       setDataError(error.message);
     }
@@ -328,6 +477,13 @@ export default function TeamProfilePage() {
               <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Practices</Typography>
               <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{practices.length}</Typography>
             </Box>
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Athletes</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+                {athletes.filter((athlete) => athlete.status === "active").length}
+                {` / ${Number(teamForm.expectedAthleteCount || 0)}`}
+              </Typography>
+            </Box>
           </Box>
         </Box>
 
@@ -396,6 +552,17 @@ export default function TeamProfilePage() {
             disabled={mode === "view"}
           />
           <TextField
+            label="Expected athletes"
+            type="number"
+            value={teamForm.expectedAthleteCount}
+            onChange={(event) =>
+              setTeamForm((prev) => ({ ...prev, expectedAthleteCount: Math.max(0, Number(event.target.value) || 0) }))
+            }
+            sx={classes.input}
+            inputProps={{ min: 0 }}
+            disabled={mode === "view"}
+          />
+          <TextField
             label="Location"
             value={teamForm.location}
             onChange={(event) => setTeamForm((prev) => ({ ...prev, location: event.target.value }))}
@@ -417,6 +584,104 @@ export default function TeamProfilePage() {
 
         {!isNew && (
           <>
+            <Box sx={{ paddingTop: "8px" }}>
+              <Box sx={classes.workspaceHeader}>
+                <Box>
+                  <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Athletes</Typography>
+                  <Typography sx={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>
+                    Track the active roster for this team and season.
+                  </Typography>
+                </Box>
+                <Button
+                  variant="contained"
+                  sx={classes.button}
+                  onClick={handleOpenAthleteModal}
+                  disabled={!activeSeasonId}
+                >
+                  Add Athlete
+                </Button>
+              </Box>
+              {!activeSeasonId ? (
+                <Typography sx={{ color: "var(--color-muted)" }}>
+                  Save a season on this team before managing athlete assignments.
+                </Typography>
+              ) : athletes.length === 0 ? (
+                <Typography sx={{ color: "var(--color-muted)" }}>No athletes assigned for this season yet.</Typography>
+              ) : (
+                <DataGrid
+                  rows={athletes}
+                  columns={[
+                    {
+                      field: "full_name",
+                      headerName: "Athlete",
+                      flex: 1,
+                      minWidth: 180,
+                      valueGetter: (_value, row) =>
+                        [row?.first_name, row?.last_name].filter(Boolean).join(" ") || "—",
+                    },
+                    {
+                      field: "status",
+                      headerName: "Status",
+                      width: 130,
+                      valueGetter: (_value, row) => row?.status || "—",
+                    },
+                    {
+                      field: "positions",
+                      headerName: "Positions",
+                      flex: 1,
+                      minWidth: 160,
+                      valueGetter: (_value, row) => row?.positions || "—",
+                    },
+                    {
+                      field: "goal_notes",
+                      headerName: "Goals",
+                      flex: 1,
+                      minWidth: 180,
+                      valueGetter: (_value, row) => row?.goal_notes || "—",
+                    },
+                    {
+                      field: "skill_notes",
+                      headerName: "Skills",
+                      flex: 1,
+                      minWidth: 180,
+                      valueGetter: (_value, row) => row?.skill_notes || "—",
+                    },
+                    {
+                      field: "actions",
+                      headerName: "Actions",
+                      minWidth: 120,
+                      sortable: false,
+                      filterable: false,
+                      renderCell: (params) => (
+                        <RowActionsMenu
+                          actions={[
+                            { label: "Edit", onClick: () => handleEditAthlete(params.row) },
+                            params.row.status === "active"
+                              ? {
+                                  label: "Remove from team",
+                                  onClick: () => handleRemoveAthlete(params.row),
+                                  color: "danger",
+                                }
+                              : null,
+                          ].filter(Boolean)}
+                        />
+                      ),
+                    },
+                  ]}
+                  autoHeight
+                  density="compact"
+                  disableRowSelectionOnClick
+                  pageSizeOptions={[5, 10, 25]}
+                  initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
+                  slots={{ toolbar: GridToolbar }}
+                  slotProps={{ toolbar: { showQuickFilter: true, quickFilterProps: { debounceMs: 300 } } }}
+                  sx={classes.dataGrid}
+                />
+              )}
+            </Box>
+
+            <Divider sx={{ borderColor: "var(--color-border)" }} />
+
             <Box sx={{ paddingTop: "8px" }}>
               <Box sx={classes.workspaceHeader}>
                 <Box>
@@ -635,6 +900,119 @@ export default function TeamProfilePage() {
           </Button>
           <Button variant="contained" sx={classes.button} onClick={handleSavePractice}>
             {editingPracticeId ? "Save Practice" : "Add Practice"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={athleteModalOpen}
+        onClose={handleCloseAthleteModal}
+        fullWidth
+        maxWidth="md"
+        PaperProps={{ sx: { backgroundColor: "var(--color-surface)", color: "var(--color-text)" } }}
+      >
+        <DialogTitle sx={{ fontFamily: "var(--font-display)", color: "var(--color-text)" }}>
+          {editingAthleteId ? "Edit Athlete" : "Add Athlete"}
+        </DialogTitle>
+        <DialogContent sx={{ display: "grid", gap: "12px" }}>
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <TextField
+              label="First name"
+              value={athleteForm.firstName}
+              onChange={(event) => setAthleteForm((prev) => ({ ...prev, firstName: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+            />
+            <TextField
+              label="Last name"
+              value={athleteForm.lastName}
+              onChange={(event) => setAthleteForm((prev) => ({ ...prev, lastName: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+            />
+          </Box>
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <TextField
+              label="Date of birth"
+              type="date"
+              value={athleteForm.dob}
+              onChange={(event) => setAthleteForm((prev) => ({ ...prev, dob: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              label="Gender"
+              value={athleteForm.gender}
+              onChange={(event) => setAthleteForm((prev) => ({ ...prev, gender: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+            />
+            <TextField
+              select
+              label="Status"
+              value={athleteForm.status}
+              onChange={(event) => setAthleteForm((prev) => ({ ...prev, status: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+            >
+              {athleteStatusOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+          <TextField
+            label="Positions"
+            value={athleteForm.positions}
+            onChange={(event) => setAthleteForm((prev) => ({ ...prev, positions: event.target.value }))}
+            sx={classes.input}
+          />
+          <TextField
+            label="Skill notes"
+            value={athleteForm.skillNotes}
+            onChange={(event) => setAthleteForm((prev) => ({ ...prev, skillNotes: event.target.value }))}
+            sx={classes.input}
+            multiline
+            minRows={2}
+          />
+          <TextField
+            label="Goals"
+            value={athleteForm.goalNotes}
+            onChange={(event) => setAthleteForm((prev) => ({ ...prev, goalNotes: event.target.value }))}
+            sx={classes.input}
+            multiline
+            minRows={2}
+          />
+          <TextField
+            label="Roster notes"
+            value={athleteForm.notes}
+            onChange={(event) => setAthleteForm((prev) => ({ ...prev, notes: event.target.value }))}
+            sx={classes.input}
+            multiline
+            minRows={2}
+          />
+          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            <TextField
+              label="Start date"
+              type="date"
+              value={athleteForm.startDate}
+              onChange={(event) => setAthleteForm((prev) => ({ ...prev, startDate: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+              InputLabelProps={{ shrink: true }}
+            />
+            <TextField
+              label="End date"
+              type="date"
+              value={athleteForm.endDate}
+              onChange={(event) => setAthleteForm((prev) => ({ ...prev, endDate: event.target.value }))}
+              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+              InputLabelProps={{ shrink: true }}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={handleCloseAthleteModal}>
+            Cancel
+          </Button>
+          <Button variant="contained" sx={classes.button} onClick={handleSaveAthlete}>
+            {editingAthleteId ? "Save Athlete" : "Add Athlete"}
           </Button>
         </DialogActions>
       </Dialog>
