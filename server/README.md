@@ -3,7 +3,7 @@ Dauntless Athletics Survey API
 Setup
 1) Install dependencies
    - cd server
-   - npm install
+   - yarn
 
 2) Configure env
    - Copy server/.env.example to server/.env
@@ -13,7 +13,7 @@ Setup
    - psql "$DATABASE_URL" -f sql/schema.sql
 
 4) Run locally
-   - npm run dev
+   - yarn dev
 
 Password hash helper (bcrypt)
 - node -e "import bcrypt from 'bcryptjs'; console.log(await bcrypt.hash('YourPassword', 12));"

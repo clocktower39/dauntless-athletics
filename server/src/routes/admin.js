@@ -18,9 +18,113 @@ const isValidTime = (value) => {
   return /^([01]\d|2[0-3]):[0-5]\d$/.test(value);
 };
 
+const normalizeText = (value) => (typeof value === "string" ? value.trim() : "");
+
+const normalizeNullableText = (value) => {
+  const text = normalizeText(value);
+  return text || null;
+};
+
+const normalizeInteger = (value) => {
+  if (value === null || value === undefined || value === "") return null;
+  const number = Number(value);
+  return Number.isInteger(number) ? number : null;
+};
+
+const normalizeBoolean = (value, fallback = false) => {
+  if (typeof value === "boolean") return value;
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return fallback;
+};
+
 const DEFAULT_ORG_ID = 1;
 const DEFAULT_SEASON_ID = 1;
 const ATHLETE_MEMBERSHIP_STATUSES = new Set(["active", "inactive", "removed", "transferred"]);
+
+const ATHLETE_PROFILE_FIELDS = [
+  "primary_email",
+  "age_label",
+  "student_keywords",
+  "roll_sheet_comment",
+  "allergies_health_concerns",
+  "hospital_clinic_preference",
+  "insurance_carrier_company",
+  "policy_number",
+  "physician_name",
+  "physician_phone",
+  "emergency_contact_name",
+  "emergency_contact_phone",
+  "active_enrollment_count",
+  "class_enrollment_count",
+  "camp_enrollment_count",
+  "appointment_booking_count",
+  "current_event_name",
+  "instructors",
+];
+
+const upsertAthleteProfile = async (client, athleteId, profileValues) => {
+  const hasValues = Object.values(profileValues).some((value) => value !== null && value !== undefined);
+  if (!hasValues) return;
+
+  await client.query(
+    `INSERT INTO athlete_profiles (
+      athlete_id, primary_email, age_label, student_keywords, roll_sheet_comment,
+      allergies_health_concerns, hospital_clinic_preference, insurance_carrier_company,
+      policy_number, physician_name, physician_phone, emergency_contact_name,
+      emergency_contact_phone, active_enrollment_count, class_enrollment_count,
+      camp_enrollment_count, appointment_booking_count, current_event_name, instructors
+    ) VALUES (
+      $1, $2, $3, $4, $5,
+      $6, $7, $8,
+      $9, $10, $11, $12,
+      $13, $14, $15,
+      $16, $17, $18, $19
+    )
+    ON CONFLICT (athlete_id)
+    DO UPDATE SET
+      primary_email = EXCLUDED.primary_email,
+      age_label = EXCLUDED.age_label,
+      student_keywords = EXCLUDED.student_keywords,
+      roll_sheet_comment = EXCLUDED.roll_sheet_comment,
+      allergies_health_concerns = EXCLUDED.allergies_health_concerns,
+      hospital_clinic_preference = EXCLUDED.hospital_clinic_preference,
+      insurance_carrier_company = EXCLUDED.insurance_carrier_company,
+      policy_number = EXCLUDED.policy_number,
+      physician_name = EXCLUDED.physician_name,
+      physician_phone = EXCLUDED.physician_phone,
+      emergency_contact_name = EXCLUDED.emergency_contact_name,
+      emergency_contact_phone = EXCLUDED.emergency_contact_phone,
+      active_enrollment_count = EXCLUDED.active_enrollment_count,
+      class_enrollment_count = EXCLUDED.class_enrollment_count,
+      camp_enrollment_count = EXCLUDED.camp_enrollment_count,
+      appointment_booking_count = EXCLUDED.appointment_booking_count,
+      current_event_name = EXCLUDED.current_event_name,
+      instructors = EXCLUDED.instructors,
+      updated_at = NOW()`,
+    [
+      athleteId,
+      profileValues.primary_email,
+      profileValues.age_label,
+      profileValues.student_keywords,
+      profileValues.roll_sheet_comment,
+      profileValues.allergies_health_concerns,
+      profileValues.hospital_clinic_preference,
+      profileValues.insurance_carrier_company,
+      profileValues.policy_number,
+      profileValues.physician_name,
+      profileValues.physician_phone,
+      profileValues.emergency_contact_name,
+      profileValues.emergency_contact_phone,
+      profileValues.active_enrollment_count,
+      profileValues.class_enrollment_count,
+      profileValues.camp_enrollment_count,
+      profileValues.appointment_booking_count,
+      profileValues.current_event_name,
+      profileValues.instructors,
+    ]
+  );
+};
 
 const buildSurveyPayload = (survey, questions) => ({
   id: survey.id,
@@ -1099,9 +1203,512 @@ router.delete("/teams/:id", async (req, res) => {
   return res.json({ teamId, deleted: true });
 });
 
+router.get("/families", async (req, res) => {
+  const organizationId = normalizeInteger(req.query.organization_id);
+  const params = [];
+  const filters = [];
+
+  if (organizationId) {
+    params.push(organizationId);
+    filters.push(`families.org_id = $${params.length}`);
+  }
+
+  const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
+  const result = await query(
+    `SELECT families.id, families.org_id, families.name, families.status, families.source_system,
+            families.source_record_id, families.primary_guardian_name, families.primary_email,
+            families.primary_phone, families.street_1, families.street_2, families.city,
+            families.state, families.postal_code, families.country, families.balance_due,
+            families.last_payment_date, families.last_payment_amount, families.notes,
+            families.created_at, families.updated_at,
+            COUNT(DISTINCT athletes.id)::int AS athlete_count,
+            COUNT(DISTINCT parents.id)::int AS guardian_count
+     FROM families
+     LEFT JOIN athletes
+       ON athletes.family_id = families.id
+      AND athletes.deleted_at IS NULL
+     LEFT JOIN parents
+       ON parents.family_id = families.id
+      AND COALESCE(parents.status, 'active') = 'active'
+     ${whereClause}
+     GROUP BY families.id
+     ORDER BY families.name ASC, families.id ASC`,
+    params
+  );
+
+  return res.json({ families: result.rows });
+});
+
+router.get("/families/:id", async (req, res) => {
+  const familyId = Number(req.params.id);
+  if (!Number.isInteger(familyId)) {
+    return res.status(400).json({ error: "Family id is required." });
+  }
+
+  const familyResult = await query(
+    `SELECT families.id, families.org_id, families.name, families.status, families.source_system,
+            families.source_record_id, families.primary_guardian_name, families.primary_email,
+            families.primary_phone, families.street_1, families.street_2, families.city,
+            families.state, families.postal_code, families.country, families.balance_due,
+            families.last_payment_date, families.last_payment_amount, families.notes,
+            families.created_at, families.updated_at,
+            COUNT(DISTINCT athletes.id)::int AS athlete_count,
+            COUNT(DISTINCT parents.id)::int AS guardian_count
+     FROM families
+     LEFT JOIN athletes
+       ON athletes.family_id = families.id
+      AND athletes.deleted_at IS NULL
+     LEFT JOIN parents
+       ON parents.family_id = families.id
+      AND COALESCE(parents.status, 'active') = 'active'
+     WHERE families.id = $1
+     GROUP BY families.id`,
+    [familyId]
+  );
+
+  if (familyResult.rowCount === 0) {
+    return res.status(404).json({ error: "Family not found." });
+  }
+
+  const guardiansResult = await query(
+    `SELECT parents.id, parents.org_id, parents.family_id, parents.first_name, parents.last_name,
+            parents.full_name, parents.email, parents.phone, parents.is_primary_guardian,
+            parents.source_system, parents.source_record_id, parents.status, parents.notes,
+            parents.created_at, parents.updated_at,
+            COUNT(DISTINCT parent_athlete.athlete_id)::int AS athlete_count
+     FROM parents
+     LEFT JOIN parent_athlete
+       ON parent_athlete.parent_id = parents.id
+      AND COALESCE(parent_athlete.status, 'active') = 'active'
+     WHERE parents.family_id = $1
+     GROUP BY parents.id
+     ORDER BY parents.is_primary_guardian DESC, parents.last_name ASC NULLS LAST, parents.first_name ASC NULLS LAST, parents.id ASC`,
+    [familyId]
+  );
+
+  const athletesResult = await query(
+    `SELECT athletes.id, athletes.org_id, athletes.family_id, athletes.first_name, athletes.last_name,
+            athletes.dob, athletes.gender, athletes.external_source, athletes.external_source_id,
+            athletes.source_created_at, athletes.created_at,
+            athlete_profiles.primary_email, athlete_profiles.age_label,
+            athlete_profiles.allergies_health_concerns, athlete_profiles.current_event_name,
+            athlete_profiles.instructors,
+            COALESCE(
+              STRING_AGG(DISTINCT teams.name, ', ') FILTER (WHERE athlete_team.status = 'active'),
+              ''
+            ) AS active_team_names
+     FROM athletes
+     LEFT JOIN athlete_profiles ON athlete_profiles.athlete_id = athletes.id
+     LEFT JOIN athlete_team ON athlete_team.athlete_id = athletes.id
+     LEFT JOIN teams ON teams.id = athlete_team.team_id
+     WHERE athletes.family_id = $1
+       AND athletes.deleted_at IS NULL
+     GROUP BY athletes.id, athlete_profiles.athlete_id
+     ORDER BY athletes.last_name ASC, athletes.first_name ASC`,
+    [familyId]
+  );
+
+  return res.json({
+    family: familyResult.rows[0],
+    guardians: guardiansResult.rows,
+    athletes: athletesResult.rows,
+  });
+});
+
+router.post("/families", async (req, res) => {
+  const name = normalizeText(req.body?.name);
+  const primaryGuardianName = normalizeNullableText(req.body?.primary_guardian_name);
+  const primaryEmail = normalizeNullableText(req.body?.primary_email);
+  const primaryPhone = normalizeNullableText(req.body?.primary_phone);
+  const street1 = normalizeNullableText(req.body?.street_1);
+  const street2 = normalizeNullableText(req.body?.street_2);
+  const city = normalizeNullableText(req.body?.city);
+  const state = normalizeNullableText(req.body?.state);
+  const postalCode = normalizeNullableText(req.body?.postal_code);
+  const country = normalizeNullableText(req.body?.country) || "USA";
+  const sourceSystem = normalizeNullableText(req.body?.source_system);
+  const sourceRecordId = normalizeNullableText(req.body?.source_record_id);
+  const status = normalizeNullableText(req.body?.status) || "active";
+  const notes = normalizeNullableText(req.body?.notes);
+  const balanceDue = req.body?.balance_due === "" || req.body?.balance_due === undefined ? null : Number(req.body?.balance_due);
+  const lastPaymentAmount =
+    req.body?.last_payment_amount === "" || req.body?.last_payment_amount === undefined
+      ? null
+      : Number(req.body?.last_payment_amount);
+  const lastPaymentDate =
+    typeof req.body?.last_payment_date === "string" && req.body.last_payment_date.trim()
+      ? req.body.last_payment_date.trim()
+      : null;
+  const orgId = normalizeInteger(req.body?.org_id) || DEFAULT_ORG_ID;
+
+  if (!name) {
+    return res.status(400).json({ error: "Family name is required." });
+  }
+
+  const result = await query(
+    `INSERT INTO families (
+      org_id, name, status, source_system, source_record_id, primary_guardian_name,
+      primary_email, primary_phone, street_1, street_2, city, state, postal_code,
+      country, balance_due, last_payment_date, last_payment_amount, notes
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6,
+      $7, $8, $9, $10, $11, $12, $13,
+      $14, $15, $16, $17, $18
+    )
+    RETURNING *`,
+    [
+      orgId,
+      name,
+      status,
+      sourceSystem,
+      sourceRecordId,
+      primaryGuardianName,
+      primaryEmail,
+      primaryPhone,
+      street1,
+      street2,
+      city,
+      state,
+      postalCode,
+      country,
+      Number.isFinite(balanceDue) ? balanceDue : null,
+      lastPaymentDate,
+      Number.isFinite(lastPaymentAmount) ? lastPaymentAmount : null,
+      notes,
+    ]
+  );
+
+  return res.status(201).json({ family: result.rows[0] });
+});
+
+router.put("/families/:id", async (req, res) => {
+  const familyId = Number(req.params.id);
+  if (!Number.isInteger(familyId)) {
+    return res.status(400).json({ error: "Family id is required." });
+  }
+
+  const body = req.body || {};
+  if (Object.prototype.hasOwnProperty.call(body, "name") && !normalizeText(body.name)) {
+    return res.status(400).json({ error: "Family name is required." });
+  }
+  const fields = [
+    "name",
+    "status",
+    "source_system",
+    "source_record_id",
+    "primary_guardian_name",
+    "primary_email",
+    "primary_phone",
+    "street_1",
+    "street_2",
+    "city",
+    "state",
+    "postal_code",
+    "country",
+    "notes",
+    "last_payment_date",
+  ];
+  const updates = [];
+  const params = [];
+
+  fields.forEach((field) => {
+    if (Object.prototype.hasOwnProperty.call(body, field)) {
+      params.push(field === "name" || field === "status" ? normalizeText(body[field]) : normalizeNullableText(body[field]));
+      updates.push(`${field} = $${params.length}`);
+    }
+  });
+
+  if (Object.prototype.hasOwnProperty.call(body, "org_id")) {
+    const orgId = normalizeInteger(body.org_id);
+    if (!orgId) {
+      return res.status(400).json({ error: "org_id must be a valid organization id." });
+    }
+    params.push(orgId);
+    updates.push(`org_id = $${params.length}`);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body, "balance_due")) {
+    const balanceDue = body.balance_due === "" ? null : Number(body.balance_due);
+    if (balanceDue !== null && !Number.isFinite(balanceDue)) {
+      return res.status(400).json({ error: "balance_due must be numeric." });
+    }
+    params.push(balanceDue);
+    updates.push(`balance_due = $${params.length}`);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body, "last_payment_amount")) {
+    const amount = body.last_payment_amount === "" ? null : Number(body.last_payment_amount);
+    if (amount !== null && !Number.isFinite(amount)) {
+      return res.status(400).json({ error: "last_payment_amount must be numeric." });
+    }
+    params.push(amount);
+    updates.push(`last_payment_amount = $${params.length}`);
+  }
+
+  if (updates.length === 0) {
+    return res.status(400).json({ error: "No updates provided." });
+  }
+
+  updates.push("updated_at = NOW()");
+  params.push(familyId);
+  const result = await query(
+    `UPDATE families
+     SET ${updates.join(", ")}
+     WHERE id = $${params.length}
+     RETURNING *`,
+    params
+  );
+
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Family not found." });
+  }
+
+  return res.json({ family: result.rows[0] });
+});
+
+router.get("/parents", async (req, res) => {
+  const familyId = normalizeInteger(req.query.family_id);
+  const params = [];
+  const filters = [];
+
+  if (familyId) {
+    params.push(familyId);
+    filters.push(`parents.family_id = $${params.length}`);
+  }
+
+  const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
+  const result = await query(
+    `SELECT parents.id, parents.org_id, parents.family_id, parents.first_name, parents.last_name,
+            parents.full_name, parents.email, parents.phone, parents.is_primary_guardian,
+            parents.source_system, parents.source_record_id, parents.status, parents.notes,
+            parents.created_at, parents.updated_at,
+            COUNT(DISTINCT parent_athlete.athlete_id)::int AS athlete_count
+     FROM parents
+     LEFT JOIN parent_athlete
+       ON parent_athlete.parent_id = parents.id
+      AND COALESCE(parent_athlete.status, 'active') = 'active'
+     ${whereClause}
+     GROUP BY parents.id
+     ORDER BY parents.is_primary_guardian DESC, parents.last_name ASC NULLS LAST, parents.first_name ASC NULLS LAST, parents.id ASC`,
+    params
+  );
+
+  return res.json({ parents: result.rows });
+});
+
+router.post("/parents", async (req, res) => {
+  const familyId = normalizeInteger(req.body?.family_id);
+  const firstName = normalizeNullableText(req.body?.first_name);
+  const lastName = normalizeNullableText(req.body?.last_name);
+  const fullName = normalizeNullableText(req.body?.full_name) || [firstName, lastName].filter(Boolean).join(" ") || null;
+  const email = normalizeNullableText(req.body?.email);
+  const phone = normalizeNullableText(req.body?.phone);
+  const notes = normalizeNullableText(req.body?.notes);
+  const sourceSystem = normalizeNullableText(req.body?.source_system);
+  const sourceRecordId = normalizeNullableText(req.body?.source_record_id);
+  const status = normalizeNullableText(req.body?.status) || "active";
+  const isPrimaryGuardian = normalizeBoolean(req.body?.is_primary_guardian, false);
+  const athleteLinks = Array.isArray(req.body?.athlete_links) ? req.body.athlete_links : [];
+  const orgId = normalizeInteger(req.body?.org_id) || DEFAULT_ORG_ID;
+
+  if (!familyId) {
+    return res.status(400).json({ error: "family_id is required." });
+  }
+
+  if (!fullName && !email && !phone) {
+    return res.status(400).json({ error: "A guardian name, email, or phone is required." });
+  }
+
+  const client = await getClient();
+  try {
+    await client.query("BEGIN");
+
+    const familyResult = await client.query("SELECT id FROM families WHERE id = $1", [familyId]);
+    if (familyResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Family not found." });
+    }
+
+    const parentResult = await client.query(
+      `INSERT INTO parents (
+        org_id, family_id, first_name, last_name, full_name, email, phone,
+        is_primary_guardian, source_system, source_record_id, status, notes
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      RETURNING *`,
+      [
+        orgId,
+        familyId,
+        firstName,
+        lastName,
+        fullName,
+        email,
+        phone,
+        isPrimaryGuardian,
+        sourceSystem,
+        sourceRecordId,
+        status,
+        notes,
+      ]
+    );
+
+    for (const link of athleteLinks) {
+      const athleteId = normalizeInteger(link?.athlete_id);
+      if (!athleteId) continue;
+      await client.query(
+        `INSERT INTO parent_athlete (
+          parent_id, athlete_id, relationship, is_legal_guardian, is_emergency_contact,
+          receives_email, receives_sms, sort_order, status
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        ON CONFLICT (parent_id, athlete_id)
+        DO UPDATE SET
+          relationship = EXCLUDED.relationship,
+          is_legal_guardian = EXCLUDED.is_legal_guardian,
+          is_emergency_contact = EXCLUDED.is_emergency_contact,
+          receives_email = EXCLUDED.receives_email,
+          receives_sms = EXCLUDED.receives_sms,
+          sort_order = EXCLUDED.sort_order,
+          status = EXCLUDED.status`,
+        [
+          parentResult.rows[0].id,
+          athleteId,
+          normalizeNullableText(link?.relationship),
+          normalizeBoolean(link?.is_legal_guardian, false),
+          normalizeBoolean(link?.is_emergency_contact, false),
+          normalizeBoolean(link?.receives_email, true),
+          normalizeBoolean(link?.receives_sms, false),
+          normalizeInteger(link?.sort_order) ?? 0,
+          normalizeNullableText(link?.status) || "active",
+        ]
+      );
+    }
+
+    await client.query("COMMIT");
+    return res.status(201).json({ parent: parentResult.rows[0] });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to create guardian." });
+  } finally {
+    client.release();
+  }
+});
+
+router.put("/parents/:id", async (req, res) => {
+  const parentId = Number(req.params.id);
+  if (!Number.isInteger(parentId)) {
+    return res.status(400).json({ error: "Guardian id is required." });
+  }
+
+  const familyId = Object.prototype.hasOwnProperty.call(req.body || {}, "family_id")
+    ? normalizeInteger(req.body?.family_id)
+    : undefined;
+  const athleteLinks = Array.isArray(req.body?.athlete_links) ? req.body.athlete_links : null;
+  const body = req.body || {};
+  const textFields = [
+    "first_name",
+    "last_name",
+    "full_name",
+    "email",
+    "phone",
+    "source_system",
+    "source_record_id",
+    "status",
+    "notes",
+  ];
+  const updates = [];
+  const params = [];
+
+  textFields.forEach((field) => {
+    if (Object.prototype.hasOwnProperty.call(body, field)) {
+      params.push(normalizeNullableText(body[field]));
+      updates.push(`${field} = $${params.length}`);
+    }
+  });
+
+  if (Object.prototype.hasOwnProperty.call(body, "is_primary_guardian")) {
+    params.push(normalizeBoolean(body.is_primary_guardian, false));
+    updates.push(`is_primary_guardian = $${params.length}`);
+  }
+
+  if (familyId !== undefined) {
+    if (!familyId) {
+      return res.status(400).json({ error: "family_id must be a valid family id." });
+    }
+    params.push(familyId);
+    updates.push(`family_id = $${params.length}`);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body, "org_id")) {
+    const orgId = normalizeInteger(body.org_id);
+    if (!orgId) {
+      return res.status(400).json({ error: "org_id must be a valid organization id." });
+    }
+    params.push(orgId);
+    updates.push(`org_id = $${params.length}`);
+  }
+
+  if (updates.length === 0 && athleteLinks === null) {
+    return res.status(400).json({ error: "No updates provided." });
+  }
+
+  const client = await getClient();
+  try {
+    await client.query("BEGIN");
+
+    if (updates.length > 0) {
+      updates.push("updated_at = NOW()");
+      params.push(parentId);
+      const parentResult = await client.query(
+        `UPDATE parents
+         SET ${updates.join(", ")}
+         WHERE id = $${params.length}
+         RETURNING id`,
+        params
+      );
+      if (parentResult.rowCount === 0) {
+        await client.query("ROLLBACK");
+        return res.status(404).json({ error: "Guardian not found." });
+      }
+    }
+
+    if (athleteLinks) {
+      await client.query("DELETE FROM parent_athlete WHERE parent_id = $1", [parentId]);
+      for (const link of athleteLinks) {
+        const athleteId = normalizeInteger(link?.athlete_id);
+        if (!athleteId) continue;
+        await client.query(
+          `INSERT INTO parent_athlete (
+            parent_id, athlete_id, relationship, is_legal_guardian, is_emergency_contact,
+            receives_email, receives_sms, sort_order, status
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+          [
+            parentId,
+            athleteId,
+            normalizeNullableText(link?.relationship),
+            normalizeBoolean(link?.is_legal_guardian, false),
+            normalizeBoolean(link?.is_emergency_contact, false),
+            normalizeBoolean(link?.receives_email, true),
+            normalizeBoolean(link?.receives_sms, false),
+            normalizeInteger(link?.sort_order) ?? 0,
+            normalizeNullableText(link?.status) || "active",
+          ]
+        );
+      }
+    }
+
+    await client.query("COMMIT");
+    return res.json({ parentId, updated: true });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to update guardian." });
+  } finally {
+    client.release();
+  }
+});
+
 router.get("/athletes", async (req, res) => {
-  const teamId = req.query.team_id ? Number(req.query.team_id) : null;
-  const seasonId = req.query.season_id ? Number(req.query.season_id) : null;
+  const teamId = normalizeInteger(req.query.team_id);
+  const seasonId = normalizeInteger(req.query.season_id);
+  const familyId = normalizeInteger(req.query.family_id);
   const status = typeof req.query.status === "string" ? req.query.status.trim().toLowerCase() : "";
   const params = [];
   const filters = ["athletes.deleted_at IS NULL"];
@@ -1121,6 +1728,11 @@ router.get("/athletes", async (req, res) => {
     filters.push(`athlete_team.status = $${params.length}`);
   }
 
+  if (familyId) {
+    params.push(familyId);
+    filters.push(`athletes.family_id = $${params.length}`);
+  }
+
   const joinClause =
     teamId || seasonId || status
       ? "JOIN athlete_team ON athlete_team.athlete_id = athletes.id"
@@ -1128,16 +1740,29 @@ router.get("/athletes", async (req, res) => {
   const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
 
   const result = await query(
-    `SELECT athletes.id, athletes.org_id, athletes.first_name, athletes.last_name, athletes.dob,
-            athletes.gender, athletes.created_at,
+    `SELECT athletes.id, athletes.org_id, athletes.family_id, athletes.first_name, athletes.last_name,
+            athletes.dob, athletes.gender, athletes.external_source, athletes.external_source_id,
+            athletes.source_created_at, athletes.created_at,
             athlete_team.team_id, athlete_team.season_id, athlete_team.status,
             athlete_team.positions, athlete_team.skill_notes, athlete_team.goal_notes,
             athlete_team.notes, athlete_team.start_date, athlete_team.end_date,
-            teams.name AS team_name, seasons.name AS season_name
+            teams.name AS team_name, seasons.name AS season_name,
+            families.name AS family_name,
+            athlete_profiles.primary_email, athlete_profiles.age_label,
+            athlete_profiles.student_keywords, athlete_profiles.roll_sheet_comment,
+            athlete_profiles.allergies_health_concerns, athlete_profiles.hospital_clinic_preference,
+            athlete_profiles.insurance_carrier_company, athlete_profiles.policy_number,
+            athlete_profiles.physician_name, athlete_profiles.physician_phone,
+            athlete_profiles.emergency_contact_name, athlete_profiles.emergency_contact_phone,
+            athlete_profiles.active_enrollment_count, athlete_profiles.class_enrollment_count,
+            athlete_profiles.camp_enrollment_count, athlete_profiles.appointment_booking_count,
+            athlete_profiles.current_event_name, athlete_profiles.instructors
      FROM athletes
      ${joinClause}
      LEFT JOIN teams ON teams.id = athlete_team.team_id
      LEFT JOIN seasons ON seasons.id = athlete_team.season_id
+     LEFT JOIN families ON families.id = athletes.family_id
+     LEFT JOIN athlete_profiles ON athlete_profiles.athlete_id = athletes.id
      ${whereClause}
      ORDER BY athletes.last_name ASC, athletes.first_name ASC`,
     params
@@ -1147,23 +1772,50 @@ router.get("/athletes", async (req, res) => {
 });
 
 router.post("/athletes", async (req, res) => {
-  const firstName = typeof req.body?.first_name === "string" ? req.body.first_name.trim() : "";
-  const lastName = typeof req.body?.last_name === "string" ? req.body.last_name.trim() : "";
+  const firstName = normalizeText(req.body?.first_name);
+  const lastName = normalizeText(req.body?.last_name);
   const dob = typeof req.body?.dob === "string" && req.body.dob.trim() ? req.body.dob.trim() : null;
-  const gender = typeof req.body?.gender === "string" ? req.body.gender.trim() : "";
-  const teamId = req.body?.team_id ? Number(req.body.team_id) : null;
-  const seasonId = req.body?.season_id ? Number(req.body.season_id) : null;
+  const gender = normalizeText(req.body?.gender);
+  const familyId = normalizeInteger(req.body?.family_id);
+  const teamId = normalizeInteger(req.body?.team_id);
+  const seasonId = normalizeInteger(req.body?.season_id);
   const status = typeof req.body?.status === "string" ? req.body.status.trim().toLowerCase() : "active";
-  const positions = typeof req.body?.positions === "string" ? req.body.positions.trim() : "";
-  const skillNotes = typeof req.body?.skill_notes === "string" ? req.body.skill_notes.trim() : "";
-  const goalNotes = typeof req.body?.goal_notes === "string" ? req.body.goal_notes.trim() : "";
-  const membershipNotes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
+  const positions = normalizeText(req.body?.positions);
+  const skillNotes = normalizeText(req.body?.skill_notes);
+  const goalNotes = normalizeText(req.body?.goal_notes);
+  const membershipNotes = normalizeText(req.body?.notes);
   const startDate =
     typeof req.body?.start_date === "string" && req.body.start_date.trim()
       ? req.body.start_date.trim()
       : null;
   const endDate =
     typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
+  const externalSource = normalizeNullableText(req.body?.external_source);
+  const externalSourceId = normalizeNullableText(req.body?.external_source_id);
+  const sourceCreatedAt =
+    typeof req.body?.source_created_at === "string" && req.body.source_created_at.trim()
+      ? req.body.source_created_at.trim()
+      : null;
+  const profileValues = {
+    primary_email: normalizeNullableText(req.body?.primary_email),
+    age_label: normalizeNullableText(req.body?.age_label),
+    student_keywords: normalizeNullableText(req.body?.student_keywords),
+    roll_sheet_comment: normalizeNullableText(req.body?.roll_sheet_comment),
+    allergies_health_concerns: normalizeNullableText(req.body?.allergies_health_concerns),
+    hospital_clinic_preference: normalizeNullableText(req.body?.hospital_clinic_preference),
+    insurance_carrier_company: normalizeNullableText(req.body?.insurance_carrier_company),
+    policy_number: normalizeNullableText(req.body?.policy_number),
+    physician_name: normalizeNullableText(req.body?.physician_name),
+    physician_phone: normalizeNullableText(req.body?.physician_phone),
+    emergency_contact_name: normalizeNullableText(req.body?.emergency_contact_name),
+    emergency_contact_phone: normalizeNullableText(req.body?.emergency_contact_phone),
+    active_enrollment_count: normalizeInteger(req.body?.active_enrollment_count),
+    class_enrollment_count: normalizeInteger(req.body?.class_enrollment_count),
+    camp_enrollment_count: normalizeInteger(req.body?.camp_enrollment_count),
+    appointment_booking_count: normalizeInteger(req.body?.appointment_booking_count),
+    current_event_name: normalizeNullableText(req.body?.current_event_name),
+    instructors: normalizeNullableText(req.body?.instructors),
+  };
 
   if (!firstName || !lastName) {
     return res.status(400).json({ error: "First and last name are required." });
@@ -1175,6 +1827,13 @@ router.post("/athletes", async (req, res) => {
 
   if (!ATHLETE_MEMBERSHIP_STATUSES.has(status)) {
     return res.status(400).json({ error: "Invalid athlete status." });
+  }
+
+  if (familyId) {
+    const familyResult = await query("SELECT id FROM families WHERE id = $1", [familyId]);
+    if (familyResult.rowCount === 0) {
+      return res.status(404).json({ error: "Family not found." });
+    }
   }
 
   if (teamId) {
@@ -1192,24 +1851,37 @@ router.post("/athletes", async (req, res) => {
   try {
     await client.query("BEGIN");
 
-    const teamResult = await client.query("SELECT id FROM teams WHERE id = $1", [teamId]);
-    if (teamResult.rowCount === 0) {
-      await client.query("ROLLBACK");
-      return res.status(404).json({ error: "Team not found." });
+    if (familyId) {
+      const familyResult = await client.query("SELECT id FROM families WHERE id = $1", [familyId]);
+      if (familyResult.rowCount === 0) {
+        await client.query("ROLLBACK");
+        return res.status(404).json({ error: "Family not found." });
+      }
     }
 
-    const seasonResult = await client.query("SELECT id FROM seasons WHERE id = $1", [seasonId]);
-    if (seasonResult.rowCount === 0) {
-      await client.query("ROLLBACK");
-      return res.status(404).json({ error: "Season not found." });
+    if (teamId && seasonId) {
+      const teamResult = await client.query("SELECT id FROM teams WHERE id = $1", [teamId]);
+      if (teamResult.rowCount === 0) {
+        await client.query("ROLLBACK");
+        return res.status(404).json({ error: "Team not found." });
+      }
+
+      const seasonResult = await client.query("SELECT id FROM seasons WHERE id = $1", [seasonId]);
+      if (seasonResult.rowCount === 0) {
+        await client.query("ROLLBACK");
+        return res.status(404).json({ error: "Season not found." });
+      }
     }
 
     const athleteResult = await client.query(
-      `INSERT INTO athletes (org_id, first_name, last_name, dob, gender)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, org_id, first_name, last_name, dob, gender, created_at`,
-      [DEFAULT_ORG_ID, firstName, lastName, dob, gender || null]
+      `INSERT INTO athletes (
+        org_id, family_id, first_name, last_name, dob, gender, external_source, external_source_id, source_created_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING id, org_id, family_id, first_name, last_name, dob, gender, external_source, external_source_id, source_created_at, created_at`,
+      [DEFAULT_ORG_ID, familyId, firstName, lastName, dob, gender || null, externalSource, externalSourceId, sourceCreatedAt]
     );
+
+    await upsertAthleteProfile(client, athleteResult.rows[0].id, profileValues);
 
     if (teamId && seasonId) {
       await client.query(
@@ -1247,30 +1919,98 @@ router.put("/athletes/:id", async (req, res) => {
     return res.status(400).json({ error: "Athlete id is required." });
   }
 
-  const firstName = typeof req.body?.first_name === "string" ? req.body.first_name.trim() : "";
-  const lastName = typeof req.body?.last_name === "string" ? req.body.last_name.trim() : "";
+  const firstName = normalizeText(req.body?.first_name);
+  const lastName = normalizeText(req.body?.last_name);
   const dob = typeof req.body?.dob === "string" && req.body.dob.trim() ? req.body.dob.trim() : null;
-  const gender = typeof req.body?.gender === "string" ? req.body.gender.trim() : "";
-  const teamId = req.body?.team_id ? Number(req.body.team_id) : null;
-  const seasonId = req.body?.season_id ? Number(req.body.season_id) : null;
+  const gender = normalizeText(req.body?.gender);
+  const hasFamilyId = Object.prototype.hasOwnProperty.call(req.body || {}, "family_id");
+  const familyId = hasFamilyId ? normalizeInteger(req.body?.family_id) : undefined;
+  const teamId = normalizeInteger(req.body?.team_id);
+  const seasonId = normalizeInteger(req.body?.season_id);
   const status = typeof req.body?.status === "string" ? req.body.status.trim().toLowerCase() : "active";
-  const positions = typeof req.body?.positions === "string" ? req.body.positions.trim() : "";
-  const skillNotes = typeof req.body?.skill_notes === "string" ? req.body.skill_notes.trim() : "";
-  const goalNotes = typeof req.body?.goal_notes === "string" ? req.body.goal_notes.trim() : "";
-  const membershipNotes = typeof req.body?.notes === "string" ? req.body.notes.trim() : "";
+  const positions = normalizeText(req.body?.positions);
+  const skillNotes = normalizeText(req.body?.skill_notes);
+  const goalNotes = normalizeText(req.body?.goal_notes);
+  const membershipNotes = normalizeText(req.body?.notes);
   const startDate =
     typeof req.body?.start_date === "string" && req.body.start_date.trim()
       ? req.body.start_date.trim()
       : null;
   const endDate =
     typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
+  const hasExternalSource = Object.prototype.hasOwnProperty.call(req.body || {}, "external_source");
+  const externalSource = hasExternalSource ? normalizeNullableText(req.body?.external_source) : undefined;
+  const hasExternalSourceId = Object.prototype.hasOwnProperty.call(req.body || {}, "external_source_id");
+  const externalSourceId = hasExternalSourceId ? normalizeNullableText(req.body?.external_source_id) : undefined;
+  const hasSourceCreatedAt = Object.prototype.hasOwnProperty.call(req.body || {}, "source_created_at");
+  const sourceCreatedAt = hasSourceCreatedAt
+    ? typeof req.body?.source_created_at === "string" && req.body.source_created_at.trim()
+      ? req.body.source_created_at.trim()
+      : null
+    : undefined;
+  const profileValues = {
+    primary_email: Object.prototype.hasOwnProperty.call(req.body || {}, "primary_email")
+      ? normalizeNullableText(req.body?.primary_email)
+      : undefined,
+    age_label: Object.prototype.hasOwnProperty.call(req.body || {}, "age_label")
+      ? normalizeNullableText(req.body?.age_label)
+      : undefined,
+    student_keywords: Object.prototype.hasOwnProperty.call(req.body || {}, "student_keywords")
+      ? normalizeNullableText(req.body?.student_keywords)
+      : undefined,
+    roll_sheet_comment: Object.prototype.hasOwnProperty.call(req.body || {}, "roll_sheet_comment")
+      ? normalizeNullableText(req.body?.roll_sheet_comment)
+      : undefined,
+    allergies_health_concerns: Object.prototype.hasOwnProperty.call(req.body || {}, "allergies_health_concerns")
+      ? normalizeNullableText(req.body?.allergies_health_concerns)
+      : undefined,
+    hospital_clinic_preference: Object.prototype.hasOwnProperty.call(req.body || {}, "hospital_clinic_preference")
+      ? normalizeNullableText(req.body?.hospital_clinic_preference)
+      : undefined,
+    insurance_carrier_company: Object.prototype.hasOwnProperty.call(req.body || {}, "insurance_carrier_company")
+      ? normalizeNullableText(req.body?.insurance_carrier_company)
+      : undefined,
+    policy_number: Object.prototype.hasOwnProperty.call(req.body || {}, "policy_number")
+      ? normalizeNullableText(req.body?.policy_number)
+      : undefined,
+    physician_name: Object.prototype.hasOwnProperty.call(req.body || {}, "physician_name")
+      ? normalizeNullableText(req.body?.physician_name)
+      : undefined,
+    physician_phone: Object.prototype.hasOwnProperty.call(req.body || {}, "physician_phone")
+      ? normalizeNullableText(req.body?.physician_phone)
+      : undefined,
+    emergency_contact_name: Object.prototype.hasOwnProperty.call(req.body || {}, "emergency_contact_name")
+      ? normalizeNullableText(req.body?.emergency_contact_name)
+      : undefined,
+    emergency_contact_phone: Object.prototype.hasOwnProperty.call(req.body || {}, "emergency_contact_phone")
+      ? normalizeNullableText(req.body?.emergency_contact_phone)
+      : undefined,
+    active_enrollment_count: Object.prototype.hasOwnProperty.call(req.body || {}, "active_enrollment_count")
+      ? normalizeInteger(req.body?.active_enrollment_count)
+      : undefined,
+    class_enrollment_count: Object.prototype.hasOwnProperty.call(req.body || {}, "class_enrollment_count")
+      ? normalizeInteger(req.body?.class_enrollment_count)
+      : undefined,
+    camp_enrollment_count: Object.prototype.hasOwnProperty.call(req.body || {}, "camp_enrollment_count")
+      ? normalizeInteger(req.body?.camp_enrollment_count)
+      : undefined,
+    appointment_booking_count: Object.prototype.hasOwnProperty.call(req.body || {}, "appointment_booking_count")
+      ? normalizeInteger(req.body?.appointment_booking_count)
+      : undefined,
+    current_event_name: Object.prototype.hasOwnProperty.call(req.body || {}, "current_event_name")
+      ? normalizeNullableText(req.body?.current_event_name)
+      : undefined,
+    instructors: Object.prototype.hasOwnProperty.call(req.body || {}, "instructors")
+      ? normalizeNullableText(req.body?.instructors)
+      : undefined,
+  };
 
   if (!firstName || !lastName) {
     return res.status(400).json({ error: "First and last name are required." });
   }
 
-  if (!teamId || !seasonId) {
-    return res.status(400).json({ error: "team_id and season_id are required." });
+  if ((teamId && !seasonId) || (!teamId && seasonId)) {
+    return res.status(400).json({ error: "team_id and season_id must be provided together." });
   }
 
   if (!ATHLETE_MEMBERSHIP_STATUSES.has(status)) {
@@ -1281,12 +2021,38 @@ router.put("/athletes/:id", async (req, res) => {
   try {
     await client.query("BEGIN");
 
+    if (hasFamilyId && familyId !== null) {
+      const familyResult = await client.query("SELECT id FROM families WHERE id = $1", [familyId]);
+      if (familyResult.rowCount === 0) {
+        await client.query("ROLLBACK");
+        return res.status(404).json({ error: "Family not found." });
+      }
+    }
+
     const athleteResult = await client.query(
       `UPDATE athletes
-       SET first_name = $1, last_name = $2, dob = $3, gender = $4
-       WHERE id = $5 AND deleted_at IS NULL
+       SET first_name = $1, last_name = $2, dob = $3, gender = $4,
+           family_id = CASE WHEN $5 THEN $6 ELSE family_id END,
+           external_source = CASE WHEN $7 THEN $8 ELSE external_source END,
+           external_source_id = CASE WHEN $9 THEN $10 ELSE external_source_id END,
+           source_created_at = CASE WHEN $11 THEN $12 ELSE source_created_at END
+       WHERE id = $13 AND deleted_at IS NULL
        RETURNING id`,
-      [firstName, lastName, dob, gender || null, athleteId]
+      [
+        firstName,
+        lastName,
+        dob,
+        gender || null,
+        hasFamilyId,
+        familyId,
+        hasExternalSource,
+        externalSource,
+        hasExternalSourceId,
+        externalSourceId,
+        hasSourceCreatedAt,
+        sourceCreatedAt,
+        athleteId,
+      ]
     );
 
     if (athleteResult.rowCount === 0) {
@@ -1294,32 +2060,53 @@ router.put("/athletes/:id", async (req, res) => {
       return res.status(404).json({ error: "Athlete not found." });
     }
 
-    await client.query(
-      `INSERT INTO athlete_team (
-        athlete_id, team_id, season_id, status, positions, skill_notes, goal_notes, notes, start_date, end_date
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, COALESCE($9, CURRENT_DATE), $10)
-      ON CONFLICT (athlete_id, team_id, season_id)
-      DO UPDATE SET
-        status = EXCLUDED.status,
-        positions = EXCLUDED.positions,
-        skill_notes = EXCLUDED.skill_notes,
-        goal_notes = EXCLUDED.goal_notes,
-        notes = EXCLUDED.notes,
-        start_date = EXCLUDED.start_date,
-        end_date = EXCLUDED.end_date`,
-      [
-        athleteId,
-        teamId,
-        seasonId,
-        status,
-        positions || null,
-        skillNotes || null,
-        goalNotes || null,
-        membershipNotes || null,
-        startDate,
-        endDate,
-      ]
-    );
+    const hasProfileValues = Object.values(profileValues).some((value) => value !== undefined);
+    if (hasProfileValues) {
+      const existingProfileResult = await client.query(
+        `SELECT ${ATHLETE_PROFILE_FIELDS.join(", ")} FROM athlete_profiles WHERE athlete_id = $1`,
+        [athleteId]
+      );
+      const mergedProfileValues = existingProfileResult.rowCount
+        ? ATHLETE_PROFILE_FIELDS.reduce((acc, field) => {
+            acc[field] =
+              profileValues[field] === undefined ? existingProfileResult.rows[0][field] : profileValues[field];
+            return acc;
+          }, {})
+        : ATHLETE_PROFILE_FIELDS.reduce((acc, field) => {
+            acc[field] = profileValues[field] === undefined ? null : profileValues[field];
+            return acc;
+          }, {});
+      await upsertAthleteProfile(client, athleteId, mergedProfileValues);
+    }
+
+    if (teamId && seasonId) {
+      await client.query(
+        `INSERT INTO athlete_team (
+          athlete_id, team_id, season_id, status, positions, skill_notes, goal_notes, notes, start_date, end_date
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, COALESCE($9, CURRENT_DATE), $10)
+        ON CONFLICT (athlete_id, team_id, season_id)
+        DO UPDATE SET
+          status = EXCLUDED.status,
+          positions = EXCLUDED.positions,
+          skill_notes = EXCLUDED.skill_notes,
+          goal_notes = EXCLUDED.goal_notes,
+          notes = EXCLUDED.notes,
+          start_date = EXCLUDED.start_date,
+          end_date = EXCLUDED.end_date`,
+        [
+          athleteId,
+          teamId,
+          seasonId,
+          status,
+          positions || null,
+          skillNotes || null,
+          goalNotes || null,
+          membershipNotes || null,
+          startDate,
+          endDate,
+        ]
+      );
+    }
 
     await client.query("COMMIT");
     return res.json({ athleteId, updated: true });

@@ -158,13 +158,41 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS families (
+  id BIGSERIAL PRIMARY KEY,
+  org_id BIGINT NOT NULL REFERENCES orgs(id),
+  name TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'active',
+  source_system TEXT,
+  source_record_id TEXT,
+  primary_guardian_name TEXT,
+  primary_email TEXT,
+  primary_phone TEXT,
+  street_1 TEXT,
+  street_2 TEXT,
+  city TEXT,
+  state TEXT,
+  postal_code TEXT,
+  country TEXT NOT NULL DEFAULT 'USA',
+  balance_due NUMERIC(10, 2),
+  last_payment_date DATE,
+  last_payment_amount NUMERIC(10, 2),
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS athletes (
   id BIGSERIAL PRIMARY KEY,
   org_id BIGINT NOT NULL REFERENCES orgs(id),
+  family_id BIGINT REFERENCES families(id) ON DELETE SET NULL,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
   dob DATE,
   gender TEXT,
+  external_source TEXT,
+  external_source_id TEXT,
+  source_created_at DATE,
   deleted_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -172,8 +200,44 @@ CREATE TABLE IF NOT EXISTS athletes (
 CREATE TABLE IF NOT EXISTS parents (
   id BIGSERIAL PRIMARY KEY,
   org_id BIGINT NOT NULL REFERENCES orgs(id),
+  family_id BIGINT REFERENCES families(id) ON DELETE SET NULL,
   user_id BIGINT REFERENCES users(id),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  first_name TEXT,
+  last_name TEXT,
+  full_name TEXT,
+  email TEXT,
+  phone TEXT,
+  is_primary_guardian BOOLEAN NOT NULL DEFAULT FALSE,
+  source_system TEXT,
+  source_record_id TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS athlete_profiles (
+  athlete_id BIGINT PRIMARY KEY REFERENCES athletes(id) ON DELETE CASCADE,
+  primary_email TEXT,
+  age_label TEXT,
+  student_keywords TEXT,
+  roll_sheet_comment TEXT,
+  allergies_health_concerns TEXT,
+  hospital_clinic_preference TEXT,
+  insurance_carrier_company TEXT,
+  policy_number TEXT,
+  physician_name TEXT,
+  physician_phone TEXT,
+  emergency_contact_name TEXT,
+  emergency_contact_phone TEXT,
+  active_enrollment_count INTEGER,
+  class_enrollment_count INTEGER,
+  camp_enrollment_count INTEGER,
+  appointment_booking_count INTEGER,
+  current_event_name TEXT,
+  instructors TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS athlete_team (
@@ -195,14 +259,31 @@ CREATE TABLE IF NOT EXISTS parent_athlete (
   parent_id BIGINT NOT NULL REFERENCES parents(id) ON DELETE CASCADE,
   athlete_id BIGINT NOT NULL REFERENCES athletes(id) ON DELETE CASCADE,
   relationship TEXT,
+  is_legal_guardian BOOLEAN NOT NULL DEFAULT FALSE,
+  is_emergency_contact BOOLEAN NOT NULL DEFAULT FALSE,
+  receives_email BOOLEAN NOT NULL DEFAULT TRUE,
+  receives_sms BOOLEAN NOT NULL DEFAULT FALSE,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'active',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY (parent_id, athlete_id)
 );
 
+CREATE INDEX IF NOT EXISTS families_org_id_idx ON families (org_id);
+CREATE INDEX IF NOT EXISTS families_status_idx ON families (status);
+CREATE UNIQUE INDEX IF NOT EXISTS families_source_record_idx
+  ON families (source_system, source_record_id)
+  WHERE source_system IS NOT NULL AND source_record_id IS NOT NULL;
 CREATE INDEX IF NOT EXISTS athletes_org_id_idx ON athletes (org_id);
+CREATE INDEX IF NOT EXISTS athletes_family_id_idx ON athletes (family_id);
+CREATE UNIQUE INDEX IF NOT EXISTS athletes_source_record_idx
+  ON athletes (external_source, external_source_id)
+  WHERE external_source IS NOT NULL AND external_source_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS parents_family_id_idx ON parents (family_id);
 CREATE INDEX IF NOT EXISTS athlete_team_team_id_idx ON athlete_team (team_id);
 CREATE INDEX IF NOT EXISTS athlete_team_athlete_id_idx ON athlete_team (athlete_id);
 CREATE INDEX IF NOT EXISTS athlete_team_team_season_status_idx ON athlete_team (team_id, season_id, status);
+CREATE INDEX IF NOT EXISTS parent_athlete_athlete_id_idx ON parent_athlete (athlete_id);
 
 CREATE TABLE IF NOT EXISTS survey_campaigns (
   id BIGSERIAL PRIMARY KEY,

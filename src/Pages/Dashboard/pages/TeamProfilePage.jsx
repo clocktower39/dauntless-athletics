@@ -26,7 +26,7 @@ import {
   emptyTeam,
 } from "../dashboardConstants";
 import { apiRequest, authHeader } from "../surveyApi";
-import { setContacts, setOrganizations, setSeasons, setTeams } from "../../../store/dashboardSlice";
+import { setContacts, setFamilies, setOrganizations, setSeasons, setTeams } from "../../../store/dashboardSlice";
 import RowActionsMenu from "../../../Components/Dashboard/RowActionsMenu";
 
 export default function TeamProfilePage() {
@@ -36,6 +36,7 @@ export default function TeamProfilePage() {
   const [searchParams] = useSearchParams();
   const token = useSelector((state) => state.auth.token);
   const organizations = useSelector((state) => state.dashboard.organizations);
+  const families = useSelector((state) => state.dashboard.families);
   const teams = useSelector((state) => state.dashboard.teams);
   const seasons = useSelector((state) => state.dashboard.seasons);
   const contacts = useSelector((state) => state.dashboard.contacts);
@@ -62,6 +63,7 @@ export default function TeamProfilePage() {
   }, [teams, teamIdNumber, isNew]);
 
   const orgMap = useMemo(() => new Map(organizations.map((org) => [String(org.id), org])), [organizations]);
+  const familyMap = useMemo(() => new Map(families.map((family) => [String(family.id), family])), [families]);
   const seasonMap = useMemo(() => new Map(seasons.map((season) => [String(season.id), season])), [seasons]);
   const activeSeasonId = useMemo(() => {
     if (isNew) return null;
@@ -87,16 +89,18 @@ export default function TeamProfilePage() {
     const load = async () => {
       try {
         setDataError("");
-        const [teamRes, orgRes, seasonRes, contactRes] = await Promise.all([
+        const [teamRes, orgRes, seasonRes, contactRes, familyRes] = await Promise.all([
           apiRequest("/api/admin/teams", { headers: authHeaders }),
           apiRequest("/api/admin/organizations", { headers: authHeaders }),
           apiRequest("/api/admin/seasons", { headers: authHeaders }),
           apiRequest("/api/admin/contacts", { headers: authHeaders }),
+          apiRequest("/api/admin/families", { headers: authHeaders }),
         ]);
         dispatch(setTeams(teamRes.teams || []));
         dispatch(setOrganizations(orgRes.organizations || []));
         dispatch(setSeasons(seasonRes.seasons || []));
         dispatch(setContacts(contactRes.contacts || []));
+        dispatch(setFamilies(familyRes.families || []));
       } catch (error) {
         setDataError(error.message);
       }
@@ -315,6 +319,7 @@ export default function TeamProfilePage() {
     setAthleteForm({
       firstName: athlete.first_name || "",
       lastName: athlete.last_name || "",
+      familyId: athlete.family_id ? String(athlete.family_id) : "",
       dob: athlete.dob ? String(athlete.dob).slice(0, 10) : "",
       gender: athlete.gender || "",
       status: athlete.status || "active",
@@ -344,6 +349,7 @@ export default function TeamProfilePage() {
       const payload = {
         first_name: athleteForm.firstName.trim(),
         last_name: athleteForm.lastName.trim(),
+        family_id: athleteForm.familyId || null,
         dob: athleteForm.dob || null,
         gender: athleteForm.gender.trim(),
         team_id: teamIdNumber,
@@ -388,6 +394,7 @@ export default function TeamProfilePage() {
         body: JSON.stringify({
           first_name: athlete.first_name,
           last_name: athlete.last_name,
+          family_id: athlete.family_id || null,
           dob: athlete.dob ? String(athlete.dob).slice(0, 10) : null,
           gender: athlete.gender || null,
           team_id: teamIdNumber,
@@ -628,6 +635,13 @@ export default function TeamProfilePage() {
                       headerName: "Status",
                       width: 130,
                       valueGetter: (_value, row) => row?.status || "—",
+                    },
+                    {
+                      field: "family_name",
+                      headerName: "Family",
+                      flex: 1,
+                      minWidth: 180,
+                      valueGetter: (_value, row) => row?.family_name || "—",
                     },
                     {
                       field: "positions",
@@ -957,11 +971,33 @@ export default function TeamProfilePage() {
             >
               {athleteStatusOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
           </Box>
+          <TextField
+            select
+            label="Family"
+            value={athleteForm.familyId}
+            onChange={(event) => setAthleteForm((prev) => ({ ...prev, familyId: event.target.value }))}
+            sx={classes.input}
+          >
+            <MenuItem value="">Unassigned</MenuItem>
+            {families.map((family) => (
+              <MenuItem key={family.id} value={String(family.id)}>
+                {family.name}
+              </MenuItem>
+            ))}
+          </TextField>
+          {athleteForm.familyId && (
+            <Box sx={classes.statCard}>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Selected family</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+                {familyMap.get(String(athleteForm.familyId))?.primary_guardian_name || familyMap.get(String(athleteForm.familyId))?.name || "—"}
+              </Typography>
+            </Box>
+          )}
           <TextField
             label="Positions"
             value={athleteForm.positions}

@@ -35,6 +35,35 @@ export const emptyContact = {
   notes: "",
 };
 
+export const emptyFamily = {
+  name: "",
+  status: "active",
+  primaryGuardianName: "",
+  primaryEmail: "",
+  primaryPhone: "",
+  street1: "",
+  street2: "",
+  city: "",
+  state: "",
+  postalCode: "",
+  country: "USA",
+  balanceDue: "",
+  lastPaymentDate: "",
+  lastPaymentAmount: "",
+  notes: "",
+};
+
+export const emptyGuardian = {
+  firstName: "",
+  lastName: "",
+  fullName: "",
+  email: "",
+  phone: "",
+  isPrimaryGuardian: false,
+  status: "active",
+  notes: "",
+};
+
 export const emptyPractice = {
   teamId: "",
   contactId: "",
@@ -46,6 +75,7 @@ export const emptyPractice = {
 };
 
 export const emptyAthlete = {
+  familyId: "",
   firstName: "",
   lastName: "",
   dob: "",

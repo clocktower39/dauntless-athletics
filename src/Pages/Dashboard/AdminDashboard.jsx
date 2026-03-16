@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import BusinessIcon from "@mui/icons-material/Business";
 import ContactsIcon from "@mui/icons-material/Contacts";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,6 +46,7 @@ export default function AdminDashboard() {
     () => [
       { id: "overview", label: "Overview", icon: <DashboardOutlinedIcon /> },
       { id: "organizations", label: "Organizations", icon: <BusinessIcon /> },
+      { id: "families", label: "Families", icon: <PeopleAltOutlinedIcon /> },
       { id: "teams", label: "Teams", icon: <EventNoteIcon /> },
       { id: "people", label: "People", icon: <ContactsIcon /> },
       { id: "surveys", label: "Surveys", icon: <AssignmentOutlinedIcon /> },

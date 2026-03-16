@@ -4,6 +4,7 @@ const dashboardSlice = createSlice({
   name: "dashboard",
   initialState: {
     organizations: [],
+    families: [],
     teams: [],
     seasons: [],
     contacts: [],
@@ -15,6 +16,9 @@ const dashboardSlice = createSlice({
   reducers: {
     setOrganizations(state, action) {
       state.organizations = action.payload || [];
+    },
+    setFamilies(state, action) {
+      state.families = action.payload || [];
     },
     setTeams(state, action) {
       state.teams = action.payload || [];
@@ -42,6 +46,7 @@ const dashboardSlice = createSlice({
 
 export const {
   setOrganizations,
+  setFamilies,
   setTeams,
   setSeasons,
   setContacts,
