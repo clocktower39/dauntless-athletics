@@ -38,6 +38,7 @@ export default function PeoplePage() {
         contact.phone,
         contact.organization_name,
         contact.team_name,
+        contact.team_names,
       ]
         .some((field) => String(field || "").toLowerCase().includes(term))
     );

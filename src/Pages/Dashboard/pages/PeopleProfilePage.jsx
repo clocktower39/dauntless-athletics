@@ -74,6 +74,11 @@ export default function PeopleProfilePage() {
     if (contact) {
       setContactForm({
         teamId: contact.team_id ? String(contact.team_id) : "",
+        teamIds: Array.isArray(contact.team_ids)
+          ? contact.team_ids.map((item) => String(item))
+          : contact.team_id
+            ? [String(contact.team_id)]
+            : [],
         organizationId: contact.organization_id ? String(contact.organization_id) : "",
         name: contact.name || "",
         role: contact.role || "",
@@ -102,7 +107,8 @@ export default function PeopleProfilePage() {
       setDataError("");
       const payload = {
         organization_id: contactForm.organizationId || null,
-        team_id: contactForm.teamId || null,
+        team_id: contactForm.teamIds[0] || contactForm.teamId || null,
+        team_ids: contactForm.teamIds,
         name: contactForm.name,
         role: contactForm.role,
         audience: contactForm.audience,
@@ -204,7 +210,12 @@ export default function PeopleProfilePage() {
             <Box sx={classes.statCard}>
               <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Team</Typography>
               <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {contactForm.teamId ? teamMap.get(String(contactForm.teamId))?.name || "—" : "Unassigned"}
+                {contactForm.teamIds.length > 0
+                  ? contactForm.teamIds
+                      .map((teamId) => teamMap.get(String(teamId))?.name)
+                      .filter(Boolean)
+                      .join(", ")
+                  : "Unassigned"}
               </Typography>
             </Box>
           </Box>
@@ -282,13 +293,17 @@ export default function PeopleProfilePage() {
             onChange={(event) => {
               const nextOrg = event.target.value;
               setContactForm((prev) => {
-                const nextTeamId =
-                  nextOrg && prev.teamId
-                    ? String(teamMap.get(String(prev.teamId))?.organization_id || "") === nextOrg
-                      ? prev.teamId
-                      : ""
-                    : prev.teamId;
-                return { ...prev, organizationId: nextOrg, teamId: nextTeamId };
+                const nextTeamIds = nextOrg
+                  ? prev.teamIds.filter(
+                      (teamId) => String(teamMap.get(String(teamId))?.organization_id || "") === nextOrg
+                    )
+                  : prev.teamIds;
+                return {
+                  ...prev,
+                  organizationId: nextOrg,
+                  teamIds: nextTeamIds,
+                  teamId: nextTeamIds[0] || "",
+                };
               });
             }}
             sx={classes.input}
@@ -303,31 +318,41 @@ export default function PeopleProfilePage() {
           </TextField>
           <TextField
             select
-            label="Team (optional)"
-            value={contactForm.teamId}
+            label="Teams (optional)"
+            value={contactForm.teamIds}
             onChange={(event) => {
-              const nextTeamId = event.target.value;
+              const nextTeamIds = typeof event.target.value === "string"
+                ? event.target.value.split(",").filter(Boolean)
+                : event.target.value;
               setContactForm((prev) => {
+                const firstTeam = nextTeamIds[0];
                 const nextOrgId =
-                  nextTeamId && teamMap.get(String(nextTeamId))?.organization_id
-                    ? String(teamMap.get(String(nextTeamId))?.organization_id)
+                  firstTeam && teamMap.get(String(firstTeam))?.organization_id
+                    ? String(teamMap.get(String(firstTeam))?.organization_id)
                     : prev.organizationId;
-                return { ...prev, teamId: nextTeamId, organizationId: nextOrgId };
+                return { ...prev, teamIds: nextTeamIds, teamId: firstTeam || "", organizationId: nextOrgId };
               });
             }}
             sx={classes.input}
             disabled={mode === "view"}
+            SelectProps={{
+              multiple: true,
+              renderValue: (selected) =>
+                (selected || [])
+                  .map((teamId) => teamMap.get(String(teamId))?.name)
+                  .filter(Boolean)
+                  .join(", "),
+            }}
           >
-            <MenuItem value="">Unassigned</MenuItem>
             {relatedTeams.map((team) => (
-              <MenuItem key={team.id} value={team.id}>
+              <MenuItem key={team.id} value={String(team.id)}>
                 {team.name}
               </MenuItem>
             ))}
           </TextField>
-            {contactForm.teamId && (
+            {contactForm.teamIds.length > 0 && (
               <DataGrid
-                rows={relatedTeams.filter((team) => String(team.id) === String(contactForm.teamId))}
+                rows={relatedTeams.filter((team) => contactForm.teamIds.includes(String(team.id)))}
                 columns={[
                   {
                     field: "name",

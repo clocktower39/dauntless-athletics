@@ -26,10 +26,22 @@ export default function MessagePrepPage() {
         if (!byId.has(key)) byId.set(key, []);
         byId.get(key).push(contact);
       }
-      if (contact.team_name) {
-        const key = String(contact.team_name).trim().toLowerCase();
+      const teamNames = contact.team_names
+        ? String(contact.team_names).split(",").map((name) => name.trim()).filter(Boolean)
+        : contact.team_name
+          ? [String(contact.team_name).trim()]
+          : [];
+      teamNames.forEach((teamName) => {
+        const key = teamName.toLowerCase();
         if (!byName.has(key)) byName.set(key, []);
         byName.get(key).push(contact);
+      });
+      if (Array.isArray(contact.team_ids)) {
+        contact.team_ids.forEach((teamId) => {
+          const key = String(teamId);
+          if (!byId.has(key)) byId.set(key, []);
+          byId.get(key).push(contact);
+        });
       }
     });
     return { contactsByTeamId: byId, contactsByTeamName: byName };

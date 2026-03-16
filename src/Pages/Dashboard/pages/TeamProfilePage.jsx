@@ -69,7 +69,11 @@ export default function TeamProfilePage() {
   }, [isNew, team?.season_id, teamForm.seasonId]);
 
   const contactsForTeam = useMemo(
-    () => contacts.filter((contact) => Number(contact.team_id) === Number(teamIdNumber)),
+    () =>
+      contacts.filter((contact) => {
+        if (Number(contact.team_id) === Number(teamIdNumber)) return true;
+        return Array.isArray(contact.team_ids) && contact.team_ids.some((id) => Number(id) === Number(teamIdNumber));
+      }),
     [contacts, teamIdNumber]
   );
 

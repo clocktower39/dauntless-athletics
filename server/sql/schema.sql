@@ -116,6 +116,15 @@ CREATE TABLE IF NOT EXISTS contacts (
 CREATE INDEX IF NOT EXISTS contacts_team_id_idx ON contacts (team_id);
 CREATE INDEX IF NOT EXISTS contacts_organization_id_idx ON contacts (organization_id);
 
+CREATE TABLE IF NOT EXISTS contact_team (
+  contact_id BIGINT NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+  team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (contact_id, team_id)
+);
+
+CREATE INDEX IF NOT EXISTS contact_team_team_id_idx ON contact_team (team_id);
+
 CREATE TABLE IF NOT EXISTS practices (
   id BIGSERIAL PRIMARY KEY,
   team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,

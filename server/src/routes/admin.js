@@ -911,7 +911,7 @@ router.get("/teams", async (req, res) => {
             organizations.name AS organization_name,
             organizations.type AS organization_type,
             seasons.name AS season_name,
-            COUNT(DISTINCT contacts.id)::int AS contact_count,
+            COUNT(DISTINCT contact_team.contact_id)::int AS contact_count,
             COUNT(DISTINCT athlete_team.athlete_id) FILTER (
               WHERE athlete_team.status = 'active'
                 AND athlete_team.season_id = teams.season_id
@@ -919,7 +919,7 @@ router.get("/teams", async (req, res) => {
      FROM teams
      LEFT JOIN organizations ON organizations.id = teams.organization_id
      LEFT JOIN seasons ON seasons.id = teams.season_id
-     LEFT JOIN contacts ON contacts.team_id = teams.id
+     LEFT JOIN contact_team ON contact_team.team_id = teams.id
      LEFT JOIN athlete_team ON athlete_team.team_id = teams.id
      ${whereClause}
      GROUP BY teams.id, organizations.name, organizations.type, seasons.name
@@ -1340,7 +1340,11 @@ router.get("/contacts", async (req, res) => {
 
   if (teamId) {
     params.push(teamId);
-    filters.push(`contacts.team_id = $${params.length}`);
+    filters.push(`EXISTS (
+      SELECT 1 FROM contact_team contact_team_filter
+      WHERE contact_team_filter.contact_id = contacts.id
+        AND contact_team_filter.team_id = $${params.length}
+    )`);
   }
 
   if (organizationId) {
@@ -1349,7 +1353,7 @@ router.get("/contacts", async (req, res) => {
   }
 
   if (unassigned) {
-    filters.push("contacts.team_id IS NULL");
+    filters.push("NOT EXISTS (SELECT 1 FROM contact_team contact_team_unassigned WHERE contact_team_unassigned.contact_id = contacts.id)");
   }
 
   const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
@@ -1357,13 +1361,21 @@ router.get("/contacts", async (req, res) => {
   const result = await query(
     `SELECT contacts.id, contacts.team_id, contacts.organization_id, contacts.name, contacts.role, contacts.audience,
             contacts.email, contacts.phone, contacts.notes, contacts.created_at,
-            teams.name AS team_name,
-            COALESCE(contacts.organization_id, teams.organization_id) AS resolved_organization_id,
-            organizations.name AS organization_name, organizations.type AS organization_type
+            primary_team.name AS team_name,
+            COALESCE(contacts.organization_id, primary_team.organization_id) AS resolved_organization_id,
+            organizations.name AS organization_name, organizations.type AS organization_type,
+            ARRAY_REMOVE(ARRAY_AGG(DISTINCT contact_team.team_id), NULL) AS team_ids,
+            COALESCE(
+              STRING_AGG(DISTINCT teams.name, ', ' ORDER BY teams.name),
+              primary_team.name
+            ) AS team_names
      FROM contacts
-     LEFT JOIN teams ON teams.id = contacts.team_id
-     LEFT JOIN organizations ON organizations.id = COALESCE(contacts.organization_id, teams.organization_id)
+     LEFT JOIN contact_team ON contact_team.contact_id = contacts.id
+     LEFT JOIN teams ON teams.id = contact_team.team_id
+     LEFT JOIN teams primary_team ON primary_team.id = contacts.team_id
+     LEFT JOIN organizations ON organizations.id = COALESCE(contacts.organization_id, primary_team.organization_id)
      ${whereClause}
+     GROUP BY contacts.id, primary_team.name, primary_team.organization_id, organizations.name, organizations.type
      ORDER BY contacts.created_at DESC`,
     params
   );
@@ -1375,6 +1387,17 @@ router.post("/contacts", async (req, res) => {
   const hasTeamId = Object.prototype.hasOwnProperty.call(req.body || {}, "team_id");
   const rawTeamId = req.body?.team_id;
   const teamId = rawTeamId === "" || rawTeamId === null ? null : Number(rawTeamId);
+  const requestedTeamIds = Array.isArray(req.body?.team_ids)
+    ? req.body.team_ids
+        .map((value) => Number(value))
+        .filter((value) => Number.isInteger(value) && value > 0)
+    : [];
+  const normalizedTeamIds = Array.from(
+    new Set([
+      ...requestedTeamIds,
+      ...(Number.isInteger(teamId) && teamId > 0 ? [teamId] : []),
+    ])
+  );
   const hasOrganizationId = Object.prototype.hasOwnProperty.call(req.body || {}, "organization_id");
   const rawOrganizationId = req.body?.organization_id;
   const organizationId =
@@ -1392,15 +1415,19 @@ router.post("/contacts", async (req, res) => {
 
   let resolvedOrganizationId = null;
 
-  if (hasTeamId && teamId !== null) {
-    if (!Number.isInteger(teamId) || teamId < 1) {
-      return res.status(400).json({ error: "team_id must be a valid team." });
+  if (hasTeamId && teamId !== null && (!Number.isInteger(teamId) || teamId < 1)) {
+    return res.status(400).json({ error: "team_id must be a valid team." });
+  }
+
+  if (normalizedTeamIds.length > 0) {
+    const teamResult = await query(
+      "SELECT id, organization_id FROM teams WHERE id = ANY($1::bigint[])",
+      [normalizedTeamIds]
+    );
+    if (teamResult.rowCount !== normalizedTeamIds.length) {
+      return res.status(404).json({ error: "One or more teams were not found." });
     }
-    const teamResult = await query("SELECT id, organization_id FROM teams WHERE id = $1", [teamId]);
-    if (teamResult.rowCount === 0) {
-      return res.status(404).json({ error: "Team not found." });
-    }
-    resolvedOrganizationId = teamResult.rows[0].organization_id || null;
+    resolvedOrganizationId = teamResult.rows[0]?.organization_id || null;
   }
 
   if (hasOrganizationId && organizationId !== null) {
@@ -1415,23 +1442,41 @@ router.post("/contacts", async (req, res) => {
 
   const finalOrganizationId = hasOrganizationId ? organizationId : resolvedOrganizationId;
 
-  const result = await query(
-    `INSERT INTO contacts (team_id, organization_id, name, role, audience, email, phone, notes)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-     RETURNING id, team_id, organization_id, name, role, audience, email, phone, notes, created_at`,
-    [
-      hasTeamId ? teamId : null,
-      finalOrganizationId || null,
-      name,
-      role || null,
-      audience || null,
-      email || null,
-      phone || null,
-      notes || null,
-    ]
-  );
+  const client = await getClient();
+  try {
+    await client.query("BEGIN");
+    const primaryTeamId = normalizedTeamIds[0] || (hasTeamId ? teamId : null);
+    const result = await client.query(
+      `INSERT INTO contacts (team_id, organization_id, name, role, audience, email, phone, notes)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING id, team_id, organization_id, name, role, audience, email, phone, notes, created_at`,
+      [
+        primaryTeamId,
+        finalOrganizationId || null,
+        name,
+        role || null,
+        audience || null,
+        email || null,
+        phone || null,
+        notes || null,
+      ]
+    );
 
-  return res.status(201).json({ contact: result.rows[0] });
+    for (const assignedTeamId of normalizedTeamIds) {
+      await client.query(
+        "INSERT INTO contact_team (contact_id, team_id) VALUES ($1, $2) ON CONFLICT (contact_id, team_id) DO NOTHING",
+        [result.rows[0].id, assignedTeamId]
+      );
+    }
+
+    await client.query("COMMIT");
+    return res.status(201).json({ contact: result.rows[0] });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to create contact." });
+  } finally {
+    client.release();
+  }
 });
 
 router.put("/contacts/:id", async (req, res) => {
@@ -1444,6 +1489,17 @@ router.put("/contacts/:id", async (req, res) => {
   const hasTeamId = Object.prototype.hasOwnProperty.call(body, "team_id");
   const rawTeamId = body.team_id;
   const teamId = rawTeamId === "" || rawTeamId === null ? null : Number(rawTeamId);
+  const requestedTeamIds = Array.isArray(body.team_ids)
+    ? body.team_ids
+        .map((value) => Number(value))
+        .filter((value) => Number.isInteger(value) && value > 0)
+    : [];
+  const normalizedTeamIds = Array.from(
+    new Set([
+      ...requestedTeamIds,
+      ...(Number.isInteger(teamId) && teamId > 0 ? [teamId] : []),
+    ])
+  );
   const hasOrganizationId = Object.prototype.hasOwnProperty.call(body, "organization_id");
   const rawOrganizationId = body.organization_id;
   const organizationId =
@@ -1457,16 +1513,22 @@ router.put("/contacts/:id", async (req, res) => {
 
   let resolvedOrganizationId = null;
 
-  if (hasTeamId) {
-    if (teamId !== null) {
-      if (!Number.isInteger(teamId) || teamId < 1) {
-        return res.status(400).json({ error: "team_id must be a valid team." });
+  if (hasTeamId && teamId !== null && (!Number.isInteger(teamId) || teamId < 1)) {
+    return res.status(400).json({ error: "team_id must be a valid team." });
+  }
+
+  if (hasTeamId || Array.isArray(body.team_ids)) {
+    if (normalizedTeamIds.length > 0) {
+      const teamResult = await query(
+        "SELECT id, organization_id FROM teams WHERE id = ANY($1::bigint[])",
+        [normalizedTeamIds]
+      );
+      if (teamResult.rowCount !== normalizedTeamIds.length) {
+        return res.status(404).json({ error: "One or more teams were not found." });
       }
-      const teamResult = await query("SELECT id, organization_id FROM teams WHERE id = $1", [teamId]);
-      if (teamResult.rowCount === 0) {
-        return res.status(404).json({ error: "Team not found." });
-      }
-      resolvedOrganizationId = teamResult.rows[0].organization_id || null;
+      resolvedOrganizationId = teamResult.rows[0]?.organization_id || null;
+    } else {
+      resolvedOrganizationId = null;
     }
   }
 
@@ -1491,7 +1553,7 @@ router.put("/contacts/:id", async (req, res) => {
 
   if (hasTeamId) {
     updateFields.push(`team_id = $${paramIndex++}`);
-    params.push(teamId);
+    params.push(normalizedTeamIds[0] || teamId);
   }
 
   if (hasOrganizationId) {
@@ -1533,17 +1595,38 @@ router.put("/contacts/:id", async (req, res) => {
 
   params.push(contactId);
 
-  const result = await query(
-    `UPDATE contacts SET ${updateFields.join(", ")} WHERE id = $${paramIndex}
-     RETURNING id, team_id, organization_id, name, role, audience, email, phone, notes, created_at`,
-    params
-  );
+  const client = await getClient();
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      `UPDATE contacts SET ${updateFields.join(", ")} WHERE id = $${paramIndex}
+       RETURNING id, team_id, organization_id, name, role, audience, email, phone, notes, created_at`,
+      params
+    );
 
-  if (result.rowCount === 0) {
-    return res.status(404).json({ error: "Contact not found." });
+    if (result.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Contact not found." });
+    }
+
+    if (hasTeamId || Array.isArray(body.team_ids)) {
+      await client.query("DELETE FROM contact_team WHERE contact_id = $1", [contactId]);
+      for (const assignedTeamId of normalizedTeamIds) {
+        await client.query(
+          "INSERT INTO contact_team (contact_id, team_id) VALUES ($1, $2) ON CONFLICT (contact_id, team_id) DO NOTHING",
+          [contactId, assignedTeamId]
+        );
+      }
+    }
+
+    await client.query("COMMIT");
+    return res.json({ contact: result.rows[0] });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    return res.status(500).json({ error: "Unable to update contact." });
+  } finally {
+    client.release();
   }
-
-  return res.json({ contact: result.rows[0] });
 });
 
 router.delete("/contacts/:id", async (req, res) => {
@@ -1619,7 +1702,12 @@ router.post("/practices", async (req, res) => {
 
   if (contactId) {
     const contactResult = await query(
-      "SELECT id FROM contacts WHERE id = $1 AND team_id = $2",
+      `SELECT contacts.id
+       FROM contacts
+       LEFT JOIN contact_team ON contact_team.contact_id = contacts.id
+       WHERE contacts.id = $1
+         AND (contacts.team_id = $2 OR contact_team.team_id = $2)
+       LIMIT 1`,
       [contactId, teamId]
     );
     if (contactResult.rowCount === 0) {
@@ -1671,7 +1759,12 @@ router.put("/practices/:id", async (req, res) => {
 
   if (contactId) {
     const contactResult = await query(
-      "SELECT id FROM contacts WHERE id = $1 AND team_id = $2",
+      `SELECT contacts.id
+       FROM contacts
+       LEFT JOIN contact_team ON contact_team.contact_id = contacts.id
+       WHERE contacts.id = $1
+         AND (contacts.team_id = $2 OR contact_team.team_id = $2)
+       LIMIT 1`,
       [contactId, teamId]
     );
     if (contactResult.rowCount === 0) {

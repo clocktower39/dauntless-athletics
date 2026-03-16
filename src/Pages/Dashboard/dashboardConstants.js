@@ -25,6 +25,7 @@ export const emptyTeam = {
 
 export const emptyContact = {
   teamId: "",
+  teamIds: [],
   organizationId: "",
   name: "",
   role: "",

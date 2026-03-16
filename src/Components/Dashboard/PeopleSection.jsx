@@ -140,7 +140,8 @@ export default function PeopleSection({
                 headerName: "Team",
                 flex: 1,
                 minWidth: 180,
-                valueGetter: (value, row) => resolveRow(value, row)?.team_name || "Unassigned",
+                valueGetter: (value, row) =>
+                  resolveRow(value, row)?.team_names || resolveRow(value, row)?.team_name || "Unassigned",
                 renderCell: (params) =>
                   params.row.team_id ? (
                     <Link component={RouterLink} to={`/dashboard/teams/${params.row.team_id}`} sx={linkSx}>
