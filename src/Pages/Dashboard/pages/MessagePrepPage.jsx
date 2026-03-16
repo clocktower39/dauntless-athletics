@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import classes from "../dashboardStyles";
 import { apiRequest, authHeader } from "../surveyApi";
 
-export default function MessagePrepPage() {
+export default function MessagePrepPage({ embedded = false }) {
   const [items, setItems] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const [error, setError] = useState("");
@@ -153,18 +153,19 @@ export default function MessagePrepPage() {
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       <Box sx={classes.section}>
-        <Box sx={classes.workspaceHeader}>
-          <Box>
-            <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>
-              Message Prep
-            </Typography>
-            <Typography sx={classes.breadcrumb}>Dashboard / Message Prep</Typography>
+        {!embedded && (
+          <Box sx={classes.workspaceHeader}>
+            <Box>
+              <Typography sx={{ fontWeight: 700, color: "var(--color-text)" }}>
+                Message Prep
+              </Typography>
+              <Typography sx={classes.breadcrumb}>Dashboard / Message Prep</Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
         {error && <Alert severity="error">{error}</Alert>}
         <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
-          <Button variant="contained" component="label" sx={classes.button}
-          >
+          <Button variant="contained" component="label" sx={classes.button}>
             Import JSON
             <input type="file" accept="application/json" hidden onChange={handleFileChange} />
           </Button>

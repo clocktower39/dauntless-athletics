@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router";
+import { BrowserRouter as Router, Route, Routes } from "react-router";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { HelmetProvider } from "react-helmet-async";
 import WebsiteHome from "./Pages/WebsitePages/WebsiteHome";
@@ -22,13 +22,10 @@ import TeamsPage from "./Pages/Dashboard/pages/TeamsPage";
 import TeamProfilePage from "./Pages/Dashboard/pages/TeamProfilePage";
 import PeoplePage from "./Pages/Dashboard/pages/PeoplePage";
 import PeopleProfilePage from "./Pages/Dashboard/pages/PeopleProfilePage";
-import SurveysPage from "./Pages/Dashboard/pages/SurveysPage";
+import SurveysHubPage from "./Pages/Dashboard/pages/SurveysHubPage";
 import SurveyProfilePage from "./Pages/Dashboard/pages/SurveyProfilePage";
-import CampaignsPage from "./Pages/Dashboard/pages/CampaignsPage";
 import CampaignProfilePage from "./Pages/Dashboard/pages/CampaignProfilePage";
-import ResponsesPage from "./Pages/Dashboard/pages/ResponsesPage";
 import ResponseProfilePage from "./Pages/Dashboard/pages/ResponseProfilePage";
-import MessagePrepPage from "./Pages/Dashboard/pages/MessagePrepPage";
 import appTheme from "./theme/appTheme";
 import "./App.css";
 
@@ -81,7 +78,6 @@ function App() {
           <> {/* App */}</>
         )}
         <Route path="/hs-coach-survey/:token" element={<CoachSurvey />} />
-        <Route path="/survey-admin/*" element={<Navigate to="/dashboard" replace />} />
         <Route
           path="/dashboard"
           element={
@@ -93,20 +89,16 @@ function App() {
         >
           <Route index element={<OverviewPage />} />
           <Route path="overview" element={<OverviewPage />} />
-          <Route path="clients" element={<Navigate to="/dashboard/organizations" replace />} />
           <Route path="organizations" element={<OrganizationsPage />} />
           <Route path="organizations/:organizationId" element={<OrganizationProfilePage />} />
           <Route path="teams" element={<TeamsPage />} />
           <Route path="teams/:teamId" element={<TeamProfilePage />} />
           <Route path="people" element={<PeoplePage />} />
           <Route path="people/:contactId" element={<PeopleProfilePage />} />
-          <Route path="surveys" element={<SurveysPage />} />
+          <Route path="surveys" element={<SurveysHubPage />} />
           <Route path="surveys/:surveyId" element={<SurveyProfilePage />} />
-          <Route path="campaigns" element={<CampaignsPage />} />
           <Route path="campaigns/:inviteId" element={<CampaignProfilePage />} />
-          <Route path="responses" element={<ResponsesPage />} />
           <Route path="responses/:responseId" element={<ResponseProfilePage />} />
-          <Route path="message-prep" element={<MessagePrepPage />} />
         </Route>
         <Route path="/survey-owner" element={<SurveyOwner />} />
         <Route path="*" element={<NotFoundPage />} />
