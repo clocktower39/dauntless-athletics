@@ -125,6 +125,29 @@ CREATE TABLE IF NOT EXISTS contact_team (
 
 CREATE INDEX IF NOT EXISTS contact_team_team_id_idx ON contact_team (team_id);
 
+CREATE TABLE IF NOT EXISTS employees (
+  id BIGSERIAL PRIMARY KEY,
+  org_id BIGINT NOT NULL REFERENCES orgs(id),
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  preferred_name TEXT,
+  title TEXT,
+  department TEXT,
+  employment_type TEXT NOT NULL DEFAULT 'contractor',
+  email TEXT,
+  phone TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  start_date DATE,
+  end_date DATE,
+  notes TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS employees_org_id_idx ON employees (org_id);
+CREATE INDEX IF NOT EXISTS employees_status_idx ON employees (status);
+CREATE INDEX IF NOT EXISTS employees_department_idx ON employees (department);
+
 CREATE TABLE IF NOT EXISTS practices (
   id BIGSERIAL PRIMARY KEY,
   team_id BIGINT NOT NULL REFERENCES teams(id) ON DELETE CASCADE,

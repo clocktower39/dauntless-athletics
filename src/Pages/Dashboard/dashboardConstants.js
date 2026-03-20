@@ -64,6 +64,22 @@ export const emptyGuardian = {
   notes: "",
 };
 
+export const emptyEmployee = {
+  organizationId: "",
+  firstName: "",
+  lastName: "",
+  preferredName: "",
+  title: "",
+  department: "",
+  employmentType: "contractor",
+  email: "",
+  phone: "",
+  status: "active",
+  startDate: "",
+  endDate: "",
+  notes: "",
+};
+
 export const emptyPractice = {
   teamId: "",
   contactId: "",

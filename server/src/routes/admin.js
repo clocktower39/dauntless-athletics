@@ -1705,6 +1705,203 @@ router.put("/parents/:id", async (req, res) => {
   }
 });
 
+router.get("/employees", async (req, res) => {
+  const organizationId = normalizeInteger(req.query.organization_id);
+  const status = normalizeNullableText(req.query.status);
+  const params = [];
+  const filters = [];
+
+  if (organizationId) {
+    params.push(organizationId);
+    filters.push(`employees.org_id = $${params.length}`);
+  }
+
+  if (status) {
+    params.push(status);
+    filters.push(`employees.status = $${params.length}`);
+  }
+
+  const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
+  const result = await query(
+    `SELECT employees.id, employees.org_id, employees.first_name, employees.last_name,
+            employees.preferred_name, employees.title, employees.department,
+            employees.employment_type, employees.email, employees.phone,
+            employees.status, employees.start_date, employees.end_date,
+            employees.notes, employees.created_at, employees.updated_at,
+            organizations.name AS organization_name
+     FROM employees
+     LEFT JOIN organizations ON organizations.org_id = employees.org_id
+     ${whereClause}
+     ORDER BY employees.last_name ASC, employees.first_name ASC, employees.id ASC`,
+    params
+  );
+
+  return res.json({ employees: result.rows });
+});
+
+router.get("/employees/:id", async (req, res) => {
+  const employeeId = Number(req.params.id);
+  if (!Number.isInteger(employeeId)) {
+    return res.status(400).json({ error: "Employee id is required." });
+  }
+
+  const result = await query(
+    `SELECT employees.id, employees.org_id, employees.first_name, employees.last_name,
+            employees.preferred_name, employees.title, employees.department,
+            employees.employment_type, employees.email, employees.phone,
+            employees.status, employees.start_date, employees.end_date,
+            employees.notes, employees.created_at, employees.updated_at,
+            organizations.name AS organization_name
+     FROM employees
+     LEFT JOIN organizations ON organizations.org_id = employees.org_id
+     WHERE employees.id = $1`,
+    [employeeId]
+  );
+
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Employee not found." });
+  }
+
+  return res.json({ employee: result.rows[0] });
+});
+
+router.post("/employees", async (req, res) => {
+  const firstName = normalizeText(req.body?.first_name);
+  const lastName = normalizeText(req.body?.last_name);
+  const preferredName = normalizeNullableText(req.body?.preferred_name);
+  const title = normalizeNullableText(req.body?.title);
+  const department = normalizeNullableText(req.body?.department);
+  const employmentType = normalizeNullableText(req.body?.employment_type) || "contractor";
+  const email = normalizeNullableText(req.body?.email);
+  const phone = normalizeNullableText(req.body?.phone);
+  const status = normalizeNullableText(req.body?.status) || "active";
+  const startDate =
+    typeof req.body?.start_date === "string" && req.body.start_date.trim() ? req.body.start_date.trim() : null;
+  const endDate =
+    typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
+  const notes = normalizeNullableText(req.body?.notes);
+  const orgId = normalizeInteger(req.body?.org_id) || DEFAULT_ORG_ID;
+
+  if (!firstName || !lastName) {
+    return res.status(400).json({ error: "First and last name are required." });
+  }
+
+  const result = await query(
+    `INSERT INTO employees (
+      org_id, first_name, last_name, preferred_name, title, department,
+      employment_type, email, phone, status, start_date, end_date, notes
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6,
+      $7, $8, $9, $10, $11, $12, $13
+    )
+    RETURNING id, org_id, first_name, last_name, preferred_name, title, department,
+              employment_type, email, phone, status, start_date, end_date,
+              notes, created_at, updated_at`,
+    [
+      orgId,
+      firstName,
+      lastName,
+      preferredName,
+      title,
+      department,
+      employmentType,
+      email,
+      phone,
+      status,
+      startDate,
+      endDate,
+      notes,
+    ]
+  );
+
+  return res.status(201).json({ employee: result.rows[0] });
+});
+
+router.put("/employees/:id", async (req, res) => {
+  const employeeId = Number(req.params.id);
+  if (!Number.isInteger(employeeId)) {
+    return res.status(400).json({ error: "Employee id is required." });
+  }
+
+  const firstName = normalizeText(req.body?.first_name);
+  const lastName = normalizeText(req.body?.last_name);
+  const preferredName = normalizeNullableText(req.body?.preferred_name);
+  const title = normalizeNullableText(req.body?.title);
+  const department = normalizeNullableText(req.body?.department);
+  const employmentType = normalizeNullableText(req.body?.employment_type) || "contractor";
+  const email = normalizeNullableText(req.body?.email);
+  const phone = normalizeNullableText(req.body?.phone);
+  const status = normalizeNullableText(req.body?.status) || "active";
+  const startDate =
+    typeof req.body?.start_date === "string" && req.body.start_date.trim() ? req.body.start_date.trim() : null;
+  const endDate =
+    typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
+  const notes = normalizeNullableText(req.body?.notes);
+  const orgId = normalizeInteger(req.body?.org_id) || DEFAULT_ORG_ID;
+
+  if (!firstName || !lastName) {
+    return res.status(400).json({ error: "First and last name are required." });
+  }
+
+  const result = await query(
+    `UPDATE employees
+     SET org_id = $1,
+         first_name = $2,
+         last_name = $3,
+         preferred_name = $4,
+         title = $5,
+         department = $6,
+         employment_type = $7,
+         email = $8,
+         phone = $9,
+         status = $10,
+         start_date = $11,
+         end_date = $12,
+         notes = $13,
+         updated_at = NOW()
+     WHERE id = $14
+     RETURNING id, org_id, first_name, last_name, preferred_name, title, department,
+               employment_type, email, phone, status, start_date, end_date,
+               notes, created_at, updated_at`,
+    [
+      orgId,
+      firstName,
+      lastName,
+      preferredName,
+      title,
+      department,
+      employmentType,
+      email,
+      phone,
+      status,
+      startDate,
+      endDate,
+      notes,
+      employeeId,
+    ]
+  );
+
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Employee not found." });
+  }
+
+  return res.json({ employee: result.rows[0] });
+});
+
+router.delete("/employees/:id", async (req, res) => {
+  const employeeId = Number(req.params.id);
+  if (!Number.isInteger(employeeId)) {
+    return res.status(400).json({ error: "Employee id is required." });
+  }
+
+  const result = await query("DELETE FROM employees WHERE id = $1 RETURNING id", [employeeId]);
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Employee not found." });
+  }
+
+  return res.json({ employeeId, deleted: true });
+});
+
 router.get("/athletes", async (req, res) => {
   const teamId = normalizeInteger(req.query.team_id);
   const seasonId = normalizeInteger(req.query.season_id);

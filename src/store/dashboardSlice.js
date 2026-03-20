@@ -5,6 +5,7 @@ const dashboardSlice = createSlice({
   initialState: {
     organizations: [],
     families: [],
+    employees: [],
     teams: [],
     seasons: [],
     contacts: [],
@@ -19,6 +20,9 @@ const dashboardSlice = createSlice({
     },
     setFamilies(state, action) {
       state.families = action.payload || [];
+    },
+    setEmployees(state, action) {
+      state.employees = action.payload || [];
     },
     setTeams(state, action) {
       state.teams = action.payload || [];
@@ -47,6 +51,7 @@ const dashboardSlice = createSlice({
 export const {
   setOrganizations,
   setFamilies,
+  setEmployees,
   setTeams,
   setSeasons,
   setContacts,

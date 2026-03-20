@@ -20,6 +20,8 @@ import OrganizationsPage from "./Pages/Dashboard/pages/OrganizationsPage";
 import OrganizationProfilePage from "./Pages/Dashboard/pages/OrganizationProfilePage";
 import FamiliesPage from "./Pages/Dashboard/pages/FamiliesPage";
 import FamilyProfilePage from "./Pages/Dashboard/pages/FamilyProfilePage";
+import EmployeesPage from "./Pages/Dashboard/pages/EmployeesPage";
+import EmployeeProfilePage from "./Pages/Dashboard/pages/EmployeeProfilePage";
 import TeamsPage from "./Pages/Dashboard/pages/TeamsPage";
 import TeamProfilePage from "./Pages/Dashboard/pages/TeamProfilePage";
 import PeoplePage from "./Pages/Dashboard/pages/PeoplePage";
@@ -95,6 +97,8 @@ function App() {
           <Route path="organizations/:organizationId" element={<OrganizationProfilePage />} />
           <Route path="families" element={<FamiliesPage />} />
           <Route path="families/:familyId" element={<FamilyProfilePage />} />
+          <Route path="employees" element={<EmployeesPage />} />
+          <Route path="employees/:employeeId" element={<EmployeeProfilePage />} />
           <Route path="teams" element={<TeamsPage />} />
           <Route path="teams/:teamId" element={<TeamProfilePage />} />
           <Route path="people" element={<PeoplePage />} />
