@@ -209,7 +209,7 @@ export default function Home() {
                 </Typography>
                 <Typography sx={{ mt: 1, color: "var(--color-muted)" }}>
                   We appreciate the love and support you have shown us these past years and are
-                  excited for year 9.
+                  excited for year 10.
                 </Typography>
                 <Stack spacing={1.2} sx={{ mt: 2, color: "var(--color-text)" }}>
                   <Typography sx={{ fontSize: "0.95rem" }}>
@@ -254,7 +254,7 @@ export default function Home() {
                   paddingBottom: "1.4em",
                 }}
               >
-                9 Years{" "}
+                10 Years{" "}
                 <Typography variant="inherit" component="span"  sx={{ fontFamily: "var(--font-display)", fontWeight: 200 }}>
                   Going Strong
                 </Typography>
@@ -265,14 +265,14 @@ export default function Home() {
                   <Grid size={12}>
                     <Grid>
                       <Typography sx={{ color: "var(--color-muted)" }}>
-                        As we approach 9 years of being open we would like to take the time to thank
-                        each and everyone of you for being a part of our journey the last 9 years!
+                        As we approach 10 years of being open we would like to take the time to thank
+                        each and everyone of you for being a part of our journey the last 10 years!
                         We appreciate all the love and support you have shown us these past years.
                       </Typography>
                       <br />
 
                       <Typography sx={{ color: "var(--color-muted)" }}>
-                        We are excited for the journey of year 9 and can’t wait to see the
+                        We are excited for the journey of year 10 and can’t wait to see the
                         improvements and goals being achieved by every athlete here!
                       </Typography>
                     </Grid>
