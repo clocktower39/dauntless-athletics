@@ -379,11 +379,11 @@ export const holidayScheduleEvents = [
   {
     Id: 20260329,
     Subject: "10 Years of Dauntless Athletics",
-    StartTime: new Date(2026, 2, 29, 0, 0),
-    EndTime: new Date(2026, 2, 30, 0, 0),
-    IsAllDay: true,
+    StartTime: new Date(2026, 2, 29, 14, 0),
+    EndTime: new Date(2026, 2, 29, 18, 0),
+    IsAllDay: false,
     zIndex: 1,
-    description: "Come help us celebrate 10 years of Dauntless Athletics. Save the Date: March 29, 2026. Thank you for being part of this incredible journey over the 10 years.",
+    description: "Come help us celebrate 10 years of Dauntless Athletics with us on Sunday March 29, 2026. Thank you for being part of this incredible journey over the 10 years.",
   },
   {
     Id: 20250418,
