@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import WebsiteNavbar from "./WebsiteNavbar";
 import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import { Schedule as ScheduleIcon } from "@mui/icons-material";
@@ -473,6 +474,48 @@ const data = [
 ];
 
 export default function ClassSchedule() {
+  const scheduleWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.innerWidth > 768) return;
+
+    let attempts = 0;
+    let timer: number | null = null;
+
+    const scrollToCurrentDay = () => {
+      const wrapper = scheduleWrapperRef.current;
+      if (!wrapper) return;
+
+      const scheduleRoot = wrapper.querySelector(".e-schedule.responsive-week");
+      const contentWrap = scheduleRoot?.querySelector(".e-content-wrap") as HTMLElement | null;
+      const headerWrap = scheduleRoot?.querySelector(".e-date-header-wrap") as HTMLElement | null;
+      const currentHeader = scheduleRoot?.querySelector(".e-header-cells.e-current-day") as HTMLElement | null;
+
+      if (!contentWrap || !currentHeader) {
+        attempts += 1;
+        if (attempts < 8) {
+          timer = window.setTimeout(scrollToCurrentDay, 180);
+        }
+        return;
+      }
+
+      const targetLeft = Math.max(currentHeader.offsetLeft - 72, 0);
+      contentWrap.scrollTo({ left: targetLeft, behavior: "smooth" });
+      if (headerWrap) {
+        headerWrap.scrollTo({ left: targetLeft, behavior: "smooth" });
+      }
+    };
+
+    timer = window.setTimeout(scrollToCurrentDay, 220);
+
+    return () => {
+      if (timer) {
+        window.clearTimeout(timer);
+      }
+    };
+  }, []);
+
   const DaySchedule = ({ day, activities }: ScheduleDay) => {
     const ActivityDetails = ({ activity, time, color = "#FFF" }: { activity: string; time: string; color?: string }) => {
       return (
@@ -607,7 +650,7 @@ export default function ClassSchedule() {
               <Divider sx={{ bgcolor: "var(--color-accent)" }} />
             </Grid>
           </Grid>
-          <Box sx={{ marginTop: "20px", overflow: "hidden" }}>
+          <Box ref={scheduleWrapperRef} sx={{ marginTop: "20px", overflow: "hidden" }}>
             <Box
               sx={{
                 width: { xs: "149.25%", sm: "125%", md: "100%" },
