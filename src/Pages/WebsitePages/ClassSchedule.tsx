@@ -607,33 +607,43 @@ export default function ClassSchedule() {
               <Divider sx={{ bgcolor: "var(--color-accent)" }} />
             </Grid>
           </Grid>
-          <ScheduleComponent
-            selectedDate={new Date()}
-            startHour="09:00"
-            endHour="22:30"
-            workDays={[1, 2, 3, 4, 5, 6]}
-            currentView="Week"
-            cssClass="responsive-week"
-            eventSettings={{
-              dataSource: data,
-              fields: {
-                description: { name: "description" },
-                link: { name: "link" },
-              },
-            }}
-            eventRendered={({ element, data }) => {
-              if (data.color) {
-                element.style.backgroundColor = data.color;
-              }
-              if (data.zIndex) {
-                element.style.zIndex = data.zIndex;
-              }
-            }}
-            popupOpen={onPopupOpen}
-            readonly
-          >
-            <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
-          </ScheduleComponent>
+          <Box sx={{ marginTop: "20px", overflow: "hidden" }}>
+            <Box
+              sx={{
+                width: { xs: "149.25%", sm: "125%", md: "100%" },
+                transform: { xs: "scale(0.67)", sm: "scale(0.8)", md: "none" },
+                transformOrigin: "top left",
+                marginBottom: { xs: "-32%", sm: "-12%", md: 0 },
+              }}
+            >
+              <ScheduleComponent
+                selectedDate={new Date()}
+                startHour="09:00"
+                endHour="22:30"
+                workDays={[1, 2, 3, 4, 5, 6]}
+                currentView="Week"
+                cssClass="responsive-week"
+                eventSettings={{
+                  dataSource: data,
+                  fields: {
+                    description: { name: "description" },
+                  },
+                }}
+                eventRendered={({ element, data }) => {
+                  if (data.color) {
+                    element.style.backgroundColor = data.color;
+                  }
+                  if (data.zIndex) {
+                    element.style.zIndex = data.zIndex;
+                  }
+                }}
+                popupOpen={onPopupOpen}
+                readonly
+              >
+                <Inject services={[Day, Week, WorkWeek, Month, Agenda]} />
+              </ScheduleComponent>
+            </Box>
+          </Box>
 
           {schedule.map((day) => (
             <DaySchedule day={day.day} activities={day.activities} />
