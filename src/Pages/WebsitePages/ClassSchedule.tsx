@@ -383,7 +383,7 @@ export const holidayScheduleEvents = [
     EndTime: new Date(2026, 2, 29, 18, 0),
     IsAllDay: false,
     zIndex: 1,
-    description: "Come help us celebrate 10 years of Dauntless Athletics with us on Sunday March 29, 2026. Thank you for being part of this incredible journey over the 10 years.",
+    description: "Come help us celebrate 10 years of Dauntless Athletics on Sunday March 29, 2026 from 2:00 pm - 6:00 pm. Thank you for being part of this incredible journey over the 10 years.",
   },
   {
     Id: 20250418,
