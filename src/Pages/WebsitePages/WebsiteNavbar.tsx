@@ -95,33 +95,47 @@ export default function WebsiteNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const toolbarRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
+  const announcementWindowDays = 10;
 
-  const getNextHoliday = (events: HolidayEvent[]) => {
+  const getNextAnnouncementHoliday = (events: HolidayEvent[]) => {
     const today = dayjs();
-    const upcoming = events.filter((e) => dayjs(e.EndTime).isAfter(today, "day"));
+    const upcomingAnnouncements = events
+      .filter((event) => event.description?.trim())
+      .filter((event) => !dayjs(event.EndTime).endOf("day").isBefore(today))
+      .sort((a, b) => dayjs(a.StartTime).diff(dayjs(b.StartTime)));
 
-    if (upcoming.length === 0) return null;
-    upcoming.sort((a, b) => dayjs(a.StartTime).diff(dayjs(b.StartTime)));
-    return upcoming[0];
+    return (
+      upcomingAnnouncements.find((event) => (
+        dayjs(event.StartTime).startOf("day").diff(today.startOf("day"), "day") <= announcementWindowDays
+      )) ?? null
+    );
   };
 
-  const nextHoliday = getNextHoliday(holidayScheduleEvents);
-
-  const today = dayjs();
-  const daysUntilHoliday = nextHoliday
-    ? dayjs(nextHoliday.StartTime).diff(today, "day")
-    : Infinity;
-
-  const hasAnnouncement = !!nextHoliday && daysUntilHoliday <= 10;
-  const announcementMessage = nextHoliday?.description;
+  const nextHoliday = getNextAnnouncementHoliday(holidayScheduleEvents);
+  const hasAnnouncement = !!nextHoliday;
+  const announcementMessage = nextHoliday?.description ?? "";
 
   const announcementKey = nextHoliday
     ? `announcementDismissed_${nextHoliday.Id}`
     : null;
-  const [dismissed, setDismissed] = useState(() => {
-    if (!announcementKey) return false;
-    return localStorage.getItem(announcementKey) === "true";
-  });
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    if (!announcementKey) {
+      setDismissed(false);
+      return;
+    }
+
+    setDismissed(localStorage.getItem(announcementKey) === "true");
+  }, [announcementKey]);
+
+  useEffect(() => {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("announcementDismissed_") && key !== announcementKey) {
+        localStorage.removeItem(key);
+      }
+    });
+  }, [announcementKey]);
 
   const handleDismiss = () => {
     if (!announcementKey) return;
@@ -134,13 +148,6 @@ export default function WebsiteNavbar() {
     localStorage.removeItem(announcementKey);
     setDismissed(false);
   };
-
-  // Cleanup old keys
-  Object.keys(localStorage).forEach((key) => {
-    if (key.startsWith("announcementDismissed_") && key !== announcementKey) {
-      localStorage.removeItem(key);
-    }
-  });
 
   const handleMenuClick = () => {
     setMenuOpen(true);
