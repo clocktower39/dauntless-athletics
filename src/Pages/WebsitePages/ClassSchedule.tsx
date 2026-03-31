@@ -376,6 +376,15 @@ const buildSchedule = (sessions: ClassSession[]): ScheduleDay[] => {
 
 const schedule = buildSchedule(classSessions);
 
+const formatClosureRange = (startDate: Date, endDateExclusive: Date) => {
+  const endDateInclusive = new Date(endDateExclusive);
+  endDateInclusive.setDate(endDateInclusive.getDate() - 1);
+
+  return `${dayjs.utc(startDate).format("dddd, MMMM Do")} through ${dayjs
+    .utc(endDateInclusive)
+    .format("dddd, MMMM Do")}`;
+};
+
 export const holidayScheduleEvents = [
   {
     Id: 20260329,
@@ -394,6 +403,10 @@ export const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
+    description: `We are closed for all classes from ${formatClosureRange(
+      new Date(2026, 3, 3, 0, 0),
+      new Date(2026, 3, 6, 0, 0),
+    )}. Happy Easter!`,
   },
   {
     Id: 20250526,
@@ -403,6 +416,10 @@ export const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
+    description: `We are closed for all classes from ${formatClosureRange(
+      new Date(2026, 4, 25, 0, 0),
+      new Date(2026, 4, 26, 0, 0),
+    )}. Happy Memorial Day!`,
   },
   {
     Id: 20251031,
@@ -412,6 +429,10 @@ export const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
+    description: `We are closed for all classes from ${formatClosureRange(
+      new Date(2026, 5, 28, 0, 0),
+      new Date(2026, 6, 6, 0, 0),
+    )}. Enjoy the holiday break!`,
   },
   {
     Id: 20251031,
@@ -421,6 +442,10 @@ export const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
+    description: `We are closed for all classes from ${formatClosureRange(
+      new Date(2026, 8, 7, 0, 0),
+      new Date(2026, 8, 8, 0, 0),
+    )}. Happy Labor Day!`,
   },
   {
     Id: 20251126,
@@ -430,14 +455,10 @@ export const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
-    description: `We are closed for all classes 
-  from ${dayjs
-        .utc(new Date("2025-11-26"))
-        .format("dddd, MMMM Do")}
-      through ${dayjs
-        .utc(new Date("2025-11-30"))
-        .format("dddd, MMMM Do")}.
-  Happy Thanksgiving!`,
+    description: `We are closed for all classes from ${formatClosureRange(
+      new Date(2026, 10, 25, 0, 0),
+      new Date(2026, 10, 30, 0, 0),
+    )}. Happy Thanksgiving!`,
 
   },
   {
@@ -448,14 +469,10 @@ export const holidayScheduleEvents = [
     IsAllDay: true,
     IsBlock: true,
     zIndex: 1,
-    description: `We are closed for all classes 
-  from ${dayjs
-        .utc(new Date("2025-12-24"))
-        .format("dddd, MMMM Do")}
-      through ${dayjs
-        .utc(new Date("2026-01-04"))
-        .format("dddd, MMMM Do")}.
-  Happy Holidays!`,
+    description: `We are closed for all classes from ${formatClosureRange(
+      new Date(2026, 11, 24, 0, 0),
+      new Date(2027, 0, 4, 0, 0),
+    )}. Happy Holidays!`,
   },
 ];
 
