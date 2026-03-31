@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HashLink as Link } from "react-router-hash-link";
 import { Avatar, Box, Button, Divider, Grid, IconButton, Typography } from "@mui/material";
 import {
@@ -184,9 +184,20 @@ const Copyright = () => {
 };
 
 export default function Footer() {
+  useEffect(() => {
+    const ready = () => document.dispatchEvent(new Event("render-event"));
+    const frame = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        ready();
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <>
-      <footer>
+      <footer data-prerender-ready="true">
         <TopFooter />
         <BottomFooter />
       </footer>

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { HelmetProvider } from "react-helmet-async";
@@ -55,11 +54,6 @@ function App() {
       ? true
       : true;
   };
-
-  useEffect(() => {
-    // Dispatch the event after the component is mounted and rendered
-    document.dispatchEvent(new Event("render-event"));
-  }, []);
 
   return (
     <HelmetProvider>

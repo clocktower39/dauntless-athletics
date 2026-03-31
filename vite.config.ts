@@ -18,6 +18,15 @@ const prerenderRoutes = [
   "/facility",
   "/contact-us",
 ];
+const genericSeoPatterns = [
+  /<title>Dauntless Athletics<\/title>/i,
+  /<meta name="description" content="Dauntless Athletics provides cheerleading, tumbling, and stunting training in the Phoenix metro area\. Camps, clinics, private lessons, and team training for all levels\.">\s*/i,
+  /<meta property="og:site_name" content="Dauntless Athletics">\s*/i,
+  /<meta property="og:title" content="Dauntless Athletics">\s*/i,
+  /<meta property="og:description" content="Dauntless Athletics provides cheerleading, tumbling, and stunting training in the Phoenix metro area\. Camps, clinics, private lessons, and team training for all levels\.">\s*/i,
+  /<meta property="og:image" content="\/dauntless_athletics_logo\.png">\s*/i,
+  /<meta name="twitter:card" content="summary_large_image">\s*/i,
+];
 const PuppeteerRenderer = vitePrerender.PuppeteerRenderer;
 
 export default defineConfig({
@@ -26,10 +35,17 @@ export default defineConfig({
     vitePrerender({
       staticDir: resolve(rootDir, "dist"),
       routes: prerenderRoutes,
+      postProcess(renderedRoute: { html: string }) {
+        genericSeoPatterns.forEach((pattern) => {
+          renderedRoute.html = renderedRoute.html.replace(pattern, "");
+        });
+        return renderedRoute;
+      },
       renderer: new PuppeteerRenderer({
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        renderAfterTime: 1200,
+        renderAfterElementExists: "[data-prerender-ready='true']",
+        renderAfterDocumentEvent: "render-event",
         navigationOptions: {
           waitUntil: "load",
           timeout: 30000,
