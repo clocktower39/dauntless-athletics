@@ -281,42 +281,6 @@ export default function CollegeCombine() {
                   backgroundColor: "var(--color-surface-2)",
                   border: "1px solid var(--color-border)",
                   borderRadius: "24px",
-                  overflow: "hidden",
-                  boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
-                }}
-              >
-                <Box sx={{ p: { xs: 2, md: 3 }, pb: 0 }}>
-                  <Typography
-                    sx={{
-                      fontFamily: "var(--font-display)",
-                      color: "var(--color-text)",
-                      textTransform: "uppercase",
-                      fontSize: "1.15rem",
-                      mb: 1,
-                    }}
-                  >
-                    Combine Preview
-                  </Typography>
-                  <Typography sx={{ color: "var(--color-muted)", mb: 2 }}>
-                    A quick look at the energy and skill focus behind the Dauntless college combine.
-                  </Typography>
-                </Box>
-                <ReactPlayer
-                  src="https://www.youtube.com/shorts/taGzf--q0Hc?feature=share"
-                  width="100%"
-                  height="70vh"
-                  muted
-                  loop
-                />
-              </Box>
-            </Grid>
-
-            <Grid size={12}>
-              <Box
-                sx={{
-                  backgroundColor: "var(--color-surface-2)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "24px",
                   p: { xs: 2, md: 3 },
                   boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
                 }}
@@ -395,6 +359,42 @@ export default function CollegeCombine() {
                     </Box>
                   </Grid>
                 </Grid>
+              </Box>
+            </Grid>
+
+            <Grid size={12}>
+              <Box
+                sx={{
+                  backgroundColor: "var(--color-surface-2)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: "24px",
+                  overflow: "hidden",
+                  boxShadow: "0 24px 40px rgba(0,0,0,0.35)",
+                }}
+              >
+                <Box sx={{ p: { xs: 2, md: 3 }, pb: 0 }}>
+                  <Typography
+                    sx={{
+                      fontFamily: "var(--font-display)",
+                      color: "var(--color-text)",
+                      textTransform: "uppercase",
+                      fontSize: "1.15rem",
+                      mb: 1,
+                    }}
+                  >
+                    Combine Preview
+                  </Typography>
+                  <Typography sx={{ color: "var(--color-muted)", mb: 2 }}>
+                    A quick look at the energy and skill focus behind the Dauntless college combine.
+                  </Typography>
+                </Box>
+                <ReactPlayer
+                  src="https://www.youtube.com/shorts/taGzf--q0Hc?feature=share"
+                  width="100%"
+                  height="70vh"
+                  muted
+                  loop
+                />
               </Box>
             </Grid>
           </Grid>
