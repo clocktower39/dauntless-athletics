@@ -1,26 +1,39 @@
+import { createRequire } from "node:module";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import PrerenderSPAPlugin from "@prerenderer/rollup-plugin";
-import PuppeteerRenderer from "@prerenderer/renderer-puppeteer";
+
+const require = createRequire(import.meta.url);
+const vitePrerender = require("vite-plugin-prerender");
+const rootDir = dirname(fileURLToPath(import.meta.url));
+const prerenderRoutes = [
+  "/",
+  "/camps",
+  "/college-combine",
+  "/peak-performance-camp",
+  "/class-schedule",
+  "/services",
+  "/staff",
+  "/facility",
+  "/contact-us",
+];
+const PuppeteerRenderer = vitePrerender.PuppeteerRenderer;
 
 export default defineConfig({
   plugins: [
     react(),
-    PrerenderSPAPlugin({
-      routes: [
-        "/",
-        "/camps",
-        "/college-combine",
-        "/peak-performance-camp",
-        "/class-schedule",
-        "/services",
-        "/staff",
-        "/facility",
-        "/contact-us",
-      ],
+    vitePrerender({
+      staticDir: resolve(rootDir, "dist"),
+      routes: prerenderRoutes,
       renderer: new PuppeteerRenderer({
         headless: true,
-        renderAfterDocumentEvent: "render-event",
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        renderAfterTime: 1200,
+        navigationOptions: {
+          waitUntil: "load",
+          timeout: 30000,
+        },
       }),
     }),
   ],
