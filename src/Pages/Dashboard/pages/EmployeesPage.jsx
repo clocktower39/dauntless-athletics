@@ -5,17 +5,15 @@ import { useNavigate } from "react-router";
 import EmployeesSection from "../../../Components/Dashboard/EmployeesSection";
 import classes from "../dashboardStyles";
 import { apiRequest, authHeader } from "../surveyApi";
-import { setEmployees, setOrganizations } from "../../../store/dashboardSlice";
+import { setEmployees } from "../../../store/dashboardSlice";
 
 export default function EmployeesPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.token);
-  const organizations = useSelector((state) => state.dashboard.organizations);
   const employees = useSelector((state) => state.dashboard.employees);
   const [dataError, setDataError] = useState("");
   const [employeeSearch, setEmployeeSearch] = useState("");
-  const [organizationFilter, setOrganizationFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
@@ -25,12 +23,8 @@ export default function EmployeesPage() {
     const load = async () => {
       try {
         setDataError("");
-        const [employeeRes, orgRes] = await Promise.all([
-          apiRequest("/api/admin/employees", { headers: authHeaders }),
-          apiRequest("/api/admin/organizations", { headers: authHeaders }),
-        ]);
+        const employeeRes = await apiRequest("/api/admin/employees", { headers: authHeaders });
         dispatch(setEmployees(employeeRes.employees || []));
-        dispatch(setOrganizations(orgRes.organizations || []));
       } catch (error) {
         setDataError(error.message);
       }
@@ -42,9 +36,6 @@ export default function EmployeesPage() {
     let items = [...employees];
     const term = employeeSearch.trim().toLowerCase();
 
-    if (organizationFilter !== "all") {
-      items = items.filter((employee) => String(employee.org_id) === organizationFilter);
-    }
     if (statusFilter !== "all") {
       items = items.filter((employee) => (employee.status || "active") === statusFilter);
     }
@@ -55,14 +46,14 @@ export default function EmployeesPage() {
         employee.first_name,
         employee.last_name,
         employee.preferred_name,
-        employee.title,
-        employee.department,
+        employee.title_summary,
+        employee.department_summary,
+        ...(employee.roles || []).flatMap((role) => [role.title, role.department, role.employment_type]),
         employee.email,
         employee.phone,
-        employee.organization_name,
       ].some((field) => String(field || "").toLowerCase().includes(term))
     );
-  }, [employees, employeeSearch, organizationFilter, statusFilter]);
+  }, [employees, employeeSearch, statusFilter]);
 
   const handleDeleteEmployee = async (employeeId) => {
     try {
@@ -85,11 +76,8 @@ export default function EmployeesPage() {
         classes={classes}
         employeeSearch={employeeSearch}
         onEmployeeSearchChange={setEmployeeSearch}
-        organizationFilter={organizationFilter}
-        onOrganizationFilterChange={setOrganizationFilter}
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
-        organizations={organizations}
         employees={filteredEmployees}
         onAddEmployee={() => navigate("/dashboard/employees/new")}
         onEditEmployee={(employee) => navigate(`/dashboard/employees/${employee.id}?edit=1`)}

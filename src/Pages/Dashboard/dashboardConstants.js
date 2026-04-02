@@ -65,15 +65,20 @@ export const emptyGuardian = {
 };
 
 export const emptyEmployee = {
-  organizationId: "",
   firstName: "",
   lastName: "",
   preferredName: "",
+  email: "",
+  phone: "",
+  status: "active",
+  notes: "",
+  roles: [],
+};
+
+export const emptyEmployeeRole = {
   title: "",
   department: "",
   employmentType: "contractor",
-  email: "",
-  phone: "",
   status: "active",
   startDate: "",
   endDate: "",

@@ -10,10 +10,15 @@ import {
   Typography,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { emptyEmployee } from "../dashboardConstants";
+import { emptyEmployee, emptyEmployeeRole } from "../dashboardConstants";
 import classes from "../dashboardStyles";
 import { apiRequest, authHeader } from "../surveyApi";
-import { setEmployees, setOrganizations } from "../../../store/dashboardSlice";
+import { setEmployees } from "../../../store/dashboardSlice";
+
+const employmentTypeOptions = ["full-time", "part-time", "contractor", "seasonal", "other"];
+const roleStatusOptions = ["active", "inactive", "ended"];
+
+const createEmptyRole = () => ({ ...emptyEmployeeRole });
 
 export default function EmployeeProfilePage() {
   const { employeeId } = useParams();
@@ -21,12 +26,11 @@ export default function EmployeeProfilePage() {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const token = useSelector((state) => state.auth.token);
-  const organizations = useSelector((state) => state.dashboard.organizations);
   const employees = useSelector((state) => state.dashboard.employees);
   const [dataError, setDataError] = useState("");
   const startEdit = searchParams.get("edit") === "1";
   const [mode, setMode] = useState(employeeId === "new" || startEdit ? "edit" : "view");
-  const [employeeDraft, setEmployeeDraft] = useState(emptyEmployee);
+  const [employeeDraft, setEmployeeDraft] = useState({ ...emptyEmployee, roles: [createEmptyRole()] });
 
   const authHeaders = useMemo(() => authHeader(token), [token]);
   const employeeIdNumber = Number(employeeId);
@@ -37,22 +41,13 @@ export default function EmployeeProfilePage() {
     return employees.find((item) => Number(item.id) === employeeIdNumber) || null;
   }, [employees, employeeIdNumber, isNew]);
 
-  const organizationMap = useMemo(
-    () => new Map(organizations.map((org) => [String(org.org_id || org.id), org.name])),
-    [organizations]
-  );
-
   useEffect(() => {
     if (!token) return;
     const load = async () => {
       try {
         setDataError("");
-        const [employeeRes, orgRes] = await Promise.all([
-          apiRequest("/api/admin/employees", { headers: authHeaders }),
-          apiRequest("/api/admin/organizations", { headers: authHeaders }),
-        ]);
+        const employeeRes = await apiRequest("/api/admin/employees", { headers: authHeaders });
         dispatch(setEmployees(employeeRes.employees || []));
-        dispatch(setOrganizations(orgRes.organizations || []));
       } catch (error) {
         setDataError(error.message);
       }
@@ -62,26 +57,33 @@ export default function EmployeeProfilePage() {
 
   useEffect(() => {
     if (isNew) {
-      setEmployeeDraft(emptyEmployee);
+      setEmployeeDraft({ ...emptyEmployee, roles: [createEmptyRole()] });
       setMode("edit");
       return;
     }
 
     if (employee) {
       setEmployeeDraft({
-        organizationId: employee.org_id ? String(employee.org_id) : "",
         firstName: employee.first_name || "",
         lastName: employee.last_name || "",
         preferredName: employee.preferred_name || "",
-        title: employee.title || "",
-        department: employee.department || "",
-        employmentType: employee.employment_type || "contractor",
         email: employee.email || "",
         phone: employee.phone || "",
         status: employee.status || "active",
-        startDate: employee.start_date ? String(employee.start_date).slice(0, 10) : "",
-        endDate: employee.end_date ? String(employee.end_date).slice(0, 10) : "",
         notes: employee.notes || "",
+        roles:
+          Array.isArray(employee.roles) && employee.roles.length > 0
+            ? employee.roles.map((role) => ({
+                id: role.id,
+                title: role.title || "",
+                department: role.department || "",
+                employmentType: role.employment_type || "contractor",
+                status: role.status || "active",
+                startDate: role.start_date ? String(role.start_date).slice(0, 10) : "",
+                endDate: role.end_date ? String(role.end_date).slice(0, 10) : "",
+                notes: role.notes || "",
+              }))
+            : [createEmptyRole()],
       });
     }
   }, [employee, isNew]);
@@ -92,28 +94,75 @@ export default function EmployeeProfilePage() {
     }
   }, [startEdit]);
 
+  const employeeName =
+    employeeDraft.preferredName ||
+    [employeeDraft.firstName, employeeDraft.lastName].filter(Boolean).join(" ") ||
+    "Employee";
+
+  const activeRoles = employeeDraft.roles.filter((role) => (role.status || "active") === "active");
+  const titleSummary = employeeDraft.roles.map((role) => role.title).filter(Boolean).join(", ") || "—";
+  const workTypes = [...new Set(employeeDraft.roles.map((role) => role.employmentType).filter(Boolean))].join(", ") || "—";
+
+  const handleRoleChange = (index, field, value) => {
+    setEmployeeDraft((prev) => ({
+      ...prev,
+      roles: prev.roles.map((role, roleIndex) =>
+        roleIndex === index ? { ...role, [field]: value } : role
+      ),
+    }));
+  };
+
+  const handleAddRole = () => {
+    setEmployeeDraft((prev) => ({
+      ...prev,
+      roles: [...prev.roles, createEmptyRole()],
+    }));
+  };
+
+  const handleRemoveRole = (index) => {
+    setEmployeeDraft((prev) => {
+      const nextRoles = prev.roles.filter((_, roleIndex) => roleIndex !== index);
+      return {
+        ...prev,
+        roles: nextRoles.length > 0 ? nextRoles : [createEmptyRole()],
+      };
+    });
+  };
+
   const handleSave = async () => {
     if (!employeeDraft.firstName.trim() || !employeeDraft.lastName.trim()) {
       setDataError("First and last name are required.");
       return;
     }
 
+    const normalizedRoles = employeeDraft.roles
+      .map((role) => ({
+        title: role.title.trim(),
+        department: role.department.trim(),
+        employment_type: role.employmentType,
+        status: role.status,
+        start_date: role.startDate || null,
+        end_date: role.endDate || null,
+        notes: role.notes.trim(),
+      }))
+      .filter((role) => role.title);
+
+    if (normalizedRoles.length === 0) {
+      setDataError("Add at least one assignment with a title.");
+      return;
+    }
+
     try {
       setDataError("");
       const payload = {
-        org_id: employeeDraft.organizationId || null,
         first_name: employeeDraft.firstName.trim(),
         last_name: employeeDraft.lastName.trim(),
         preferred_name: employeeDraft.preferredName.trim(),
-        title: employeeDraft.title.trim(),
-        department: employeeDraft.department.trim(),
-        employment_type: employeeDraft.employmentType,
         email: employeeDraft.email.trim(),
         phone: employeeDraft.phone.trim(),
         status: employeeDraft.status,
-        start_date: employeeDraft.startDate || null,
-        end_date: employeeDraft.endDate || null,
         notes: employeeDraft.notes.trim(),
+        roles: normalizedRoles,
       };
 
       let savedId = employeeIdNumber;
@@ -159,11 +208,6 @@ export default function EmployeeProfilePage() {
     }
   };
 
-  const employeeName =
-    employeeDraft.preferredName ||
-    [employeeDraft.firstName, employeeDraft.lastName].filter(Boolean).join(" ") ||
-    "Employee";
-
   return (
     <Box sx={{ display: "grid", gap: "16px" }}>
       {dataError && <Alert severity="error">{dataError}</Alert>}
@@ -202,25 +246,19 @@ export default function EmployeeProfilePage() {
           <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Overview</Typography>
           <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(4, 1fr)" }, gap: "12px" }}>
             <Box sx={classes.statCard}>
-              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Title</Typography>
-              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {employeeDraft.title || "—"}
-              </Typography>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Assignments</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{titleSummary}</Typography>
             </Box>
             <Box sx={classes.statCard}>
-              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Department</Typography>
-              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {employeeDraft.department || "—"}
-              </Typography>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Active Roles</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{activeRoles.length}</Typography>
             </Box>
             <Box sx={classes.statCard}>
-              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Type</Typography>
-              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-                {employeeDraft.employmentType || "—"}
-              </Typography>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Work Types</Typography>
+              <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>{workTypes}</Typography>
             </Box>
             <Box sx={classes.statCard}>
-              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Status</Typography>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Employee Status</Typography>
               <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
                 {employeeDraft.status || "—"}
               </Typography>
@@ -230,23 +268,8 @@ export default function EmployeeProfilePage() {
 
         <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "840px" }}>
-          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Details</Typography>
-          <TextField
-            select
-            label="Organization"
-            value={employeeDraft.organizationId}
-            onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, organizationId: event.target.value }))}
-            sx={classes.input}
-            disabled={mode === "view"}
-          >
-            <MenuItem value="">Default organization</MenuItem>
-            {organizations.map((org) => (
-              <MenuItem key={org.id} value={String(org.org_id || org.id)}>
-                {org.name}
-              </MenuItem>
-            ))}
-          </TextField>
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px", maxWidth: "900px" }}>
+          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Person Details</Typography>
           <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <TextField
               label="First name"
@@ -272,39 +295,10 @@ export default function EmployeeProfilePage() {
           </Box>
           <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             <TextField
-              label="Title"
-              value={employeeDraft.title}
-              onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, title: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-              disabled={mode === "view"}
-            />
-            <TextField
-              label="Department"
-              value={employeeDraft.department}
-              onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, department: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-              disabled={mode === "view"}
-            />
-            <TextField
-              select
-              label="Employment type"
-              value={employeeDraft.employmentType}
-              onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, employmentType: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-              disabled={mode === "view"}
-            >
-              <MenuItem value="full-time">Full-time</MenuItem>
-              <MenuItem value="part-time">Part-time</MenuItem>
-              <MenuItem value="contractor">Contractor</MenuItem>
-              <MenuItem value="seasonal">Seasonal</MenuItem>
-            </TextField>
-          </Box>
-          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <TextField
               label="Email"
               value={employeeDraft.email}
               onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, email: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
+              sx={{ ...classes.input, flex: 1, minWidth: "220px" }}
               disabled={mode === "view"}
             />
             <TextField
@@ -316,7 +310,7 @@ export default function EmployeeProfilePage() {
             />
             <TextField
               select
-              label="Status"
+              label="Employee status"
               value={employeeDraft.status}
               onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, status: event.target.value }))}
               sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
@@ -326,46 +320,125 @@ export default function EmployeeProfilePage() {
               <MenuItem value="inactive">Inactive</MenuItem>
             </TextField>
           </Box>
-          <Box sx={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            <TextField
-              type="date"
-              label="Start date"
-              value={employeeDraft.startDate}
-              onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, startDate: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-              InputLabelProps={{ shrink: true }}
-              disabled={mode === "view"}
-            />
-            <TextField
-              type="date"
-              label="End date"
-              value={employeeDraft.endDate}
-              onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, endDate: event.target.value }))}
-              sx={{ ...classes.input, flex: 1, minWidth: "180px" }}
-              InputLabelProps={{ shrink: true }}
-              disabled={mode === "view"}
-            />
-          </Box>
           <TextField
             label="Notes"
+            multiline
+            minRows={4}
             value={employeeDraft.notes}
             onChange={(event) => setEmployeeDraft((prev) => ({ ...prev, notes: event.target.value }))}
             sx={classes.input}
-            multiline
-            minRows={3}
             disabled={mode === "view"}
           />
         </Box>
 
         <Divider sx={{ borderColor: "var(--color-border)" }} />
 
-        <Box sx={{ display: "grid", gap: "8px", paddingTop: "8px" }}>
-          <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Assignment</Typography>
-          <Box sx={classes.statCard}>
-            <Typography sx={{ color: "var(--color-muted)", fontSize: "0.75rem" }}>Organization</Typography>
-            <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
-              {organizationMap.get(String(employeeDraft.organizationId)) || "Dauntless Athletics"}
-            </Typography>
+        <Box sx={{ display: "grid", gap: "12px", paddingTop: "8px" }}>
+          <Box sx={classes.workspaceHeader}>
+            <Box>
+              <Typography sx={{ fontWeight: 600, color: "var(--color-text)" }}>Assignments</Typography>
+              <Typography sx={{ color: "var(--color-muted)", fontSize: "0.82rem" }}>
+                Track every role this employee holds at Dauntless.
+              </Typography>
+            </Box>
+            {mode === "edit" && (
+              <Button variant="outlined" sx={{ color: "var(--color-text)" }} onClick={handleAddRole}>
+                Add Assignment
+              </Button>
+            )}
+          </Box>
+
+          <Box sx={{ display: "grid", gap: "12px" }}>
+            {employeeDraft.roles.map((role, index) => (
+              <Box key={role.id || `role-${index}`} sx={classes.statCard}>
+                <Box sx={classes.workspaceHeader}>
+                  <Typography sx={{ color: "var(--color-text)", fontWeight: 600 }}>
+                    {role.title || `Assignment ${index + 1}`}
+                  </Typography>
+                  {mode === "edit" && (
+                    <Button
+                      variant="text"
+                      color="error"
+                      onClick={() => handleRemoveRole(index)}
+                      disabled={employeeDraft.roles.length === 1}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </Box>
+                <Box sx={{ display: "grid", gap: "12px", gridTemplateColumns: { xs: "1fr", md: "repeat(3, minmax(0, 1fr))" } }}>
+                  <TextField
+                    label="Title"
+                    value={role.title}
+                    onChange={(event) => handleRoleChange(index, "title", event.target.value)}
+                    sx={classes.input}
+                    disabled={mode === "view"}
+                  />
+                  <TextField
+                    label="Department"
+                    value={role.department}
+                    onChange={(event) => handleRoleChange(index, "department", event.target.value)}
+                    sx={classes.input}
+                    disabled={mode === "view"}
+                  />
+                  <TextField
+                    select
+                    label="Work type"
+                    value={role.employmentType}
+                    onChange={(event) => handleRoleChange(index, "employmentType", event.target.value)}
+                    sx={classes.input}
+                    disabled={mode === "view"}
+                  >
+                    {employmentTypeOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    select
+                    label="Assignment status"
+                    value={role.status}
+                    onChange={(event) => handleRoleChange(index, "status", event.target.value)}
+                    sx={classes.input}
+                    disabled={mode === "view"}
+                  >
+                    {roleStatusOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <TextField
+                    type="date"
+                    label="Start date"
+                    value={role.startDate}
+                    onChange={(event) => handleRoleChange(index, "startDate", event.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                    sx={classes.input}
+                    disabled={mode === "view"}
+                  />
+                  <TextField
+                    type="date"
+                    label="End date"
+                    value={role.endDate}
+                    onChange={(event) => handleRoleChange(index, "endDate", event.target.value)}
+                    InputLabelProps={{ shrink: true }}
+                    sx={classes.input}
+                    disabled={mode === "view"}
+                  />
+                </Box>
+                <TextField
+                  label="Assignment notes"
+                  multiline
+                  minRows={3}
+                  value={role.notes}
+                  onChange={(event) => handleRoleChange(index, "notes", event.target.value)}
+                  sx={classes.input}
+                  disabled={mode === "view"}
+                />
+              </Box>
+            ))}
           </Box>
         </Box>
       </Box>

@@ -144,9 +144,26 @@ CREATE TABLE IF NOT EXISTS employees (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS employee_roles (
+  id BIGSERIAL PRIMARY KEY,
+  employee_id BIGINT NOT NULL REFERENCES employees(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  department TEXT,
+  employment_type TEXT NOT NULL DEFAULT 'contractor',
+  status TEXT NOT NULL DEFAULT 'active',
+  start_date DATE,
+  end_date DATE,
+  notes TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE INDEX IF NOT EXISTS employees_org_id_idx ON employees (org_id);
 CREATE INDEX IF NOT EXISTS employees_status_idx ON employees (status);
 CREATE INDEX IF NOT EXISTS employees_department_idx ON employees (department);
+CREATE INDEX IF NOT EXISTS employee_roles_employee_id_idx ON employee_roles (employee_id);
+CREATE INDEX IF NOT EXISTS employee_roles_status_idx ON employee_roles (status);
 
 CREATE TABLE IF NOT EXISTS practices (
   id BIGSERIAL PRIMARY KEY,

@@ -16,11 +16,8 @@ export default function EmployeesSection({
   classes,
   employeeSearch,
   onEmployeeSearchChange,
-  organizationFilter,
-  onOrganizationFilterChange,
   statusFilter,
   onStatusFilterChange,
-  organizations = [],
   employees = [],
   onAddEmployee,
   onEditEmployee,
@@ -47,20 +44,6 @@ export default function EmployeesSection({
               onChange={(event) => onEmployeeSearchChange(event.target.value)}
               sx={{ ...classes.input, minWidth: "220px" }}
             />
-            <TextField
-              select
-              label="Organization"
-              value={organizationFilter}
-              onChange={(event) => onOrganizationFilterChange(event.target.value)}
-              sx={{ ...classes.input, minWidth: "220px" }}
-            >
-              <MenuItem value="all">All organizations</MenuItem>
-              {organizations.map((org) => (
-                <MenuItem key={org.id} value={String(org.org_id || org.id)}>
-                  {org.name}
-                </MenuItem>
-              ))}
-            </TextField>
             <TextField
               select
               label="Status"
@@ -101,31 +84,31 @@ export default function EmployeesSection({
                 ),
               },
               {
-                field: "title",
-                headerName: "Title",
-                flex: 0.8,
-                minWidth: 160,
-                valueGetter: (_value, row) => row?.title || "—",
-              },
-              {
-                field: "department",
-                headerName: "Department",
-                flex: 0.8,
-                minWidth: 160,
-                valueGetter: (_value, row) => row?.department || "—",
-              },
-              {
-                field: "employment_type",
-                headerName: "Type",
-                width: 130,
-                valueGetter: (_value, row) => row?.employment_type || "—",
-              },
-              {
-                field: "organization_name",
-                headerName: "Organization",
+                field: "title_summary",
+                headerName: "Assignments",
                 flex: 1,
+                minWidth: 220,
+                valueGetter: (_value, row) => row?.title_summary || "—",
+              },
+              {
+                field: "department_summary",
+                headerName: "Departments",
+                flex: 0.9,
                 minWidth: 180,
-                valueGetter: (_value, row) => row?.organization_name || "—",
+                valueGetter: (_value, row) => row?.department_summary || "—",
+              },
+              {
+                field: "employment_types",
+                headerName: "Work Type",
+                flex: 0.9,
+                minWidth: 180,
+                valueGetter: (_value, row) => (row?.employment_types || []).join(", ") || "—",
+              },
+              {
+                field: "role_count",
+                headerName: "Role Count",
+                width: 110,
+                valueGetter: (_value, row) => row?.role_count || 0,
               },
               {
                 field: "email",

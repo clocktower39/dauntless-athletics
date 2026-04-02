@@ -1705,16 +1705,136 @@ router.put("/parents/:id", async (req, res) => {
   }
 });
 
+const employeeSelectSql = `SELECT employees.id,
+       employees.org_id,
+       employees.first_name,
+       employees.last_name,
+       employees.preferred_name,
+       employees.email,
+       employees.phone,
+       employees.status,
+       employees.notes,
+       employees.created_at,
+       employees.updated_at,
+       COALESCE(
+         json_agg(
+           json_build_object(
+             'id', employee_roles.id,
+             'title', employee_roles.title,
+             'department', employee_roles.department,
+             'employment_type', employee_roles.employment_type,
+             'status', employee_roles.status,
+             'start_date', employee_roles.start_date,
+             'end_date', employee_roles.end_date,
+             'notes', employee_roles.notes,
+             'sort_order', employee_roles.sort_order,
+             'created_at', employee_roles.created_at,
+             'updated_at', employee_roles.updated_at
+           )
+           ORDER BY employee_roles.sort_order ASC, employee_roles.id ASC
+         ) FILTER (WHERE employee_roles.id IS NOT NULL),
+         '[]'::json
+       ) AS roles
+FROM employees
+LEFT JOIN employee_roles ON employee_roles.employee_id = employees.id`;
+
+function normalizeEmployeeRoles(rawRoles, fallback = {}) {
+  const sourceRoles = Array.isArray(rawRoles) ? rawRoles : [];
+  const normalized = sourceRoles
+    .map((role, index) => {
+      const title = normalizeText(role?.title);
+      if (!title) return null;
+
+      return {
+        title,
+        department: normalizeNullableText(role?.department),
+        employmentType: normalizeNullableText(role?.employment_type || role?.employmentType) || 'contractor',
+        status: normalizeNullableText(role?.status) || 'active',
+        startDate:
+          typeof (role?.start_date || role?.startDate) === 'string' && String(role?.start_date || role?.startDate).trim()
+            ? String(role?.start_date || role?.startDate).trim()
+            : null,
+        endDate:
+          typeof (role?.end_date || role?.endDate) === 'string' && String(role?.end_date || role?.endDate).trim()
+            ? String(role?.end_date || role?.endDate).trim()
+            : null,
+        notes: normalizeNullableText(role?.notes),
+        sortOrder: index,
+      };
+    })
+    .filter(Boolean);
+
+  if (normalized.length > 0) return normalized;
+
+  const legacyTitle = normalizeText(fallback?.title);
+  if (!legacyTitle) return [];
+
+  return [
+    {
+      title: legacyTitle,
+      department: normalizeNullableText(fallback?.department),
+      employmentType: normalizeNullableText(fallback?.employment_type || fallback?.employmentType) || 'contractor',
+      status: normalizeNullableText(fallback?.status) || 'active',
+      startDate:
+        typeof fallback?.start_date === 'string' && fallback.start_date.trim() ? fallback.start_date.trim() : null,
+      endDate: typeof fallback?.end_date === 'string' && fallback.end_date.trim() ? fallback.end_date.trim() : null,
+      notes: normalizeNullableText(fallback?.role_notes || fallback?.notes),
+      sortOrder: 0,
+    },
+  ];
+}
+
+async function replaceEmployeeRoles(client, employeeId, roles) {
+  await client.query('DELETE FROM employee_roles WHERE employee_id = $1', [employeeId]);
+
+  for (const role of roles) {
+    await client.query(
+      `INSERT INTO employee_roles (
+        employee_id, title, department, employment_type, status,
+        start_date, end_date, notes, sort_order
+      ) VALUES (
+        $1, $2, $3, $4, $5,
+        $6, $7, $8, $9
+      )`,
+      [
+        employeeId,
+        role.title,
+        role.department,
+        role.employmentType,
+        role.status,
+        role.startDate,
+        role.endDate,
+        role.notes,
+        role.sortOrder,
+      ]
+    );
+  }
+}
+
+function serializeEmployeeRow(row) {
+  const roles = Array.isArray(row.roles) ? row.roles : [];
+  const activeRoles = roles.filter((role) => (role?.status || 'active') === 'active');
+  const titleSummary = (activeRoles.length > 0 ? activeRoles : roles)
+    .map((role) => role?.title)
+    .filter(Boolean)
+    .join(', ');
+  const departmentSummary = [...new Set(roles.map((role) => role?.department).filter(Boolean))].join(', ');
+  const employmentTypes = [...new Set(roles.map((role) => role?.employment_type).filter(Boolean))];
+
+  return {
+    ...row,
+    roles,
+    title_summary: titleSummary || '—',
+    department_summary: departmentSummary || '—',
+    employment_types: employmentTypes,
+    role_count: roles.length,
+  };
+}
+
 router.get("/employees", async (req, res) => {
-  const organizationId = normalizeInteger(req.query.organization_id);
   const status = normalizeNullableText(req.query.status);
   const params = [];
   const filters = [];
-
-  if (organizationId) {
-    params.push(organizationId);
-    filters.push(`employees.org_id = $${params.length}`);
-  }
 
   if (status) {
     params.push(status);
@@ -1723,20 +1843,14 @@ router.get("/employees", async (req, res) => {
 
   const whereClause = filters.length > 0 ? `WHERE ${filters.join(" AND ")}` : "";
   const result = await query(
-    `SELECT employees.id, employees.org_id, employees.first_name, employees.last_name,
-            employees.preferred_name, employees.title, employees.department,
-            employees.employment_type, employees.email, employees.phone,
-            employees.status, employees.start_date, employees.end_date,
-            employees.notes, employees.created_at, employees.updated_at,
-            organizations.name AS organization_name
-     FROM employees
-     LEFT JOIN organizations ON organizations.org_id = employees.org_id
+    `${employeeSelectSql}
      ${whereClause}
+     GROUP BY employees.id
      ORDER BY employees.last_name ASC, employees.first_name ASC, employees.id ASC`,
     params
   );
 
-  return res.json({ employees: result.rows });
+  return res.json({ employees: result.rows.map(serializeEmployeeRow) });
 });
 
 router.get("/employees/:id", async (req, res) => {
@@ -1746,15 +1860,9 @@ router.get("/employees/:id", async (req, res) => {
   }
 
   const result = await query(
-    `SELECT employees.id, employees.org_id, employees.first_name, employees.last_name,
-            employees.preferred_name, employees.title, employees.department,
-            employees.employment_type, employees.email, employees.phone,
-            employees.status, employees.start_date, employees.end_date,
-            employees.notes, employees.created_at, employees.updated_at,
-            organizations.name AS organization_name
-     FROM employees
-     LEFT JOIN organizations ON organizations.org_id = employees.org_id
-     WHERE employees.id = $1`,
+    `${employeeSelectSql}
+     WHERE employees.id = $1
+     GROUP BY employees.id`,
     [employeeId]
   );
 
@@ -1762,59 +1870,55 @@ router.get("/employees/:id", async (req, res) => {
     return res.status(404).json({ error: "Employee not found." });
   }
 
-  return res.json({ employee: result.rows[0] });
+  return res.json({ employee: serializeEmployeeRow(result.rows[0]) });
 });
 
 router.post("/employees", async (req, res) => {
   const firstName = normalizeText(req.body?.first_name);
   const lastName = normalizeText(req.body?.last_name);
   const preferredName = normalizeNullableText(req.body?.preferred_name);
-  const title = normalizeNullableText(req.body?.title);
-  const department = normalizeNullableText(req.body?.department);
-  const employmentType = normalizeNullableText(req.body?.employment_type) || "contractor";
   const email = normalizeNullableText(req.body?.email);
   const phone = normalizeNullableText(req.body?.phone);
   const status = normalizeNullableText(req.body?.status) || "active";
-  const startDate =
-    typeof req.body?.start_date === "string" && req.body.start_date.trim() ? req.body.start_date.trim() : null;
-  const endDate =
-    typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
   const notes = normalizeNullableText(req.body?.notes);
   const orgId = normalizeInteger(req.body?.org_id) || DEFAULT_ORG_ID;
+  const roles = normalizeEmployeeRoles(req.body?.roles, req.body);
 
   if (!firstName || !lastName) {
     return res.status(400).json({ error: "First and last name are required." });
   }
 
-  const result = await query(
-    `INSERT INTO employees (
-      org_id, first_name, last_name, preferred_name, title, department,
-      employment_type, email, phone, status, start_date, end_date, notes
-    ) VALUES (
-      $1, $2, $3, $4, $5, $6,
-      $7, $8, $9, $10, $11, $12, $13
-    )
-    RETURNING id, org_id, first_name, last_name, preferred_name, title, department,
-              employment_type, email, phone, status, start_date, end_date,
-              notes, created_at, updated_at`,
-    [
-      orgId,
-      firstName,
-      lastName,
-      preferredName,
-      title,
-      department,
-      employmentType,
-      email,
-      phone,
-      status,
-      startDate,
-      endDate,
-      notes,
-    ]
-  );
+  const client = await getClient();
+  try {
+    await client.query('BEGIN');
 
-  return res.status(201).json({ employee: result.rows[0] });
+    const employeeResult = await client.query(
+      `INSERT INTO employees (
+        org_id, first_name, last_name, preferred_name, email, phone, status, notes
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8
+      ) RETURNING id`,
+      [orgId, firstName, lastName, preferredName, email, phone, status, notes]
+    );
+
+    const employeeId = employeeResult.rows[0].id;
+    await replaceEmployeeRoles(client, employeeId, roles);
+    await client.query('COMMIT');
+
+    const result = await query(
+      `${employeeSelectSql}
+       WHERE employees.id = $1
+       GROUP BY employees.id`,
+      [employeeId]
+    );
+
+    return res.status(201).json({ employee: serializeEmployeeRow(result.rows[0]) });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    return res.status(500).json({ error: 'Unable to create employee.' });
+  } finally {
+    client.release();
+  }
 });
 
 router.put("/employees/:id", async (req, res) => {
@@ -1826,66 +1930,59 @@ router.put("/employees/:id", async (req, res) => {
   const firstName = normalizeText(req.body?.first_name);
   const lastName = normalizeText(req.body?.last_name);
   const preferredName = normalizeNullableText(req.body?.preferred_name);
-  const title = normalizeNullableText(req.body?.title);
-  const department = normalizeNullableText(req.body?.department);
-  const employmentType = normalizeNullableText(req.body?.employment_type) || "contractor";
   const email = normalizeNullableText(req.body?.email);
   const phone = normalizeNullableText(req.body?.phone);
   const status = normalizeNullableText(req.body?.status) || "active";
-  const startDate =
-    typeof req.body?.start_date === "string" && req.body.start_date.trim() ? req.body.start_date.trim() : null;
-  const endDate =
-    typeof req.body?.end_date === "string" && req.body.end_date.trim() ? req.body.end_date.trim() : null;
   const notes = normalizeNullableText(req.body?.notes);
   const orgId = normalizeInteger(req.body?.org_id) || DEFAULT_ORG_ID;
+  const roles = normalizeEmployeeRoles(req.body?.roles, req.body);
 
   if (!firstName || !lastName) {
     return res.status(400).json({ error: "First and last name are required." });
   }
 
-  const result = await query(
-    `UPDATE employees
-     SET org_id = $1,
-         first_name = $2,
-         last_name = $3,
-         preferred_name = $4,
-         title = $5,
-         department = $6,
-         employment_type = $7,
-         email = $8,
-         phone = $9,
-         status = $10,
-         start_date = $11,
-         end_date = $12,
-         notes = $13,
-         updated_at = NOW()
-     WHERE id = $14
-     RETURNING id, org_id, first_name, last_name, preferred_name, title, department,
-               employment_type, email, phone, status, start_date, end_date,
-               notes, created_at, updated_at`,
-    [
-      orgId,
-      firstName,
-      lastName,
-      preferredName,
-      title,
-      department,
-      employmentType,
-      email,
-      phone,
-      status,
-      startDate,
-      endDate,
-      notes,
-      employeeId,
-    ]
-  );
+  const client = await getClient();
+  try {
+    await client.query('BEGIN');
 
-  if (result.rowCount === 0) {
-    return res.status(404).json({ error: "Employee not found." });
+    const result = await client.query(
+      `UPDATE employees
+       SET org_id = $1,
+           first_name = $2,
+           last_name = $3,
+           preferred_name = $4,
+           email = $5,
+           phone = $6,
+           status = $7,
+           notes = $8,
+           updated_at = NOW()
+       WHERE id = $9
+       RETURNING id`,
+      [orgId, firstName, lastName, preferredName, email, phone, status, notes, employeeId]
+    );
+
+    if (result.rowCount === 0) {
+      await client.query('ROLLBACK');
+      return res.status(404).json({ error: 'Employee not found.' });
+    }
+
+    await replaceEmployeeRoles(client, employeeId, roles);
+    await client.query('COMMIT');
+
+    const refreshed = await query(
+      `${employeeSelectSql}
+       WHERE employees.id = $1
+       GROUP BY employees.id`,
+      [employeeId]
+    );
+
+    return res.json({ employee: serializeEmployeeRow(refreshed.rows[0]) });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    return res.status(500).json({ error: 'Unable to update employee.' });
+  } finally {
+    client.release();
   }
-
-  return res.json({ employee: result.rows[0] });
 });
 
 router.delete("/employees/:id", async (req, res) => {
