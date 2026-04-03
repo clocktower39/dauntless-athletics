@@ -64,7 +64,11 @@ export default defineConfig({
         manualChunks(id: string) {
           if (!id.includes("node_modules")) return;
           if (id.includes("react-player") || id.includes("youtube-video-element")) return "player";
+          if (id.includes("@syncfusion")) return "syncfusion";
+          if (id.includes("@mui/x-data-grid")) return "datagrid";
           if (id.includes("@mui") || id.includes("@emotion")) return "mui";
+          if (id.includes("@reduxjs/toolkit") || id.includes("react-redux")) return "state";
+          if (id.includes("axios")) return "http";
           if (id.includes("react-router")) return "router";
           if (id.includes("dayjs")) return "dayjs";
           return "vendor";

@@ -30,7 +30,7 @@ import {
   Instagram,
   YouTube,
 } from "@mui/icons-material";
-import { holidayScheduleEvents } from "./ClassSchedule";
+import { holidayScheduleEvents } from "./holidayScheduleEvents";
 import useWindowWidth from "../../Hooks/WindowWidth";
 import DauntlessAthleticsLogoDesktopCircleImg from "../../assets/Dauntless-Athletics-Logo-Desktop-Circle1.png";
 import dayjs from "dayjs";
